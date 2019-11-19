@@ -1,0 +1,21 @@
+.background-image {
+	background-image: url("/assets/img/sales_background.png");
+	background-color: #08030A;
+}
+
+.margin-top {
+	margin-top: 10px;
+	display: block;
+}
+
+.badge {
+	font-size: 115%;
+	color: #FFF;
+	background-color: transparent;
+}
+
+.personSelected {
+  background-color: #ee6c10;
+  color: #000;
+  text-decoration: underline;
+}

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<head>
+  <style type="text/css">
+    .facturaSelected{
+       background-color: #F0F8FF;
+    }
+    #modalListaFacturas{
+      width: 70% !important;
+    }
+
+    #consecutivo_nota_credito{
+        resize: none
+    }
+    #select_descuento{
+      width: 60%;
+      border-radius: 4px;
+    }
+
+    .cantidadproducto, .cantidadproducto2 ,#descuentoorden{
+      width: 60%;
+      border-radius: 4px;
+    }
+
+    #descuentoorden{
+      background-color: silver;
+
+    }
+    #txtFormaPagoNotaCredito{
+      color: black;
+    }
+    .disabledbutton {
+    pointer-events: none;
+    opacity: 0.4;
+    }
+    .deshabilitar{
+      background-color: #c1c1c1;
+    }
+
+    .habilitar{
+      background-color: #ED9B2C;
+    }
+  </style>
+</head>
+<!-- 3926 -->
+<div class="wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div ng-include="'/shared/search.html'"></div>
+      <div class="col-xs-12 col-sm-7 col-md-7 col-lg-5">
+        <div class="pull-right">
+          <div class="form-group">
+          <div class="btn-group mr-1 col-md-3 pull-right">
+             <input type="hidden" name="tipoCambioNota" id="tipoCambioNota">
+             <input type="hidden" name="tipoFactura" id="tipoFactura">
+             <button type="submit" class="btn btn-warning" ng-click="tipoFactura(1);sendDataLoadModalFactura(facturaSelected);">Nota crédito</button>
+          </div>
+          <div class="btn-group mr-1 col-md-3 pull-right">
+            <button type="submit" class="btn btn-warning" ng-click="tipoFactura(2);sendDataLoadModalFactura(facturaSelected);">Nota débito</button>
+          </div>
+            <div class="btn-group mr-1 col-md-3 pull-right">
+              <button class="btn btn-home"><a href="#!/restaurante">Ventas</a><span class="glyphicon glyphicon-home"></span></button>
+            </div>
+            <div class="btn-group mr-1 col-md-3 pull-right">
+              <button id="btnProuctReport1" ng-click="reporte_excel1();" type="button" class="btn btn-default">Bills
+                <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row content background-image">
+      <div class="col-md-15 col-lg-9">
+        <div class="table-responsive">
+          <table class="table table-condensed table-hover">
+            <thead class="tableHeaders">
+              <tr>
+                <th class="col-sm-1 small" ng-click="sort('idfactura')">#ID
+                  <input type="hidden" name="tipo_nota" id="tipo_nota" ng-model="tipo_nota">
+                  <span ng-show="sortKey=='idfactura'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th class="ng-hide" ng-click="sort('idcuenta')">Cuenta
+                  <span ng-show="sortKey=='idcuenta'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sort('nombre')">Empleado
+                  <span ng-show="sortKey=='nombre'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sort('periodo')">Periodo
+                  <span ng-show="sortKey=='periodo'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sort('estadofactura')">Estado
+                  <span ng-show="sortKey=='estadofactura'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sort('formapago')">Condicion
+                  <span ng-show="sortKey=='formapago'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sort('subtotal')">SubTotal
+                  <span ng-show="sortKey=='subtotal'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sort('porcentajedescuento')">Descuento
+                  <span ng-show="sortKey=='porcentajedescuento'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th class="col-md-2" ng-click="sort('fecha_date')">Fecha
+                  <span ng-show="sortKey=='fecha_date'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th>Ver
+                </th>
+                <th>PDF</th>
+              </tr>
+            </thead>
+            <tbody id="accountsCanceledTable">
+              <tr ng-class="{'facturaSelected':factura.checked == true}" ng-repeat="factura in object | orderBy:sortKey:reverse | filter:search">
+                <td class="col-sm-1 nr">{{factura.idfactura}}</td>
+                <td class="ng-hide">{{factura.idcuenta}}</td>
+                <td ng-click="filaClicked(factura)" >{{factura.nombre}}</td>
+                <td ng-click="filaClicked(factura)" >{{factura.periodo}}</td>
+                <td ng-click="filaClicked(factura)" >{{factura.estadofactura}}</td>
+                <td ng-click="filaClicked(factura)" >{{factura.formapago}}</td>
+                <td ng-click="filaClicked(factura)" >{{factura.subtotal | currency:"₡"}}</td>
+                <td ng-click="filaClicked(factura)" >{{factura.porcentajedescuento}}%</td>
+                <td class="col-md-2" ng-click="filaClicked(factura)" >{{factura.fecha_date | date:'dd/MMM/yy HH:mm:ss':'-0600'}}</td>
+                <td>
+                    <button type="submit" class="btn btn-warning btn-sm" ng-click="sendDataLoad(factura.idfactura, factura.idcuenta, factura.nombre, factura.periodo, factura.formapago, factura.cantidadpersonas, factura.subtotal, factura.porcentajedescuento, factura.fecha)" data-toggle="modal" data-target="#orders-per-account-modal">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"> </span>
+                    </button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-warning btn-sm" ng-click="showPDFbill(factura.idfactura)" data-toggle="modal" data-target="#orders-per-account-modal-PDF">
+                      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> </span>
+                    </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="col-md-12 col-lg-12">
+            <h4> 
+              Periodo: <span ng-bind="nombrePeriodo" class="text-info"></span>
+              Fecha Inicio: <span ng-bind="fechaInicioPeriodo" class="text-info"></span>
+              Efectivo: {{totalEfectivo | currency:"₡"}}
+              Tarjeta: {{totalTarjeta | currency:"₡"}}
+              Total: {{total | currency:"₡"}}
+            </h4>
+          </div>
+               <div class="btn-group mr-1 col-md-3 pull-left">
+              <button id="btnProuctRefresh" ng-click="refreshCuenta();" type="button" class="btn btn-default">
+                <span class="fa fa-refresh"></span>
+              </button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- MODAL ORDENES DE LA FACTURA -->
+<div id="orders-per-account-modal" class="modal fade" role="dialog">
+<div class="modal-dialog modal-sm" role="document">
+  <!-- Modal content-->
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Ordenes de la Factura</h4>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class=" form-group" >
+          <p><b> Factura:</b> {{idFactura}} <b> Cuenta:</b> {{idCuenta}}</p>
+          <p><b> Fecha Factura:</b> {{fecha}}</p>
+          <p><b> Empleado:</b> {{nombreEmpleado}}</p>
+          <!--<div class="form-group">-->
+          <table>
+            <thead class="tableHeaders">
+              <tr>
+                <th>
+                  <p><b>Cantidad &nbsp; </b></p>
+                </th>
+                <th>
+                  <p><b>Producto &nbsp; </b></p>
+                </th>
+                <th>
+                  <p><b>SubTotal &nbsp;</b></p>
+                </th>
+              </tr>
+            </thead>
+            <tbody style="height: auto">
+              <tr  ng-repeat="item in ordersElements track by $index">
+                <td>{{item.cantidadproducto}}</td>
+                <td >
+                  <p><b> &nbsp; </b> {{item.descripcionproducto}} &nbsp; &nbsp;</p>
+                </td>
+                <td>
+                  <p><b> &nbsp; </b> {{item.subtotal | currency:"₡"}} &nbsp; &nbsp;</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--</div>-->
+<!--          <div align="right"> -->
+          <div>
+            <b> Forma Pago: </b> 
+            <select class="form-control" name="formasPago" id="txtFormaPago">
+              <option ng-repeat="itm in formasPago" value="{{itm}}">{{itm}}</option>
+            </select>
+          </div>
+          <p><b> Periodo Venta:</b> {{periodo}}</p>
+          <p><b> Sub Total:</b> {{subTotalPagar | currency:"₡"}}</p>
+          <p><b> Descuento:</b> {{porcentajeDescuento}}%</p>
+          <p><b> Monto Descuento:</b> {{totalDescuento | currency:"₡"}}</p>
+          <p><b> Total:</b> {{totalPagar | currency:"₡"}}</p>
+          <p><b> Por Persona:</b> {{montoPorPersona | currency:"₡"}}</p>
+<!--          </div> -->
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div>
+        <center>
+          <button id="btnActualizar" type="reset" class="btn btn-primary" data-dismiss="modal" ng-click="actualizarCuenta(idFactura);"> Actualizar</button>
+          <button id="btnEliminar" type="reset" class="btn btn-primary" data-dismiss="modal" data-target="#delete-bill-modal" ng-click="deleteBill();"> Anular Factura</button>
+          <button id="idBtnCnta" type="submit" class="btn btn-primary" data-dismiss="modal" ng-click="imprimir_cuenta();"> Imprimir</button>
+          <button type="reset" class="btn btn-default" data-dismiss="modal"> Cancelar</button>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MODAL ORDENES DE LA FACTURA PDF -->
+<div id="orders-per-account-modal-PDF" class="modal fade" role="dialog">
+<div class="modal-dialog modal-lg" role="document">
+  <!-- Modal content-->
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Factura: {{responsePDF[0].idfactura}}</h4>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div id="pdf-bill" class=" form-group" >
+
+          <div id="pdfGroup1">
+            <div id="pdfHeader1">
+              <p align="center">{{responsePDF[0].emisor_nombre}}</p>
+              <p align="center">Ced: {{responsePDF[0].emisor_numero}}</p>
+              <p align="center">Tel: {{responsePDF[0].emisor_telefono_codigopais}}-{{responsePDF[0].emisor_telefono_numtelefono}}</p>
+              <p align="center">{{responsePDF[0].correoelectronico}}</p>
+              <p align="center">{{responsePDF[0].nombre_provincia}}/{{responsePDF[0].nombre_canton}}/{{responsePDF[0].nombre_distrito}}</p>
+            <p align="center">______________________________</p>
+              <hr>
+            </div>
+
+            <div id="pdfHeader2">
+              <p align="left">Fact# {{responsePDF[0].idfactura}}</p>
+              <p></p>
+              <p align="left">Clv# {{responsePDF[0].clavenumerica}}</p>
+              <p align="left">Consecutivo# {{responsePDF[0].consecutivo}}</p>
+              <p align="left">Tipo Documento: {{responsePDF[0].tipoComprobante_description}}</p>
+              <p></p>
+              <p align="left">Fecha: {{responsePDF[0].fecharegistrofacturaFormat}}</p>
+            <p align="center">______________________________</p>
+              <hr>
+            </div>
+
+            <div id="pdfBody1">
+              <hr>
+              <p align="right">Total Serv Gravados: {{responsePDF[0].totalservgravados}}</p>
+              <p align="right">Total Serv Excentos: {{responsePDF[0].totalservexentos}}</p>
+              <p align="right">Total Merc Gravadas: {{responsePDF[0].totalmercanciasgravadas}}</p>
+              <p align="right">Total Merc Excentas: {{responsePDF[0].totalmercanciasexentas}}</p>
+              <p></p>
+              <hr>
+              <p align="right">Total Gravado: {{responsePDF[0].totalgravado}}</p>
+              <p align="right">Total Excento: {{responsePDF[0].totalexento}}</p>
+              <p align="right">Total Venta: {{responsePDF[0].totalventa}}</p>
+              <p></p>
+              <hr>
+              <p align="right">Total Descuento: {{responsePDF[0].totalgravado}}</p>
+              <p align="right">Total Venta Neta: {{responsePDF[0].totalventaneta}}</p>
+              <p align="right">Total Impuestos: {{responsePDF[0].totalimpuesto}}</p>
+              <p></p>
+              <hr>
+              <p align="right"><b>Total Comprobante: {{responsePDF[0].totalcomprobante}}</b></p>
+              <p></p>
+              <hr>
+              <p align="right">{{normativa}}</p>
+            </div>
+          </div>
+
+          <div id="pdfGroup2">
+            <p align="center">______________________________</p>
+            <table id="pdfTable" class="table table-striped">
+            <colgroup>
+              <col width="10%">
+              <col width="50%">
+              <col width="40%">
+            </colgroup>
+            <thead class="tableHeaders">
+              <tr>
+                <th>
+                  <p><b>Cant &nbsp; </b></p>
+                </th>
+                <th>
+                  <p><b>Producto &nbsp; </b></p>
+                </th>
+                <th>
+                  <p><b>SubTotal &nbsp;</b></p>
+                </th>
+              </tr>
+            </thead>
+            <tbody style="height: auto">
+              <tr  ng-repeat="item in responsePDF_Body track by $index">
+                <td>{{item.cantidadproducto}}</td>
+                <td>
+                  <p><b> &nbsp; </b> {{item.descripcionproducto}} &nbsp; &nbsp;</p>
+                </td>
+                <td>
+                  <p><b> &nbsp; </b> {{item.subtotal | currency:"₡"}} &nbsp; &nbsp;</p>
+                </td>
+              </tr>
+            </tbody>
+            </table>
+            <p align="center">______________________________</p>
+          </div>
+
+        </div>
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div>
+        <center>
+          <button type="submit" class="btn btn-primary" data-dismiss="modal" ng-click="imprimir_pdf(idFactura);"> Imprimir</button>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<!--DELETE FACTURA MODAL-->
+<div id="delete-bill-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea Anular?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="billFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtIdFacturaDelete" ng-model="idfactura" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button id="btnDeleteBill" ng-click="eliminarCuenta(idFactura);" type="submit" class="btn btn-primary pull-left" data-dismiss="modal">Anular</button>
+                    <button type="reset" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="nota-credito-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm" role="document" id="modalListaFacturas">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title"><strong>Nota de crédito</strong></h4></center>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group" >
+            <p ><b> Factura:</b> {{idFactura}} <b> Cuenta:</b> {{idCuenta}}
+            <p ><b> Fecha Factura:</b> {{fecha}}</p>
+            <b > Clave numérica: </b>{{claveNumericaReferencia}}</p>
+            <p><b> Empleado:</b> {{nombreEmpleado}}</p>
+            <!--<div class="form-group">-->
+            <table id="nota-credito">
+              <thead class="tableHeaders">
+                <tr>
+                <th>
+                    <p><b>Descuento &nbsp; </b></p>
+                  </th>                
+                  <th>
+                    <p><b>Cantidad &nbsp; </b></p>
+                  </th>
+                  <th>
+                    <p><b>Producto &nbsp; </b></p>
+                  </th>
+                  <th>
+                    <p><b>Precio &nbsp;</b></p>
+                  </th>
+                  <th>
+                    <p><b>SubTotal &nbsp;</b></p>
+                 
+                  <th>
+                    <p><b>Aumentar &nbsp; </b></p>
+                  </th>
+                  <th>
+                    <p><b>Disminuir &nbsp; </b></p>
+                  </th>
+                   <th>
+                    <p><b>Habilitar &nbsp; </b></p>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in ordersElementsModal track by $index" style="background-color: #BFBFBF;" class="tr">
+                
+                 <td id="descuentolinea">
+                    <input type="number" id="descuentoorden" value="{{item.descuentoorden}}" readonly>
+                 </td>
+                  <td id="cantidad">
+                    <input type="number" class="cantidadproducto" value="{{item.cantidadproducto}}" ng-model="cantidad"  idorden="{{item.idorden}}" ng-keydown="KeyBackspace($event);" disabled>
+                  </td>
+                  <td >
+                    <p><b> &nbsp; </b> {{item.descripcionproducto}} &nbsp; &nbsp;</p>
+                  </td>
+                  <td >
+                    <p><b> &nbsp; </b> {{item.preciounitarioproducto}} &nbsp; &nbsp;</p>
+                  </td>
+                  <td>
+                    <p id="subtotal_orden_nota_credito"><b> &nbsp; </b> {{item.subtotal | currency:"₡"}} &nbsp; &nbsp;</p>
+                  </td>
+                
+                 <!-- <td id="Eliminar">
+                    <button class="btn btn-warning" id="btn_eliminarOrden" ng-click="eliminarOrden(item)" idorden="{{item.idorden}}"><i class="fa fa-times-rectangle-o"></i></i></button>
+                  </td>  -->
+                  <td id="Aumentar">
+                    <button class="btn btn-warning btn_aumentarCantidadCredito" id="btn_aumentarCantidadCredito" ng-click="editarCantidadCredito(item,1,'cantidadproducto','credito')" idorden="{{item.idorden}}"><i class="glyphicon glyphicon-plus"></i></i></button>
+                  </td>
+                  <td id="Disminuir">
+                    <button class="btn btn-warning btn_disminuirCantidadCredito" id="btn_disminuirCantidadCredito" ng-click="editarCantidadCredito(item,2,'cantidadproducto','credito','btn_aumentarCantidadCredito','btn_disminuirCantidadCredito')" idorden="{{item.idorden}}"><i class="glyphicon glyphicon-minus"></i></i></button>
+                  </td>  
+                  <td id="Habilitar"> <!-- Material unchecked -->
+                    
+                        <label class="btn btn-warning">
+                          <input type="checkbox" autocomplete="off" class="check">
+                        </label>
+                                          
+                    
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!--</div>-->
+  <!--          <div align="right"> -->
+           
+             <div style="border: 2px solid #eaeaea; padding: 5px; border-radius: 4px;">
+                <b> Forma Pago: {{formapago}} </b> 
+              
+            <p><b> Periodo Venta:</b> {{periodo}}</p>
+            <p id="subtotal_nota_credito"><b> Sub Total:</b> {{subTotalPagar | currency:"₡"}}</p>
+            <p ><b> Descuento:</b> {{porcentajeDescuento}}%</p>
+            <p ><b> Monto Descuento:</b> {{totalDescuento | currency:"₡"}}</p>
+            <p ><b> Total:</b> {{ totalPagar | currency:"₡"}}</p>
+            <p><b> Por Persona:</b> {{montoPorPersona | currency:"₡"}}</p>
+
+            </div>
+  <!--          </div> -->
+          </div>
+        </form>
+         <div class="form-group" style="border: 2px solid #eaeaea; padding: 5px; border-radius: 4px;">
+         <br>
+      <select  class="form-control" id="id_distrito" ng-model="factura.referencia_nota_credito" required ng-options='item as item.descripcion for item in referencia track by item.id'>
+            <option value="" disabled><strong>Referencia</strong></option>
+      </select>
+              <br>
+                <p ng-model="factura_nc.consecutivo"><strong># Consecutivo:</strong> {{consecutivo_nota}}</p>
+              <br>
+                <p><strong>Razón:</strong> 
+              <br>
+            <textarea id="consecutivo_nota_credito" cols="50" rows="3" class="form-control" ng-model="factura_nc.razon"></textarea></p>
+                      
+      </div>
+                  <!-- id="consecutivo_nota_credito" -->
+      </div>
+      <div class="modal-footer">
+        <div>
+          <center>
+            <button id="btnActualizar" type="reset" class="btn btn-primary" data-dismiss="modal" ng-click="cacularDatosNota(ordersElementsModal,1)"> Aplicar Nota</button>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SUMAR EL IMPUESTO AUTOMATICAMENTE AL PRECIO DEL PRODUCTO -->
+<!--DESCRIPCION, CATEGORIA, TIPO PRODUCTO, COSTO UNITARIO, <hr> PRECIO SIN IMPUESTO, CON IMPUESTO, IMPUESTO PRODUCTO, PORCENTAJE DE IMPUESTO, MONTO IMPUESTO --> 
+<div id="nota-debito-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm" role="document" id="modalListaFacturas">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title"><strong>Nota de débito</strong></h4></center>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group" >
+            <p ><b> Factura:</b> {{idFactura}} <b> Cuenta:</b> {{idCuenta}}
+            <p ><b> Fecha Factura:</b> {{fecha}}</p>
+            <b > Clave numérica: </b>{{claveNumericaReferencia}}</p>
+            <p><b> Empleado:</b> {{nombreEmpleado}}</p>
+            <!--<div class="form-group">-->
+            <table id="nota-debito">
+              <thead class="tableHeaders">
+                <tr>
+                <th>
+                    <p><b>Descuento &nbsp; </b></p>
+                  </th>                
+                  <th>
+                    <p><b>Cantidad &nbsp; </b></p>
+                  </th>
+                  <th>
+                    <p><b>Producto &nbsp; </b></p>
+                  </th>
+                  <th>
+                    <p><b>Precio &nbsp;</b></p>
+                  </th>
+                  <th>
+                    <p><b>SubTotal &nbsp;</b></p>
+                </th>
+                 <th>
+                    <p><b>Aumentar &nbsp; </b></p>
+                  </th>
+                  <th>
+                    <p><b>Disminuir &nbsp; </b></p>
+                  </th>
+                 <th>
+                    <p><b>Habilitar &nbsp; </b></p>
+                  </th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in ordersElementsModal track by $index" style="background-color: #BFBFBF;" class="tr2">
+                 <td id="descuentolinea">
+                    <input type="number" id="descuentoorden" value="{{item.descuentoorden}}" readonly>
+                 </td>
+                  <td id="cantidad">
+                    <input type="number" class="cantidadproducto2" value="{{item.cantidadproducto}}" ng-model="cantidad"  ng-keydown="KeyBackspace($event);" idorden="{{item.idorden}}">
+                  </td>
+                  <td>
+                    <p><b> &nbsp; </b> {{item.descripcionproducto}} &nbsp; &nbsp;</p>
+                  </td>
+                  <td>
+                    <p><b> &nbsp; </b> {{item.preciounitarioproducto}} &nbsp; &nbsp;</p>
+                  </td>
+                  <td>
+                    <p id="subtotal_orden_nota_credito"><b> &nbsp; </b> {{item.subtotal | currency:"₡"}} &nbsp; &nbsp;</p>
+                  </td>
+                       <td id="Aumentar">
+                    <button class="btn btn-warning btn_aumentarCantidadCredito2" id="btn_aumentarCantidadCredito" ng-click="editarCantidadCredito(item,1, 'cantidadproducto2','debito','btn_aumentarCantidadCredito2','btn_disminuirCantidadCredito2')" idorden="{{item.idorden}}"><i class="glyphicon glyphicon-plus"></i></i></button>
+                  </td>
+                  <td id="Disminuir">
+                    <button class="btn btn-warning btn_disminuirCantidadCredito2" id="btn_disminuirCantidadCredito" ng-click="editarCantidadCredito(item,2,'cantidadproducto2','debito')" idorden="{{item.idorden}}"><i class="glyphicon glyphicon-minus"></i></i></button>
+                  </td>  
+                     <td id="Habilitar"> <!-- Material unchecked -->
+                    
+                        <label class="btn btn-warning">
+                          <input type="checkbox" autocomplete="off" class="check2">
+                        </label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!--</div>-->
+  <!--          <div align="right"> -->
+           
+             <div style="border: 2px solid #eaeaea; padding: 5px; border-radius: 4px;">
+                <b> Forma Pago: {{formapago}} </b> 
+              
+            <p><b> Periodo Venta:</b> {{periodo}}</p>
+            <p id="subtotal_nota_credito"><b> Sub Total:</b> {{subTotalPagar | currency:"₡"}}</p>
+            <p ><b> Descuento:</b> {{porcentajeDescuento}}%</p>
+            <p ><b> Monto Descuento:</b> {{totalDescuento | currency:"₡"}}</p>
+            <p ><b> Total:</b> {{ totalPagar | currency:"₡"}}</p>
+            <p><b> Por Persona:</b> {{montoPorPersona | currency:"₡"}}</p>
+
+            </div>
+  <!--          </div> -->
+          </div>
+        </form>
+         <div class="form-group" style="border: 2px solid #eaeaea; padding: 5px; border-radius: 4px;">
+         <br>
+      <select  class="form-control" id="id_distrito" ng-model="factura.referencia_nota_credito" required ng-options='item as item.descripcion for item in referencia track by item.id'>
+            <option value="" disabled><strong>Referencia</strong></option>
+      </select>
+              <br>
+                <p ng-model="factura_nc.consecutivo"><strong># Consecutivo:</strong> {{consecutivo_nota}}</p>
+              <br>
+                <p><strong>Razón:</strong> 
+              <br>
+            <textarea id="consecutivo_nota_credito" cols="50" rows="3" class="form-control" ng-model="factura_nc.razon"></textarea></p>
+                      
+      </div>
+                  <!-- id="consecutivo_nota_credito" -->
+      </div>
+      <div class="modal-footer">
+        <div>
+          <center>
+            <button id="btnActualizar" type="reset" class="btn btn-primary" data-dismiss="modal" ng-click="cacularDatosNota(ordersElementsModal,2)"> Aplicar Nota</button>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

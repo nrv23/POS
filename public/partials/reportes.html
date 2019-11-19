@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<head>
+  <style type="text/css">
+    .facturaSelected{
+       background-color: #F0F8FF;
+    }
+    #modalListaFacturas{
+      width: 70% !important;
+    }
+
+    #consecutivo_nota_credito{
+        resize: none
+    }
+    #select_descuento{
+      width: 60%;
+      border-radius: 4px;
+    }
+
+    .cantidadproducto, .cantidadproducto2 ,#descuentoorden{
+      width: 60%;
+      border-radius: 4px;
+    }
+
+    #descuentoorden{
+      background-color: silver;
+
+    }
+    #txtFormaPagoNotaCredito{
+      color: black;
+    }
+
+  </style>
+</head>
+<div class="wrapper">
+  <div class="container-fluid">
+    <div class="row col-md-push-12">
+      &nbsp&nbsp&nbsp&nbsp&nbsp
+     
+      <!-- Boton de Refresh -->
+      <!--<button id="btnProuctRefresh" ng-click="refreshDashboard();" type="button" class="btn btn-default">
+        <span class="fa fa-refresh"></span>-->
+      </button>
+      <button id="btnShowSales" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#busqueda-fecha-modal" > Buscar por fecha</button>&nbsp;&nbsp;
+      <!-- Botones de templates-->
+      <button id="btnShowSales" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#busqueda-fechas-modal" > Buscar por fechas</button>&nbsp;&nbsp;
+      <button id="btnShowSales" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#busqueda-cedula-modal" > Buscar por cedula</button>&nbsp;&nbsp;
+      <button id="btnShowSales" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#busqueda-clave-modal" > Buscar por clavenumerica</button>&nbsp;&nbsp;     
+      <!-- Boton de Refresh busqueda-impuesto-modal-->
+      <button id="btnShowSales" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#busqueda-impuesto-modal" > Buscar por impuesto</button>  
+    </div>
+    <div>&nbsp</div>
+    <div class="row">
+      
+      <div>
+          <div ng-include="'/shared/search.html'"></div>
+        <h4> 
+          <!-- Boton de Reporte2 -->
+          <button id="btnReporteHacienda" ng-click="exportTableToExcel(listaBusqueda);" type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> </span>
+          </button>
+          Hora Actual: {{ horaReloj }}
+        </h4>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="float: right">
+            <div class="col-md-5">
+            
+                <h3>
+                    Filtro: {{filtroBusquda}}
+                    <br>
+                    #Resultados: {{numeroResultados}}
+                  </h3>
+              </div>
+          <div class="col-md-2">
+              <div class="form-group">
+                  <select class="form-control" id="tipoFacturaReportes" ng-model="reporte.tipo_factura"
+                    ng-options="tipo as tipo.tipo for tipo in listaTiposComprobante track by tipo.codigo"
+                    ng-change="filtroTipoFactura(reporte.tipo_factura)"
+                  >
+                    <option value="">Tipo Factura</option>
+                    </select>
+                </div>
+          </div>
+          <div class="col-md-2">
+              <div class="form-group">
+                  <select class="form-control" id="medioPago_Reportes" ng-model="reporte.medio_pago"
+                    ng-options="medio as medio.MediosDePago for medio in listaMediosPago track by medio.Codigo"
+                    ng-change="filtroMedioPago(reporte.medio_pago)"
+                  >
+                    <option value="">Medio Pago</option>
+                    </select>
+                </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+                <select class="form-control" id="condicion_venta_Reportes" ng-model="reporte.condicion_venta"
+                  ng-options='condicion.condicion for condicion in listaCondicionVenta track by condicion.codigo'
+                  ng-change="filtroCondicionVenta(reporte.condicion_venta)"
+                >
+                  <option value="">Condicion Venta</option>
+                  </select>
+              </div>
+        </div>
+        
+        </div>
+       
+
+    </div>
+    <div class="row content background-image">
+      <div class="col-md-12">
+        <ng-include src="template"></ng-include>
+      </div>    
+    </div>
+  </div>
+</div>
+
+<script type="text/ng-template" id="reportes">
+  <div class="table-responsive">
+    <table class="table table-hover table-condensed table-fixed cf" id="tablaDetalles">
+      <thead class="cf">
+        <tr>
+          <th ng-click="sortDashboard('clavenumerica')"><a>Clave</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='fecha_date'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('receptor_numero')"><a>Cedula</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='idempleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('tipo')"><a>Tipo</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='nombreperiodo'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <!--
+          <th ng-click="sortDashboard('estadoperiodo')"><a>Estado</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='estadoperiodo'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          -->
+          <th ng-click="sortDashboard('totalventa')"><a>Total</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='efectivos'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('medio_pago')"><a>Medio Pago</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='tarjetas'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('fecharegistrofactura')"><a>Fecha</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='subtotal'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <!--
+          <th ng-click="sortDashboard('efectivosdescuentos')"><a>Descuento Efectivo</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='efectivosdescuentos'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('tarjetasdescuentos')"><a>Descuento Tarjeta</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='tarjetasdescuentos'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          -->
+          <th ng-click="sortDashboard('status')"><a>Estado</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='descuento'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('total')"><a>Ver</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='total'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="summaryTable">
+        
+        <tr ng-repeat="summary in listaBusqueda | orderBy:sortKey:reverse | filter:search">
+          {{summary.clavenumerica}}
+          <td ng-click="rowClicked(summary)" style="max-height: auto; word-wrap: break-word;" id="clave">{{summary.clavenumerica}}
+          </td>
+          <td ng-click="rowClicked(summary)">{{summary.receptor_numero}}</td>
+          <td ng-click="rowClicked(summary)">{{summary.tipo}}</td>
+          <!-- <td ng-click="rowClicked(summary)">{{summary.estadoperiodo}}</td> -->
+          <td align="left" ng-click="rowClicked(summary)">{{summary.totalventa | currency:"₡"}}</td>
+          <td align="left" ng-click="rowClicked(summary)">{{summary.medio_pago}}</td>
+          <td align="left" ng-click="rowClicked(summary)">{{summary.fecharegistrofactura | date:'dd/MMM/yy HH:mm:ss':'-0600'}}</td>
+          <!-- <td align="left" ng-click="rowClicked(summary)">{{summary.efectivosdescuentos | currency:"₡"}}</td>
+          <td align="left" ng-click="rowClicked(summary)">{{summary.tarjetasdescuentos | currency:"₡"}}</td> -->
+          <td align="left" ng-click="rowClicked(summary)">{{summary.status}}</td>
+          <td align="left" ng-click="rowClicked(summary)"><button class="btn btn-warning" ng-Click="loadDataFactura(summary)"  data-toggle="modal" data-target="#detalle-factura-modal"><span class="glyphicon glyphicon-eye-open"></span></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>   
+</script>
+
+<div id="busqueda-fechas-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+     <!-- Modal content-->
+     <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+           <h4 class="modal-title">Busqueda</h4>
+        </div>
+        <!-- ORDER TABLE DISCOUNT -->
+        <div class="modal-body">
+              
+               <form id="busquedaFechasForm" method="POST" role="form" novalidate  name="busquedaFechasForm">
+                <div class="form-group">
+                    <label for="fecha1" style="color: #3F3933">Fecha Inicial:</label> 
+                  <input 
+                  type="date" class="form-control" id="fecha1" ng-model="busqueda.fecha1"
+                  />
+                 </div>
+                   
+                   <div class="form-group">
+                      <label for="fecha2" style="color: #3F3933">Fecha Final:</label>
+                    <input 
+                    type="date" class="form-control" id="fecha2" ng-model="busqueda.fecha2"
+                    />
+                   </div>
+
+               </form>
+        </div>
+        <div class="modal-footer">
+           <div class="pull-left">
+              <button id="btnBuscarPorFechas" ng-click= "BuscarPorFechas(busqueda,'')" type="submit" class="btn btn-primary" >Buscar</button>
+                   <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+
+<div id="busqueda-cedula-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm" >
+     <!-- Modal content-->
+     <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+           <h4 class="modal-title">Busqueda</h4>
+        </div>
+        <!-- ORDER TABLE DISCOUNT -->
+        <div class="modal-body">
+              
+               <form id="busquedaCedulaForm" method="POST" role="form" novalidate>
+
+                   <div class="form-group" ng-class="{ 'has-error' : busquedaCedula.numerocedula.$invalid && !busquedaCedula.numerocedula.$pristine }">
+                      
+                      <label for="txtcedula" style="color: #3F3933">Cedula:</label>
+                       <input type="text" class="form-control validateAlphanumeric" id="txtcedula" placeholder="Digite el numero de cedula"  size="12" maxLength="12" ng-model="busquedaCedula.numerocedula">
+                   </div>
+               </form>
+        </div>
+        <div class="modal-footer">
+           <div class="pull-left">
+              <button id="btnActualizarDescuento" ng-click= "busquedaPorCedula(busquedaCedula);" type="submit" class="btn btn-primary" ng-disabled="busquedaCedulaForm.$invalid">Buscar</button>
+                   <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+
+<div id="busqueda-clave-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+     <!-- Modal content-->
+     <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+           <h4 class="modal-title">Busqueda</h4>
+        </div>
+        <!-- ORDER TABLE DISCOUNT -->
+        <div class="modal-body">
+              
+               <form id="busquedaClaveForm" method="POST" role="form" novalidate>
+                  
+                   <div class="form-group" ng-class="{ 'has-error' : busquedaClave.numeroclave.$invalid && !busquedaClave.numeroclave.$pristine }">
+                      <label for="txtclavenumerica" style="color: #3F3933">Clavenumérica:</label>
+                    <input type="text" class="form-control validateAlphanumeric" id="txtclavenumerica" placeholder="Digite el numero de la clavenumerica"  size="50" maxLength="50" ng-model="busquedaClave.numeroclave">
+                   </div>
+               </form>
+        </div>
+        <div class="modal-footer">
+           <div class="pull-left">
+              <button id="btnActualizarDescuento" ng-click= "busquedaPorClave(busquedaClave);" type="submit" class="btn btn-primary" ng-disabled="busquedaClaveForm.$invalid">Buscar</button>
+                   <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+
+<div id="busqueda-fecha-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+     <!-- Modal content-->
+     <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+           <h4 class="modal-title">Busqueda</h4>
+        </div>
+        <!-- ORDER TABLE DISCOUNT -->
+        <div class="modal-body">
+              
+               <form id="busquedaFechaForm" method="POST" role="form" novalidate  name="busquedaFechaForm">
+                <div class="form-group">
+                  <label for="fecha" style="color: #3F3933">Fecha:</label>
+                  <input 
+                  type="date" class="form-control" id="fecha" ng-model="busqueda.fecha"
+                  />
+                 </div>
+               </form>
+        </div>
+        <div class="modal-footer">
+           <div class="pull-left">
+              <button id="btnBuscarPorFecha" ng-click= "BuscarPorFechas(busqueda,'fecha')" type="submit" class="btn btn-primary" >Buscar</button>
+                   <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+
+
+<div id="busqueda-impuesto-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+     <!-- Modal content-->
+     <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+           <h4 class="modal-title">Busqueda</h4>
+        </div>
+        <!-- ORDER TABLE DISCOUNT -->
+        <div class="modal-body">
+              
+               <form id="busquedaImpuestoForm" method="POST" role="form" novalidate  name="busquedaImpuestoForm">
+                <div class="form-group">
+                    <label for="impuesto" style="color: #3F3933">Impuesto:</label> 
+                    <select id="impuesto" class="form-control" ng-model="busquedaImpuesto.impuesto" ng-options="impuesto.descripcion_impuesto for impuesto in arrayImpuestos track by impuesto.codigo_impuesto"
+                      ng-change=loadTipoImpuesto(busquedaImpuesto.impuesto)
+                    >
+                      <option value="">Seleccione Impuesto</option>
+                    </select>
+                </div>
+                   
+                <div class="form-group">
+                      <label for="tipoimpuesto" style="color: #3F3933">Tipo de Impuesto:</label>
+                      <select id="tipoimpuesto" class="form-control" ng-model="busquedaImpuesto.tipoimpuesto"
+                        ng-options= "tipoimpuesto.descripcion for tipoimpuesto in subImpuestoSeleccionado track by tipoimpuesto.idimpuesto"
+                      >
+                        <option value="">Seleccione TipoImpuesto</option>
+                      </select>
+                   </div>
+               </form>
+        </div>
+        <div class="modal-footer">
+           <div class="pull-left">
+              <button id="btnBuscarPorImpuesto" ng-click= "BuscarPorImpuesto(busquedaImpuesto)" type="submit" class="btn btn-primary" >Buscar</button>
+                   <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+<!--  -------------------------------------------------------------------------- -->
+
+<div id="detalle-factura-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm" role="document" id="modalListaFacturas">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title" id="titulo"><strong>{{titulo}}</strong></h4></center>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group" >
+            <p ><b> Factura:</b> {{idComprobante }}
+            <p ><b> Fecha </b> {{fechaEmisionComprobante | date:'dd/MMM/yy HH:mm:ss':'-0600'}}</p>
+            <b > Clavenumérica: </b>{{claveComprobante}}</p>
+            <p ><b>Consecutivo:</b> {{consecutivoComprobante}}</p>
+            <p ><b>Estado comprobante:</b> <b>{{estado}}</b></p>
+  
+            <!--<div class="form-group">-->
+            <table id="nota-credito">
+              <thead class="tableHeaders">
+                <tr>
+                <th>
+                      <p><b>% Descuento &nbsp; </b></p>
+                </th>  
+                <th>
+                    <p><b>Monto <br> Descuento &nbsp; </b></p>
+                  </th>                
+                  <th>
+                    <p><b>Cantidad &nbsp; </b></p>
+                  </th>
+                  <th>
+                    <p><b>Producto &nbsp; </b></p>
+                  </th>
+                  <th>
+                    <p><b>Precio &nbsp;</b></p>
+                  </th>
+                  <th>
+                    <p><b>SubTotal &nbsp;</b></p>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr ng-repeat="item in listaOrdenesFactura track by item.idorden">
+                  <td>
+                        <p><b> &nbsp; </b> {{item.descuentoorden}} &nbsp; &nbsp;</p>
+                           
+                  </td>
+                  <td>
+                 <p><b> &nbsp; </b> {{item.montodescuento}} &nbsp; &nbsp;</p>
+                    
+                 </td>
+                  <td>
+                  <p><b> &nbsp; </b> {{item.cantidadproducto}} &nbsp; &nbsp;</p>
+                  </td>
+                  <td >
+                    <p><b> &nbsp; </b> {{item.descripcionproducto}} &nbsp; &nbsp;</p>
+                  </td>
+                  <td >
+                    <p><b> &nbsp; </b> {{item.preciounitarioproducto}} &nbsp; &nbsp;</p>
+                  </td>
+                  <td>
+                    <p ><b> &nbsp; </b> {{item.total_orden | currency:"₡"}} &nbsp; &nbsp;</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!--</div>-->
+  <!--          <div align="right"> -->
+           
+             <div style="border: 2px solid #eaeaea; padding: 5px; border-radius: 4px;">
+                <h4 style="margin: 0 auto"><b>Detalle de Comprobante</b></h4><br>
+                <b> Forma Pago: {{formapago}} </b> 
+                <p><b> Sub Total:</b> {{subtotalComprobante | currency:"₡"}}</p>
+                <p><b> Monto Descuento:</b> {{descuentoComprobante | currency:"₡"}}</p>
+                <p><b> Total Gravado:</b> {{totalgravado | currency:"₡"}}</p>
+                <p><b> Total Excento:</b> {{totalexcento | currency:"₡"}}</p>
+                <p><b> Mercancias Gravadas:</b> {{mercgravada | currency:"₡"}}</p>
+                <p><b> Mercancias Excentas:</b> {{totalmercexcenta | currency:"₡"}}</p>
+                <p><b> Servicios Excentos:</b> {{servexcentos | currency:"₡"}}</p>
+                <p><b> Servicios Gravados:</b> {{servgravados | currency:"₡"}}</p>
+                <p><b> Total Impuesto:</b> {{totalimpuesto | currency:"₡"}}</p>
+                <p><b> Venta Total:</b> {{ totalventa | currency:"₡"}}</p>
+            </div>
+  <!--          </div> -->
+          </div>
+        </form>
+
+      <div class="form-group" style="border: 2px solid #eaeaea; padding: 5px; border-radius: 4px;">
+        <p><a  href="/download?tipo=xml&clave={{claveComprobante}}&id={{idComprobante}}" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-down"></span></a><b> XML de comprobante</b></p>
+        <p> <a href="/download?tipo=acuse&clave={{claveComprobante}}&id={{idComprobante}}"  class="btn btn-primary"><span class="glyphicon glyphicon-arrow-down"></span></a><b> Acuse de comprobante</b></p>     
+        <button class="btn btn-primary"><span class="glyphicon glyphicon glyphicon-list-alt"
+          ng-click="enviarReporte()"></span></button>
+          <b> Enviar reporte a correo electrónico</b>
+                          
+      </div>
+      <div class="modal-footer">
+        <div>
+          <center>
+            <button id="btnAceptar" type="reset" class="btn btn-primary" data-dismiss="modal" > Aceptar</button>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

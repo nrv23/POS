@@ -1,0 +1,6 @@
+development:
+  url: postgresql://black>admin@localhost:5432/SOPA?ssl=true
+  adapter: postgresql
+  database: SOPA
+  host: localhost
+  password: admin

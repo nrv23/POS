@@ -1,0 +1,91 @@
+c<!DOCTYPE html>
+<div class="wrapper">
+  <div class="container-fluid">
+    <h1 style="color:white;">Configuracion de credenciales</h1>
+    <div class="row content">
+       <button class="btn btn-home"><a href="#!/restaurante">Ventas</a><span class="glyphicon glyphicon-home"></span></button>
+       <br>
+        <label style="font-size: 25px;">Todos los campos son requeridos</label>
+        <br>
+        <form class="form-horizontal" emisor_form>
+          <!--Nombre -->
+
+           <div class="form-group jf-required">
+                     <label class="control-label col-sm-2">Nombre completo:</label><br>
+                    <input type="text" ng-model="emisor.nombrecompleto" data-type="input-textbox" class="form-textbox validateLetters"  maxlength="30" data-component="textbox" required="" id="nombrecompleto" placeholder="Nombre completo" style="color: black; " />
+                     
+                </div>
+
+            <div class="form-group jf-required">
+                     <label class="control-label col-sm-2">Usuario API:<span class="form-required"></span></label><br>
+                    <input type="text" ng-model="emisor.username" data-type="input-textbox" class="form-textbox validateAlphanumeric"  maxlength="20" data-component="textbox" required="" id="username" placeholder="Nombre de usuario" style="color: black; "/>
+                </div>
+
+                <div class="form-group jf-required">
+                     <label class="control-label col-sm-2">Contraseña API:<span class="form-required"></label><br>
+                    <input type="password"  ng-model="emisor.pwd" data-type="input-textbox" class="form-textbox validateAlphanumeric"  maxlength="20" data-component="textbox" required="" id="pwd" placeholder="Contraseña" style="color: black; "/>
+                </div>
+
+                <div class="form-group jf-required">
+                  <label class="control-label col-sm-2">idUser API:<span class="form-required"></label><br>
+                 <input type="text"  ng-model="emisor.idUserAPI" data-type="input-textbox" class="form-textbox validateAlphanumeric"  maxlength="10" data-component="textbox" required="" id="idUserAPI" placeholder="idUserAPI" style="color: black; "/>
+              </div>
+
+                <div class="form-group jf-required">
+                  <label class="control-label col-sm-2">idFile del p12 en la API:<span class="form-required"></label><br>
+                 <input type="text"  ng-model="emisor.idFile" data-type="input-textbox" class="form-textbox validateAlphanumeric"  maxlength="8" data-component="textbox" required="" id="idFile" placeholder="idFile" style="color: black; "/>
+                </div>
+
+                <div class="form-group jf-required">
+                  <label class="control-label col-sm-2">downloadCode del p12 en la API:<span class="form-required"></label><br>
+                 <input type="text"  ng-model="emisor.downloadCode" data-type="input-textbox" class="form-textbox validateAlphanumeric"  maxlength="64" size="45" data-component="textbox" required="" id="downloadCode" placeholder="downloadCode" style="color: black; "/>
+                </div>
+
+
+                  <div class="form-group jf-required">
+                     <label class="control-label col-sm-2">Usuario llave criptográfica:<span class="form-required"></span></label>
+                    <input type="text" ng-model="emisor.key_username" data-type="input-textbox" class="form-textbox validateAlphanumeric"  maxlength="52" size="45" data-component="textbox" required="" id="key_username" placeholder="Nombre de usuario" style="color: black; "/>
+                </div>
+
+                <div class="form-group jf-required">
+                     <label class="control-label col-sm-2">Contraseña llave criptográfica:<span class="form-required"></label>
+                    <input type="password"  ng-model="emisor.key_pwd" data-type="input-textbox" class="form-textbox validateAlphanumeric"  maxlength="20" data-component="textbox" required="" id="key_pwd" placeholder="Contraseña" style="color: black; "/>
+                </div>
+
+                    <div class="form-group jf-required">
+                     <label class="control-label col-sm-2">Pin del certificado:<span class="form-required"></label><br>
+                    <input type="text"  ng-model="emisor.pin" data-type="input-textbox" class="form-textbox validateAlphanumeric"  maxlength="4" data-component="textbox" id="pin" placeholder="Pin" style="color: black; "/>
+            </div>                 
+   
+
+         <div class="form-group">
+            <label class="control-label col-sm-2">Email:<span class="form-required"></span></label>
+            <input type="email" id="email_user" ng-model="emisor.email_user" placeholder="Correo" size="40" maxLength="100" required style="color: black; "/>
+          </div>
+
+              <div class="form-group jf-required">
+                   <label class="control-label col-sm-2">Ubicación:<span class="form-required"></label>
+                    <input type="text"  class="validateAlphanumeric" ng-model="emisor.ubicacion_user" placeholder="Ubicación" size="40" maxLength="80" id="ubicacion_user" value="CR" style="color: black;">
+                </div>
+             <div class="form-group">
+            <label class="control-label col-sm-2">Acerca de:</label>
+            <input type="text"  class="validateLetters" ng-model="emisor.about" placeholder="Acerca de mi" size="40" maxLength="80" id="about" style="color: black; ">
+          </div>
+        </form>
+        <div class="form-group" style="align-content: center;">
+           <input type='submit' id="emisorUpdate" ng-click=" insertarCredenciales(emisor);" style="color: black;" class="btn btn-default" value='Guardar' />
+        </div>
+
+
+        <form  class="form-horizontal" ng-submit="sendFile()" ng-app="app" ng-controller="FileUploadController">
+          <div class="form-group">
+                   <label class="control-label col-sm-2">Subir documento de certificado:<span class="form-required">*</span><br></label>
+                     <input id="file" type="file" file-changed model="file" class="form-group">
+                </div>
+                 <div class="form-group" style="align-content: center;">
+                  <button type="submit" style="color: black;"  class="boton btn btn-default" id="up">Enviar</button>
+        </div>
+        </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<div class="wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div ng-include="'/shared/search.html'"></div>
+      <div class="col-xs-12 col-sm-7 col-md-7 col-lg-5">
+        <!--<div class="col-md-12 col-lg-12">-->
+        <div class="pull-right">
+          <div class="form-group">
+            <button id="btnClientNew" type="button" class="btn-function btn-color" data-toggle="modal" data-target="#clientModal" ng-click="clearData();">Nuevo</button>
+            <button id="btnClientRefresh" ng-click="refreshClient();" type="button" class="btn btn-default">
+            <span class="fa fa-refresh"></span>
+          </button>
+          </div>
+        </div>
+        <!--</div>-->
+      </div>
+    </div>
+    <div class="row content">
+      <div id="flip-scroll" class="col-md-12 col-lg-9">
+        <div class="table-responsive">
+          <table class="table table-consensed table-hover table-fixed cf">
+            <thead class="cf">
+              <tr>
+                <th ng-click="sortClient('idCliente')">Cliente
+                  <span ng-show="sortKey=='idCliente'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sortClient('nombreCliente')">Nombre
+                  <span ng-show="sortKey=='nombreCliente'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sortClient('apellidoCliente')">Apellido
+                  <span ng-show="sortKey=='apellidoCliente'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sortClient('identificacionCliente')">Observación
+                  <span ng-show="sortKey=='identificacionCliente'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="clientTable">
+              <tr ng-repeat="client in object | orderBy:sortKey:reverse | filter:search">
+                <td class="nr" ng-click="getBill(client.idCliente)">
+                  {{client.idCliente}}
+                </td>
+                <td ng-click="getBill(client.idCliente)"><span ng-bind="client.nombreCliente"></span></td>
+                <td ng-click="getBill(client.idCliente)"><span ng-bind="client.apellidoCliente"></span></td>
+                <td ng-click="getBill(client.idCliente)"><span ng-bind="client.identificacionCliente"></span></td>
+                <td>
+                  <button type="submit" class="btn btn-warning btn-sm" ng-click="edit(client)" data-toggle="modal" data-target="#clientModal">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true"> </span>
+                </button>
+                  <button type="submit" class="btn btn-warning btn-sm" ng-click="addClientAccount(client.idCliente, client.nombreCliente, client.apellidoCliente)"
+                    data-toggle="modal" data-target="#add-account-model">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span>
+                </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Client-->
+  <div id="clientModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Formulario de Cliente</h4>
+        </div>
+        <div class="modal-body">
+          <form id="clientForm" role="form" ng-submit="saveClient(client);">
+            <div class="form-group" ng-class="{ 'has-error' : clientForm.nombreCliente.$invalid && !clientForm.nombreCliente.$pristine }">
+              <input type="text" class="form-control validateAlphanumeric" id="txtNombre" placeholder="Nombre" ng-model="client.nombreCliente"
+                required>
+              <p ng-show="clientForm.nombreCliente.$invalid && !clientForm.nombreCliente.$pristine" class="help-block">El nombre en requerido.</p>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control validateAlphanumeric" id="txtApellido" placeholder="Apellido" ng-model="client.apellidoCliente"
+                required>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control validateAlphanumeric" id="txtIdentificacion" placeholder="Observación" ng-model="client.identificacionCliente">
+            </div>
+            <div class="modal-footer" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;">
+              <div class="pull-left">
+                <button type="submit" class="btn btn-primary" ng-disabled="clientForm.$invalid">Guardar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearData();">Cancelar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Add Account-->
+  <div id="add-account-model" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Agregar Cuenta al Cliente</h4>
+        </div>
+        <div class="modal-body">
+          <form id="" method="POST" role="form">
+            <div class="form-group">
+              <input type="text" class="form-control" id="txtNombreCliente" disabled>
+            </div>
+            <div class="modal-footer" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;">
+              <div class="pull-left">
+                <button id="btnAddClientAccount" type="submit" class="btn btn-primary" ng-click="addAccount();" data-dismiss="modal">Agregar Cuenta</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

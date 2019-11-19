@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<div class="container-fluid">
+    <div class="row">
+        <div ng-include="'/shared/search.html'"></div>
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-5">
+            <!--<div class="col-md-12 col-lg-12">-->
+            <div class="pull-right">
+                <div class="form-group">
+                    <button id="btnClientNew" type="button" class="btn-function btn-color" data-toggle="modal" data-target="#clientModal" ng-click="clearData();">Nuevo</button>
+                    <button id="btnClientRefresh" ng-click="refreshClient();" type="button" class="btn btn-default">
+            <span class="fa fa-refresh"></span>
+          </button>
+                </div>
+            </div>
+            <!--</div>-->
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col-lg-9">
+            <div class="table-responsive">
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Identificacion</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="client in object">
+                            <td>
+                                {{client.idCliente}}
+                            </td>
+                            <td><span ng-bind="client.nombreCliente"></span></td>
+                            <td><span ng-bind="client.apellidoCliente"></span></td>
+                            <td><span ng-bind="client.identificacionCliente"></span></td>
+                            <td>
+                                <button type="submit" class="btn btn-warning btn-sm">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"> 
+                                    </span>
+                                </button>
+                                <button type="submit" class="btn btn-warning btn-sm">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span>
+                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>

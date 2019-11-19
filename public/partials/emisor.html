@@ -1,0 +1,223 @@
+c
+<!DOCTYPE html>
+<div class="wrapper">
+    <div class="container-fluid">
+        <h1 style="color:white;">Configuracion de Emisor</h1>
+        <div class="row content">
+            <button ng-click="" class="btn btn-home"><a href="#!/restaurant">Ventas</a><span class="glyphicon glyphicon-home"></span></button>
+            <form class="form-horizontal" emisor_form>
+                
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Requerido<span class="form-required">*</span>
+                      <br>
+                    </label>
+                    <button class="btn btn-default" style="color: black; " type="button" data-toggle="modal" data-target="#select-codigo-actividad-modal">
+                        <span class="glyphicon glyphicon-tag"></span>Codigo de Actividad
+                    </button>
+                </div>
+                <!--Nombre -->
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Casa matriz:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <input type="text" class="validateNumbers" ng-model="emisor.casamatriz" data-type="input-textbox" class="form-textbox  validateNumbers" maxlength="3" data-component="textbox" required="" id="casamatriz" placeholder="Casa matriz" /> Casa matriz, 3 dígitos
+                </div>
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Punto de venta:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <input type="text" class="validateNumbers" ng-model="emisor.puntoventa" data-type="input-textbox" class="form-textbox  validateNumbers" maxlength="5" data-component="textbox" required="" id="puntoventa" placeholder="Punto venta" /> Punto de venta, 5 dígitos
+                </div>
+
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Normativa:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <textarea class="validateAlphanumeric" ngModel="emisor.normativa" cols="30" placeholder="Normativa" data-component="textbox" style="resize: none" id="normativa"></textarea>
+                    <br>
+                    <span class="validity"></span>
+                </div>
+
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Tipo producto:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <select ng-init="emisor.identificacion_tipo_producto = {nombre: datos[0].nombre}" ng-model="emisor.identificacion_tipo_producto" ng-options="lista.valor for lista in datos track by lista.nombre" id="identificacion_tipo_producto" required>
+                        <option value="" disabled> Selecione tipo producto/servicio</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Nombre:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <input type="text" class="validateLetters" ng-model="emisor.nombre" placeholder="Nombre o Razón social" size="40" maxLength="80" id="nombre_emisor" /><span class="validity"></span>
+                </div>
+
+                <!-- Identificacion -->
+
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Tipo-Id:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <select required ng-model="emisor.identificacion_tipo" ng-options="item as item.name for item in tipoIds track by item.id" ng-change="cargarId(emisor)" id="tipo_id_emisor">
+                        <option value="" disabled> Selecione tipo ID</option>
+                    </select>
+                </div>
+
+                <input type="hidden" id="identificacion_tipo_id_emisor" ng-model="emisor.identificacion_tipo_id" data-type="input-textbox" size="3" maxlength="3" minlength="1" data-component="textbox">
+
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Identificacion:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <input type="text" ng-model="emisor.identificacion_numero" class="validateNumbers identificacion_numero_emisor" id="identificacion_numero_emisor" data-type="input-textbox" class="form-textbox  validateNumbers" size="20" maxLength="12" data-component="textbox" ng-blur="validateId(emisor)" required="" placeholder="numero de identificacion" />
+                    <br>
+                    <p id="mensajeEmisor" style="color:#f00; font-size: 13px;"></p>
+                </div>
+
+                <!--CorreoElectronico -->
+
+                <!-- Ubicacion -->
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Provincia:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <select ng-model="emisor.ubicacion_provincia" ng-options="provincia as provincia.nombre_provincia for provincia in provincias track by provincia.codigo_provincia" id="provincia" name="codigo_provincia" required ng-change="cargarCanton(emisor)" ng-click="cargarData()">
+                        <option value="" disabled> Seleccione Provincia</option>
+                    </select>
+                </div>
+                <div class="form-group jf-required" id="id_canton_emisor" style="display: none;">
+                    <label class="control-label col-sm-2">Canton:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <select id="canton" ng-model="emisor.ubicacion_canton" name="codigo_canton" ng-options="canton as canton.nombre_canton for canton in cantones track by canton.codigo_canton" ng-change="cargarDistrito(emisor)" required>
+                        <option value="" disabled> Seleccione Canton</option>
+                    </select>
+                </div>
+
+                <div class="form-group jf-required" id="id_distrito_emisor" style="display: none;">
+                    <label class="control-label col-sm-2">Distrito:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <select id="distrito" ng-model="emisor.ubicacion_distrito" ng-options="distrito as distrito.nombre_distrito for distrito in distritos track by distrito.codigo_distrito" required>
+                        <option value=""> Seleccione Distrito</option>
+                    </select>
+                </div>
+
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Otras señas:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <textarea class="validateAlphanumeric" ngModel="emisor.ubicacion_otras_senas" cols="20" placeholder="Ingrese una dirección especifica" data-component="textbox" style="resize: none" id="otras_senas_emisor"></textarea>
+                    <br>
+                    <span class="validity"></span>
+                </div>
+                <!--NombreComercial -->
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Nombre Comercial:
+                        <br>
+                    </label>
+                    <input type="text" class="validateAlphanumeric" ng-model="emisor.nombrecomercial" placeholder="Ingresar el Nombre Comercial" size="40" maxLength="80" id="nombre_comercial_emisor" /><span class="validity"></span>
+                </div>
+
+                <!-- Telefono -->
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Telefono CodPais:
+                        <br>
+                    </label>
+                    <input type="text" ng-model="emisor.telefono_codigopais" class="validateNumbers" data-type="input-textbox" class="form-textbox validate[required, Fill Mask]" size="3" maxLength="3" minLength="1" data-component="textbox" id="tel_cod_emisor" /><span class="validity"></span>
+                    <br>Codigo de Pais. Max 3 digitos
+                </div>
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Telefono Numero:
+                        <br>
+                    </label>
+                    <input type="text" ng-model="emisor.telefono_numero" class="validateNumbers" data-type="input-textbox" class="form-textbox validate[required, Fill Mask]" size="20" maxLength="20" minLength="1" data-component="textbox" id="tel_num_emisor" /><span class="validity"></span>
+                    <br>Numero de Telefono. Max 20 digitos
+                </div>
+
+                <!-- Fax -->
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Fax CodPais:
+                        <br>
+                    </label>
+                    <input type="text" ng-model="emisor.fax_codigopais" class="validateNumbers" data-type="input-textbox" class="form-textbox validate[required, Fill Mask]" size="3" maxLength="3" minLength="1" data-component="textbox" id="fax_cod_emisor" /><span class="validity"></span>
+                    <br>Código País. Max 3 digitos
+                </div>
+
+                <div class="form-group jf-required">
+                    <label class="control-label col-sm-2">Fax Numero:
+                        <br>
+                    </label>
+                    <input type="text" ng-model="emisor.fax_numero" class="validateNumbers" data-type="input-textbox" class="form-textbox validate[required, Fill Mask]" size="20" maxLength="20" minLength="1" data-component="textbox" id="fax_tel_emisor" /><span class="validity"></span>
+                    <br>Numero de Telefono. Max 20 digitos
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Correo Electronico:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <input type="email" id="email_emisor" ng-model="emisor.correoelectronico" placeholder="Ingresar el Correo Eletronico" size="40" maxLength="60" required="" /><span class="validity"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Contraseña:<span class="form-required">*</span>
+                        <br>
+                    </label>
+                    <input type="password" id="pass_emisor" ng-model="emisor.password" placeholder="Ingresar la Contraseña" size="40" maxLength="60" required="" /><span class="validity" autocomplete="off" style="color: black;"></span>
+                </div>
+            </form>
+            <div class="form-group" style="align-content: center;">
+                <button id="emisorUpdate" ng-click="validateAndSendEmisor(emisor);" class="btn btn-default" style="color: black; ">Actualizar</button>
+
+                <!-- temp -->
+                <button ng-hide="true" ng-click="validateAndSendEmisor2(emisor);" class="btn btn-default" style="color: black; ">Actualizar2</button>
+
+                <a href='/sopa#!/credencialesEmisor' class="btn btn-default" style="color: black; ">Credenciales</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="select-codigo-actividad-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm" id="elegir-codigo-actividad">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Elegir Codigo Actividad</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col" ng-include="'/shared/search.html'"></div>
+
+                <!-- CARGA TABLA DE Codigos -->
+                <div id="listaCodigosActividad">
+                    <table class="table" id="mitabla">
+                        <thead class="tableHeaders">
+                            <tr>
+                                <th data-field="cod" width="50%">Código</th>
+                                <th data-field="name" width="50%">Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody id="codigoActividadTable" style="height: 350px;">
+                            <tr id="tc_rc" height="10%" ng-repeat="codigoActividad in codigoActividadList | filter:search">
+
+                                <td ng-click="selectCodigoActividad(key);" ng-repeat="(key, val) in codigoActividad"><span>{{key}}</span></td>
+                                <td ng-click="selectCodigoActividad(key);" ng-repeat="(key, val) in codigoActividad"><span>{{val.actividad}}</span></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button ng-click="saveCodigoActividad(emisor.codigoActividadTemp)" type="submit" class="btn btn-primary">Cargar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

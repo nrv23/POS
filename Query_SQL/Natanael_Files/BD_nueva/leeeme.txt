@@ -1,0 +1,77 @@
+Al ejecutar estos comandos:
+
+DELETE FROM detalles_orden;
+DELETE FROM xml;
+DELETE FROM orden;
+DELETE FROM factura;
+DELETE FROM users;
+DELETE FROM emisor;
+
+Deben ejecutar luego estos otros comandos:
+
+ALTER SEQUENCE xml_idxml_seq RESTART WITH 1;
+ALTER SEQUENCE detalles_orden_iddetalle_seq RESTART WITH 1;
+ALTER SEQUENCE orden_idorden_seq RESTART WITH 1;
+ALTER SEQUENCE factura_idfactura_seq RESTART WITH 1;
+ALTER SEQUENCE emisor_idemisor_seq RESTART WITH 1;
+ALTER SEQUENCE users_iduser_seq RESTART WITH 1;
+
+Sino va generar un error de llave foranea
+
+
+-- Esos scripts solamente se deben correr cuando la base de datos sea cargada en el servidor de amazon
+
+-- instrucciones: 
+ -- correr el script de modelo y luego correr estos scripts de creacion y asignacion de secuencias para las tablas de emisor
+   -- y factura, luego se corren los scripts de funciones y por ultimo inserts
+   
+-- CREAR Y ASIGNAR SECUENCIAS A LAS TABLAS DE FACTURA Y EMISOR
+
+-- EMISOR
+
+
+CREATE SEQUENCE emisor_idemisor_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+
+ALTER TABLE emisor ALTER COLUMN idemisor set default nextval('emisor_idemisor_seq'::regclass); 
+
+-- FACTURA
+
+
+CREATE SEQUENCE factura_idfactura_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+
+ALTER TABLE factura ALTER COLUMN idfactura set default nextval('factura_idfactura_seq'::regclass);
+
+// Estas consultas no se deben usar, las tengo ahi como ejemplo, no borrarlas
+ 
+SELECT o.idorden, o.idfactura, o.cantidadproducto,p.unidadmedida, p.descripcionproducto, o.preciounitarioproducto, p.impuesto, p.montoimpuesto, p.porcentajeimpuesto, p.unidadmedida, o.naturalezadescuento ,o.descuentoorden,p.unidadmedidacomercial, p.costounitario, o.iddetalle, (SELECT e_nombrecomercial FROM emisor) AS nombreinstitucion, (SELECT tipo_producto FROM emisor) AS tipoProducto_Servicio, (SELECT codigo_producto FROM emisor) AS codigoProducto_Servicio FROM orden O INNER JOIN producto p ON o.idproducto= p.idproducto WHERE o.iddetalle= 0;
+--------------------------
+CREATE OR REPLACE FUNCTION public.get_orders_per_factura(IN id integer)
+  RETURNS TABLE(j json) AS
+$BODY$
+BEGIN
+
+  RETURN QUERY SELECT row_to_json(datos) FROM (SELECT o.idfactura ,o.idOrden,o.idcuenta , o.estadoorden, o.preciounitarioproducto, o.costounitarioproducto,
+   o.cantidadproducto ,o.codigoservicio, o.tiposervicio, o.unidadmedida, o.unidadmedidacomercial,
+   o.naturalezadescuento, o.codigoimpuesto, o.exoneracion_tipodocumento, o.nombreinstitucion, o.montoimpuesto, 
+  o.procentajecompra, p.descripcionProducto, f.porcentajedescuento, o.montodescuento, o.descuentoorden, 
+  (o.precioUnitarioProducto * o.cantidadProducto) AS subtotal, p.tipo_producto, p.porcentajeimpuesto,
+   o.idproducto, f.condicion_venta, f.plazo_credito 
+  FROM ORDEN o 
+  INNER JOIN FACTURA f ON o.idFactura = f.idFactura 
+  INNER JOIN PRODUCTO p ON o.idProducto = p.idProducto 
+  WHERE f.idFactura = id 
+  ORDER BY o.idOrden DESC) datos;
+ 
+END
+$BODY$
+  LANGUAGE plpgsql

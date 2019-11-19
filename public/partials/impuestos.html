@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<div class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- First Section Left -->
+            <div ng-include="'/shared/search.html'"></div>
+             <!-- First Section: Right -->
+            <div>
+                  <button class="btn btn-home"><a href="#!/restaurante">Ventas</a><span class="glyphicon glyphicon-home"></span></button>
+
+                <div class="row pull-right" style="margin-right: 2%;" >
+
+                    <button id="btnShow_SellingProducts" type="button" class="btn btn-sopa-funciones sopa-sell" ng-click="template_Right='sell_products'; template_Left='sell_products_table'; template_Right_action('sell'); cargarEstadoImpuestos() ">
+                    <!-- <h4>Productos</h4> -->
+                    </button>
+                    <button id="btnShow_RawMaterial" type="button" class="btn btn-sopa-funciones sopa-materiales" ng-click="template_Right='raw_products'; template_Left='raw_products_table';template_Right_action('raw');">
+                    <!-- <h4>Materiales</h4> -->
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row content background-image">
+            <!-- Second Section Left -->
+            <div class="col-md-8">
+                <ng-include src="template_Left"></ng-include>
+            </div>
+            <!-- Second Section Right -->
+            <div class="col-md-4">
+                <h4>
+                    <center>Datos&nbsp&nbsp
+                        <button id="btnProductRefresh" ng-click="refresh(template_Right);" type="button" class="btn btn-default">
+                            <span class="fa fa-refresh"></span>
+                        </button>
+                    </center>
+                </h4>
+                <ng-include src="template_Right"></ng-include>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<!-- CARGA DETALLE DE PRODUCTO -->
+<script type="text/ng-template" id="sell_products">
+    <h3> <i>&nbsp&nbsp Nombre: </i>{{impuesto_selected.nombre}} </h3>
+    <h3> <i>&nbsp&nbsp Código: </i>{{impuesto_selected.codigo_impuesto}} </h3>
+        <ul>
+            <li ng-repeat="raws in raw_material" ng-show="raws.cantidadnecesaria > 0 && raws.cantidadnecesaria != 'undefined'" >
+              {{raws.descripcioninventario}}: {{raws.cantidadnecesaria}}/{{raws.cantidaddisponibleinventario}} {{raws.unidad}}
+            </li>
+        </ul>
+    </h3>
+    <div>
+        <center>
+            <h3 class="alignBtm">
+                <span><button id="btnEditarImpuesto" type="button" class="btn-sopa-funciones sopa-editar"  ng-click="filaSeleccionada(impuesto_selected);"></button></span>
+                <span><button id="btnCrearImpuesto" type="button" class="btn-sopa-funciones sopa-crear" data-toggle="modal" data-target="#insert-impuesto-modal"></button></span>
+                
+            </h3>
+        </center>
+    </div>
+</script>
+
+<!-- CARGA DETALLE DE INVENTARIO -->
+<script type="text/ng-template" id="raw_products">
+    <div class="form-group">
+            <h5 style="color: #A2A1AD;">Seleccione impuesto:
+                <select required class="form-control" ng-model="impuesto"  name="txtimpuestoInsertar" ng-options="impuestos.nombre for impuestos in arrayImpuesto track by impuestos.idimpuesto" id="txtimpuestoInsertar" ng-change="cargarTiposImpuesto(impuesto.idimpuesto)">
+                <option disabled selected value="">Impuesto</option>
+                </select>
+            </h5>
+        </div>
+    <h3> <i>&nbsp&nbsp Nombre impuesto: </i>{{tipoimpuesto_selected.nombre}} </h3>
+    <h3> <i>&nbsp&nbsp Descripcion tipo: </i>{{tipoimpuesto_selected.descripcionimpuesto}} </h3>
+    <h3> <i>&nbsp&nbsp Porcentaje: </i>{{tipoimpuesto_selected.porcentajetipoimpuesto}} </h3>
+    <div>
+        <center>
+            <h3 class="alignBtm">
+                <span><button id="btnCrearInventory" type="button" class="btn-sopa-funciones sopa-crear" data-toggle="modal" data-target="#insert-tipoimpuesto-modal"></button></span>
+            </h3>
+        </center>
+    </div>
+</script>
+
+<!-- CARGA TABLA DE PRODUCTO -->
+<script type="text/ng-template" id="sell_products_table">
+    <div class="table-responsive">
+        <table class="table table-condensed table-hover">
+            <thead class="tableHeaders">
+                <tr>
+                    <th class="col-sm-1" ng-click="sort('idimpuesto')">ID
+                        <span ng-show="sortKey=='idproducto'" ng-class="{'fa fa-caret-down':reverse, 'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('nombre')">Nombre
+                        <span ng-show="sortKey=='descripcionproducto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('estadoimpuesto')">Estado
+                        <span ng-show="sortKey=='descripcioncategoria'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <!-- <th class="ng-hide"></th>-->
+                </tr>
+            </thead>
+            <tbody id="productTable">
+                <tr ng-class="{'impuesto_selected':impuesto.idimpuesto == selectedRow}"  ng-repeat="impuesto in object | orderBy:sortKey:reverse | filter:search | filter:category">
+                    <td class="col-sm-1" ng-click="rowClicked(impuesto)">{{impuesto.idimpuesto}}</td>
+                    <td ng-click="rowClicked(impuesto)" class="nr">{{impuesto.nombre}}</td>
+                    <td><button class="btn btn-warning impuesto" ng-click="cambiarEstadoImpuesto(impuesto)" idimpuesto></button></td>
+                    <!-- <td class="ng-hide" ><input type="radio" name="sell_impuestos_radio" ng-model="impuesto.checked"></td> -->
+                </tr>
+            </tbody>
+          </table>
+    </div>
+</script>
+
+<!-- CARGA TABLA DE INVENTARIO -->
+<script type="text/ng-template" id="raw_products_table">
+    <div class="table-responsive">
+        <table class="table table-condensed table-hover">
+            <thead class="tableHeaders">
+                <tr>
+                    <th class="col-sm-1" ng-click="sort('idinventario')">id
+                        <span ng-show="sortKey=='idinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+
+                    <th ng-click="sort('descripcioninventario')">Impuesto
+                        <span ng-show="sortKey=='descripcioninventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('descripcioncategoriainventario')">Tipo
+                        <span ng-show="sortKey=='descripcioncategoriainventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('cantidaddisponibleinventario')">Porcentaje
+                        <span ng-show="sortKey=='cantidaddisponibleinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('costoinventario')">Estado
+                        <span ng-show="sortKey=='costoinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+<!--                    <th ng-click="sort('unidad')">Unidad
+                        <span ng-show="sortKey=='unidad'" ng-class="{'fa fa-caret-down':reverse, 'fa fa-caret-up':!reverse}"></span>
+                    </th> -->
+                    <!--  <th class="ng-hide"></th> -->
+                </tr>
+            </thead>
+            <tbody id="inventoryTable">
+                <tr ng-class="{'tipoimpuesto_selected': tipoimpuesto.idtipoimpuesto == selectedRow}" ng-repeat="tipoimpuesto in arrFromMyObj | orderBy:sortKey:reverse | filter:search | filter:category">
+                    <td class="col-sm-1 nr" ng-click="rowClicked(product)">{{tipoimpuesto.idtipoimpuesto}}</td>
+                    <td ng-click="rowClickedTipoImpuesto(tipoimpuesto)">{{tipoimpuesto.nombre}}</td>
+                    <td ng-click="rowClickedTipoImpuesto(tipoimpuesto)">{{tipoimpuesto.descripcionimpuesto}}</td>
+                    <td ng-click="rowClickedTipoImpuesto(tipoimpuesto)">{{tipoimpuesto.porcentajetipoimpuesto}}</td>
+                    <td><button class="btn btn-warning tipoimpuesto" idtipoimpuesto="{{tipoimpuesto.idtipoimpuesto}}" ng-click="cambiarEstadoTipoImpuesto(tipoimpuesto)">{{tipoimpuesto.ind_activo}}</button></td>
+<!--                    <td ng-click="rowClicked(product)">{{product.unidad}}</td>-->
+                    <!-- <td class="ng-hide" ><input type="radio" name="raw_material_radio" ng-model="product.checked"></td> -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<!-- Modals -->
+
+<!-- Modal Editar PRODUCTO-->
+<div id="insert-impuesto-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Crear Impuesto</h4>
+            </div>
+            <div class="modal-body">
+                <form id="ImpuestoInsertForm" method="POST" role="form">
+                        <div class="form-group">
+                                <h5 style="color: blue;">Seleccione impuesto:
+                                    <select required class="form-control" ng-model="impuesto"  name="txtimpuestoInsertar" ng-options="impuestos.impuesto for impuestos in ObtenerImpuesto track by impuestos.id" id="txtimpuestoInsertar" ng-change="cargarDataImpuesto(impuesto,1)">
+                                    <option disabled selected value="">Impuesto</option>
+                                    </select>
+                                </h5>
+                            </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Nombre:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtNombreImpuestoInsertar" placeholder="Nombre de impuesto" ng-model="impuesto.nombreInsertar" required disabled>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Codigo:
+                            <input type="text" class="form-control validateNumbers" id="txtCodigoImpuestoInsertar" placeholder="Código del impuesto" ng-model="impuesto.codigoInsertar" required disabled>
+                        </h5>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnImpuestoInsert" ng-click="insertImpuesto(impuesto);" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button type="reset" ng-click="cancelarEditProduct(template_Right);" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear TIPOIMPUESTO-->
+<div id="insert-tipoimpuesto-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Crear tipo impuesto</h4>
+            </div>
+           
+            <div class="modal-body">
+                <form id="ImpuestoUtForm" method="POST" role="form">
+                        <div class="form-group">
+                                <h5 style="color: blue;">Seleccione impuesto:
+                                    <select required class="form-control" ng-model="impuestos"  name="txtimpuestotipo" ng-options="impuestos.impuesto for impuestos in ObtenerImpuesto track by impuestos.id" id="txtimpuestotipo" ng-change="escogerImpuesto(impuestos)">
+                                    <option disabled selected value="">Impuesto</option>
+                                    </select>
+                                </h5>
+                            </div>
+                            <div class="form-group">
+                                    <h5 style="color: blue;">Seleccione tipo impuesto:
+                                        <select required class="form-control" ng-model="tipoimpuesto"  name="txttipoimpuesto" ng-options="tipoimpuesto.descripcion for tipoimpuesto in tiposImpuesto track by tipoimpuesto.idimpuesto" id="txttipoimpuesto" ng-change="escogerTipoImpuesto(tipoimpuesto)">
+                                        <option disabled selected value="">Tipo impuesto</option>
+                                        </select>
+                                    </h5>
+                                </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Nombre:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtNombreImpuesto" placeholder="Nombre de impuesto" required ng-model="tipoimpuesto.impuesto"  disabled>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                            <h5 style="color: blue;">Tipo impuesto:
+                                <input type="text" class="form-control validateAlphanumeric" id="txttdescripciontipoimpuesto" placeholder="descripcion tipo impuesto" ng-model="tipoimpuesto.tipo" required disabled>
+                            </h5>
+                        </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Porcentaje:
+                            <input type="text" class="form-control validateNumbers" id="txtporcentajetipoimpuesto" placeholder="porcentaje tipo impuesto" required 
+                             ng-model="tipoimpuesto.porcentajeTipo"  disabled>
+                        </h5>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnImpuestoEdit" ng-click="insertarTipoImpuesto(tipoimpuesto);" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button type="reset" ng-click="cancelarEditProduct(template_Right);" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--angular no permite uso de etiquetas como head, body, etc al utilizat ng-view-->
+<!--
+<head>
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="">
+  <style type="text/css">
+    tr:hover {
+      cursor: pointer;
+    }
+  </style>
+</head>-->
+<div class="wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div ng-include="'/shared/search.html'"></div>
+      <div class="col-xs-12 col-sm-7 col-md-6 col-lg-5">
+        <div class="pull-right">
+          <button id="btnWaiterNew" type="reset" class="btn-function btn-color" data-toggle="modal" data-target="#new-waiter-modal">Nuevo</button>
+          <button id="btnWaiterRefresh" ng-click="refreshWaiter();" type="button" class="btn btn-default">
+            <span class="fa fa-refresh"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row content">
+      <div class="col-md-12 col-lg-9">
+        <div class="table-responsive">
+          <table class="table table-condensed table-hover">
+            <thead class="tableHeaders">
+              <tr>
+                <th ng-click="sortWaiter('idEmpleado')">Mesero
+                  <span ng-show="sortKey=='idEmpleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sortWaiter('nombreEmpleado')">Nombre
+                  <span ng-show="sortKey=='nombreEmpleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sortWaiter('apellidoEmpleado')">Apellido
+                  <span ng-show="sortKey=='apellidoEmpleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sortWaiter('identificacionEmpleado')">Identificación
+                  <span ng-show="sortKey=='identificacionEmpleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th ng-click="sortWaiter('descripcionPuesto')">Puesto
+                  <span ng-show="sortKey=='descripcionPuesto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                </th>
+                <th>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="waiterTable">
+              <tr ng-repeat="waiter in object | orderBy:sortKey:reverse | filter:search">
+                <td class="nr">
+                  {{waiter.idEmpleado}}
+                </td>
+                <td>{{waiter.nombreEmpleado}}</td>
+                <td>{{waiter.apellidoEmpleado}}</td>
+                <td>{{waiter.identificacionEmpleado}}</td>
+                <td>{{waiter.descripcionPuesto}}</td>
+                <td>
+                  <button type="submit" class="btn btn-warning btn-sm" ng-click="sendData(waiter.idEmpleado, waiter.nombreEmpleado, waiter.apellidoEmpleado, waiter.identificacionEmpleado, waiter.descripcionPuesto)"
+                    data-toggle="modal" data-target="#new-waiter-modal">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true"> </span>
+                </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+    <!-- Modal -->
+    <div id="new-waiter-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Formulario de Mesero</h4>
+          </div>
+          <div class="modal-body">
+            <form id="waiterForm" method="POST" role="form">
+              <div class="form-group">
+                <input type="text" class="form-control validateLetters" id="txtNombre" placeholder="Nombre" ng-model="nombre">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control validateLetters" id="txtApellido" placeholder="Apellido" ng-model="apellido">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control validateNumbers" id="txtIdentificacion" placeholder="Identificación" ng-model="identificacion">
+              </div>
+              <!--<div class="form-group">
+                <select class="form-control validateNumbers" name="cmb_Puesto" id="cmb_Puesto">
+                        <option value="1">Administrador</option>
+                        <option value="2">Cajero</option>
+                        <option value="3">Mesero</option>
+              <div class="form-group">
+                  <select class="form-control validateNumbers" name="cmb_Puesto" id="cmb_Puesto">
+                    <option ng-repeat="itm in Puestos" value="{{itm.idPuesto}}">{{itm.descripcionPuesto}}</option>
+                  </select>
+              </div>-->
+              <div class="form-group">
+                <select class="form-control" ng-model="selectedJob" ng-options="job as job.descripcionPuesto for job in jobList">
+                  <!--<option value="" ng-if="selectedJob">Ningún puesto seleccionado</option>-->
+                  </select>
+                <p>Puesto: {{selectedJob.descripcionPuesto}}</p>
+                <p>Codigo: {{selectedJob.idPuesto}}</p>
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" id="txtPassword" placeholder="Contraseña" ng-model="password">
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" id="txtRepassword" placeholder="Reescribir contraseña" ng-model="repassword">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-left">
+              <button id="btnWaiterGuardar" ng-click="saveWaiter();" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+              <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

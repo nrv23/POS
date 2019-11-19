@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<div class="wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div ng-include="'/shared/search.html'"></div>
+      <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+        <div class="pull-right">
+          <div class="form-group">
+            <!-- <label for="daterangepicker">Custom:</label> -->
+            <div>
+              <div class="input-group date" id="daterangepicker">
+                <h4>{{dateRangeSelected}}</h4>
+                <span class="input-group-addon" datepicker-popup="{{format}}" is-open="opened" min-date="minDate" datepicker-options="dateOptions"
+                  date-disabled="disabled(date, mode)" ng-required="true" close-text="Close">Rango de fechas:
+                <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+              <button id="btnProuctRefresh" ng-click="refreshOrder();" type="button" class="btn btn-default"><span class="fa fa-refresh"></span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row content">
+    <div class="col-md-12 col-lg-12">
+      <span ng-show="orderByField == 'age'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+      <div class="table-responsive">
+        <table id="ordersH_table" class="table table-condensed table-hover">
+          <thead>
+            <tr>
+              <th ng-click="sortOrder('idOrden')">#idOrden
+                <span ng-show="sortKey=='idOrden'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('NumCuenta')">#Cuenta
+                <span ng-show="sortKey=='NumCuenta'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('Cliente')">Cliente
+                <span ng-show="sortKey=='Cliente'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('Producto')">Producto
+                <span ng-show="sortKey=='Producto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+
+              <th ng-click="sortOrder('Categoria')">Categoria
+                <span ng-show="sortKey=='Categoria'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('EstadoCuenta')">EstadoCuenta
+                <span ng-show="sortKey=='EstadoCuenta'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('Pago')">Pago
+                <span ng-show="sortKey=='Pago'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('Fecha')">Fecha
+                <span ng-show="sortKey=='Fecha'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('Precio')">Precio
+                <span ng-show="sortKey=='Precio'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('Cantidad')">Cantidad
+                <span ng-show="sortKey=='Cantidad'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('Total')">Total
+                <span ng-show="sortKey=='Total'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('EstadoOrden')">EstadoOrden
+                <span ng-show="sortKey=='EstadoOrden'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+              </th>
+              <th ng-click="sortOrder('Empleado')">Empleado</th>
+              <span ng-show="sortKey=='Empleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+            </tr>
+          </thead>
+          <tbody id="order_table">
+            <tr ng-repeat="product in object | orderBy:sortKey:reverse | filter:search | filter: dateRangeFilter('Fecha',changeDate1,changeDate2)">
+              <td>{{product.idOrden}}</td>
+              <td>{{product.NumCuenta}}</td>
+              <td>{{product.Cliente}}</td>
+              <td>{{product.Producto}}</td>
+              <td>{{product.Categoria}}</td>
+              <td>{{product.EstadoCuenta}}</td>
+              <td>{{product.Pago}}</td>
+              <td>{{product.Fecha | date:"DD/MM/YY"}}</td>
+              <td>{{product.Precio | currency:"₡"}}</td>
+              <td>{{product.Cantidad}}</td>
+              <td>{{product.Total | currency:"₡"}}</td>
+              <td>{{product.EstadoOrden}}</td>
+              <td>{{product.Empleado}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!--
+        <div>
+          <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true">
+          </dir-pagination-controls>
+        </div>
+        <div>
+          <input type="number" ng-model="resolution" ng-minlength="5" ng-maxlength="100" ng-init="8" placeholder="N/A" value="8">{{resolution}}
+        </div>
+-->
+    </div>
+  </div>
+</div>

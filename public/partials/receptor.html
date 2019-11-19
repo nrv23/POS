@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<div class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div ng-include="'/shared/search.html'"></div>
+        </div>
+        <div class="row content background-image">
+            <!-- Second Section Left -->
+            <div class="col-md-8">
+                <ng-include src="template_Left"></ng-include>
+            </div>
+            <!-- Second Section Right -->
+            <div class="col-md-4">
+                <h4>
+                    <center>Detalles&nbsp&nbsp
+                        <button id="btnReceptorRefresh" ng-click="refresh(template_Right);" type="button" class="btn btn-default"><span class="fa fa-refresh"></span></button>
+                    </center>
+                </h4>
+                <ng-include src="template_Right"></ng-include>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<!-- CARGA TABLA DE PROVEEDORES -->
+<script type="text/ng-template" id="proveedores_table">
+    <div class="table-responsive">
+        <!-- <table class="table table-consensed table-hover table-fixed cf"> -->
+        <table class="table table-condensed table-hover">
+            <!-- <thead class="cf"> -->
+            <thead class="tableHeaders">
+                <tr>
+                    <th style="width= 100px;" ng-click="sortReceiver('idreceptor')">Código
+                        <span ng-show="sortKey=='idreceptor'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortReceiver('nombre')">Nombre
+                        <span ng-show="sortKey=='nombre'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortReceiver('correoelectronico')">Email
+                        <span ng-show="sortKey=='correoelectronico'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="proveedorTable">
+                <tr ng-class="{'personSelected':receptor.idreceptor == selectedRow}" ng-repeat="receptor in object | orderBy:sortKey:reverse | filter:search">
+                    <td class="nr" ng-click="rowClicked(receptor)">{{receptor.idreceptor}}</td>
+                    <td ng-click="rowClicked(receptor)"><span ng-bind="receptor.nombre"></span></td>
+                    <td ng-click="rowClicked(receptor)"><span ng-bind="receptor.correoelectronico"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<!-- CARGA DETALLE DE PROVEEDORES -->
+<script type="text/ng-template" id="proveedores">
+    <h4> <b> <i> Provincia:</i> {{person_selected.nombre_provincia}}</b></h4>
+    <h4> <b> <i> Cantón:</i> {{person_selected.nombre_canton}}</b></h4>
+    <h4> <b> <i> Distrito:</i> {{person_selected.nombre_distrito}}</b></h4>
+    <h4> <b> <i> Otras señas:</i> {{person_selected.otras_senas}}</b></h4>
+    <h4> <i>&nbsp&nbsp Cédula:</i> {{person_selected.receptor_numero}} </h4>
+    <h4> <i>&nbsp&nbsp Código País:</i> {{person_selected.receptor_telefono_codigopais}} </h4>
+    <h4> <i>&nbsp&nbsp Telefono:</i> {{person_selected.receptor_telefono_numtelefono}} </h4>
+    <h4> <i>&nbsp&nbsp Fax Código País:</i> {{person_selected.receptor_fax_codigopais}} </h4>
+    <h4> <i>&nbsp&nbsp fax:</i> {{person_selected.receptor_fax_numtelefono}} </h4>
+    <h4> <i>&nbsp Correo:</i> <span href="mailto:{{person_selected.correoelectronico}}"></span> {{person_selected.correoelectronico}} </h4>
+    <div>
+        <center>
+            <h4 class="alignBtm">
+                <span><button id="btnEliminarProveedor" type="button" class="btn-function btn-color btn-sm" data-toggle="modal" data-target="#delete-receptor-modal" ng-click="sendDataDeleteReceptor(person_selected.receptor_numero, person_selected.nombre)">Eliminar
+                </button></span>
+
+                <span><button id="btnEditarProveedor" type="button" class="btn-function btn-color btn-sm" ng-click=" sendDataUpdateReceptor( person_selected.nombre, person_selected.receptor_tipo_identificacion, person_selected.receptor_numero, person_selected.nombrecomercial, person_selected.codigo_provincia, person_selected.codigo_canton,
+                person_selected.codigo_distrito, person_selected.otras_senas, person_selected.receptor_telefono_codigopais, person_selected.receptor_telefono_numtelefono, person_selected.receptor_fax_codigopais, person_selected.receptor_fax_numtelefono, person_selected.correoelectronico ); cargarCantonEsc()">Editar
+                </button></span>
+            </h4>
+        </center>
+    </div>
+</script>
+
+
+
+<!-- Modal Update PROVEEDORES-->
+<div id="update-receiver-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Editar receptor</h4>
+         </div>
+         <!-- ORDER TABLE DISCOUNT -->
+         <div class="modal-body">
+           <div class="" style="font-size: 12px;">Campos con signo * son requeridos</div><br>
+
+                <form id="receptorFormUpdate" method="POST" role="form" novalidate>
+                    <div class="form-group" ng-class="{ 'has-error' : receptorFormUpdate.nombre.$invalid && !receptorFormUpdate.nombre.$pristine }">
+                     <span class="form-required">Nombre o razón social *</span>
+                        <input type="text" class="form-control validateAlphanumeric" id="nombre_Update" placeholder="Nombre o razón social" ng-model="receptor.nombre_Update" size="40" maxLength="80"  >
+                    </div>
+
+                    <div class="form-group">
+                    <span class="form-required">Tipo de identificación *</span>
+                    <select class="form-control" id="tipo_id_Update" required ng-model="receptor.tipo_identificacion_Update" ng-options="item as item.name for item in tipoIds track by item.id" ng-change="cargarId(receptor); ">
+                      <option value="" disabled>Seleccione tipo ID </option>
+                    </select>
+
+             <div class="form-group">
+                  <input type="hidden" id="txt_num_tipoIdentificacion_Update" ng-model="receptor.identificacion_tipo_Update" maxlength="3" readonly />
+               </div>
+
+                  </div>
+                      <div class="form-group">
+                    <span class="form-required">Numero de identificacion *</span>
+                    <input type="number"  class="form-control" id="identificacion_numero_Update" ng-model="receptor.identificacion_numero_Update" data-type="input-textbox" class="form-textbox  validateNumbers"  maxlength="12" data-component="textbox" required="" placeholder="numero de identificacion" ng-blur="validateId(receptor)"/>
+                    <p id="mensaje" style="color:#FF0000; font-size: 10px;"></p>
+                </div>
+
+                <div class="form-group">
+                   <span class="form-required">Provincia *</span>
+                    <select class="form-control"  id="id_provincia_update" ng-model="receptor.ubicacion_provincia" ng-options="provincia as provincia.nombre_provincia for provincia in provincias track by provincia.codigo_provincia " ng-change="cargarCanton(receptor)" name="codigo_provincia" required ng-click="cargarCantones()">
+                        <option value="" disabled> Seleccione Provincia</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="div_canton" style="display: none;">
+                  <span class="form-required">Canton *</span>
+                    <select  class="form-control" id="id_canton_update" ng-model="receptor.ubicacion_canton" name="codigo_canton"
+                    ng-options="canton as canton.nombre_canton for canton in cantonUpdate track by canton.id"
+                    ng-change="cargarDistrito(receptor)" required  >
+                        <option value="" disabled> Seleccione Canton</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="div_distrito" style="display: none">
+                <span class="form-required">Distrito *</span>
+                    <select  class="form-control" id="id_distrito_update" ng-model="receptor.ubicacion_distrito"
+                     ng-options="distrito as distrito.nombre_distrito for distrito in distritoUpdate track by distrito.codigo_distrito"
+                    required >
+                       <option value="" disabled> Seleccione Distrito</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <span class="form-required">Ubicación específica *</span>
+                    <textarea class="form-control validateAlphanumeric" id="otras_senas_Update" ngModel="receptor.ubicacion_otras_senas" cols="20"  placeholder="Ingrese una dirección especifica" data-component="textbox" style="resize: none"></textarea><br>
+                    <span class="validity"></span>
+                </div>
+                <!--NombreComercial -->
+                <div class="form-group">
+                    <span class="form-required">Nombre comercial</span>
+                    <input type="text" class="form-control validateAlphanumeric" ng-model="receptor.nombrecomercial" placeholder="Ingresar el Nombre Comercial" size="40" maxLength="80" id="nombreComercial_Update" />
+                </div>
+                <!-- Telefono -->
+               <div class="form-group">
+                    <span class="form-required">Codigo del país</span>
+                    <input type="text" id="cod_telefono_Update" ng-model="receptor.codigo_pais" data-type="input-textbox" class="form-control validateNumbers"  size="3" maxLength="3"  data-component="textbox" placeholder="Codigo pais" />
+                </div>
+
+               <div class="form-group">
+                    <span class="form-required">Número de teléfono</span>
+                    <input type="text" id="telefono_numero_Update" ng-model="receptor.telefono_numero" data-type="input-textbox" class="form-control  form-textbox validateNumbers" size="20" maxLength="20"  data-component="textbox" placeholder="Numero de telefono" />
+                </div>
+                <!-- Fax-->
+                <!-- Fax -->
+                <div class="form-group">
+                    <span class="form-required">Fax - Códifdo del país</span>
+                    <input type="text" id="fax_codigoPais_Update" ng-model="receptor.fax_codigopais" data-type="input-textbox" class="form-control  form-textbox validateNumbers" size="3" maxLength="3"  data-component="textbox" placeholder="Código de país" />
+                </div>
+                <div class="form-group">
+                    <span class="form-required">Número fax</span>
+                    <input type="text" id="fax_numero_Update" ng-model="receptor.fax_numero" data-type="input-textbox" class="form-control  form-textbox validateNumbers" size="20" maxLength="20" data-component="textbox" placeholder="Número de Fax" /><br>
+                </div>
+                <!--CorreoElectronico -->
+                <div class="form-group">
+                  <span class="form-required">Correo electrónico*</span>
+                    <input class="form-control" id="email_Update" type="email" ng-model="receptor.correoelectronico_Update" placeholder="Ingresar el Correo Eletronico" size="60" maxLength="60" required="" ngPattern="\s*\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*\s*"/>
+                </div>
+                <input type="hidden" id="id_search" ng-model="receptor.id_search">
+                  <!----------------------------------------------------------------------------------->
+                 <!-- parte del receptor -->
+                </form>
+         </div>
+         <div class="modal-footer">
+            <div class="pull-left">
+               <button id="btnUpdateReceiver" ng-click= "actualizarReceptor(person_selected);" type="submit" class="btn btn-primary" ng-disabled="receptorFormUpdate.$invalid">Guardar</button>
+                    <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!-- Modal Eliminar PROVEEDORES-->
+<div id="delete-receptor-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea Eliminar el Receptor?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="proveedorFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateNumbers" id="txtNumeroReceptorDelete" placeholder="Número de identifación" ng-model="person_selected.receptor_numero" disabled>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control validateLetters" id="txtnombreReceptorDelete" placeholder="Nombre" ng-model="person_selected.nombre" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnDeleteProveedor" ng-click="deleteReceptor(person_selected.receptor_numero);" type="submit" class="btn btn-primary" data-dismiss="modal">Eliminar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

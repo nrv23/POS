@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<div class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- First Section Left -->
+            <div ng-include="'/shared/search.html'"></div>
+             <!-- First Section: Right -->
+            <div>
+                    <button ng-click="reporte_excel4();" type="button" class="btn btn-default">InvDisponible
+                      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> </span>
+                    </button>
+                   <button ng-click="reporte_excel5();" type="button" class="btn btn-default">InvConsumido
+                      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> </span>
+                  <button class="btn btn-home"><a href="#!/restaurante">Ventas</a><span class="glyphicon glyphicon-home"></span></button>
+
+                <div class="row pull-right" style="margin-right: 2%;" >
+
+                    <button id="btnShow_SellingProducts" type="button" class="btn btn-sopa-funciones sopa-sell" ng-click="template_Right='sell_products'; template_Left='sell_products_table'; template_Right_action('sell');">
+                    <!-- <h4>Productos</h4> -->
+                    </button>
+                    <button id="btnShow_RawMaterial" type="button" class="btn btn-sopa-funciones sopa-materiales" ng-click="template_Right='raw_products'; template_Left='raw_products_table';template_Right_action('raw');">
+                    <!-- <h4>Materiales</h4> -->
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row content background-image">
+            <!-- Second Section Left -->
+            <div class="col-md-8">
+                <ng-include src="template_Left"></ng-include>
+            </div>
+            <!-- Second Section Right -->
+            <div class="col-md-4">
+                <h4>
+                    <center>Detalles&nbsp&nbsp
+                        <button id="btnProductRefresh" ng-click="refresh(template_Right);" type="button" class="btn btn-default">
+                            <span class="fa fa-refresh"></span>
+                        </button>
+                    </center>
+                </h4>
+                <ng-include src="template_Right"></ng-include>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<!-- CARGA DETALLE DE PRODUCTO -->
+<script type="text/ng-template" id="sell_products">
+    <h3> <i><b>Descripcion:</b></i> {{product_selected.descripcionproducto}}</h3>
+    <h3> <i>&nbsp&nbsp Cod:</i> {{product_selected.idproducto}} </h3>
+    <h3> <i>&nbsp&nbsp Categoria:</i> {{product_selected.descripcioncategoria}} </h3>
+    <h3> <i>&nbsp&nbsp Precio:</i> {{product_selected.precioproducto}} </h3>
+    <h3> <i>&nbsp&nbsp Materias:</i>
+        <ul>
+            <li ng-repeat="raws in raw_material" ng-show="raws.cantidadnecesaria > 0 && raws.cantidadnecesaria != 'undefined'" >
+              {{raws.descripcioninventario}}: {{raws.cantidadnecesaria}}/{{raws.cantidaddisponibleinventario}} {{raws.unidad}}
+            </li>
+        </ul>
+    </h3>
+    <div>
+        <center>
+            <h3 class="alignBtm">
+                <span><button id="btnEliminarProducto" type="button" class="btn-sopa-funciones sopa-eliminar" data-toggle="modal" data-target="#delete-product-modal" ng-click="sendDataDelete(product_selected.idproducto, product_selected.descripcionproducto)"></button></span>
+                <span><button id="btnEditarProducto" type="button" class="btn-sopa-funciones sopa-editar" ng-click="sendData(product_selected);"></button></span>
+                <span><button id="btnCrearProducto" type="button" class="btn-sopa-funciones sopa-crear" data-toggle="modal" data-target="#create-product-modal"></button></span>
+                <span><button id="btnComposicionProducto" type="button" class="btn-sopa-funciones sopa-editar-composicion" data-toggle="modal" data-target="#composicion-producto-modal" ng-click="composicion_sendData(product_selected.idproducto, product_selected.descripcionproducto, product_selected.descripcioncategoria, raw_material)"></button></span>
+            </h3>
+        </center>
+    </div>
+</script>
+
+<!-- CARGA DETALLE DE INVENTARIO -->
+<script type="text/ng-template" id="raw_products">
+    <h3> <i><b> Descripcion:</b></i> {{product_selected.descripcioninventario}} </h3>
+    <h3> <i>&nbsp&nbsp Cod: </i>{{product_selected.idinventario}} </h3>
+    <h3> <i>&nbsp&nbsp Categoria: </i>{{product_selected.descripcioncategoriainventario}} </h3>
+    <h3> <i>&nbsp&nbsp Cantidad Disponible: </i>{{product_selected.cantidaddisponibleinventario}} </h3>
+    <h3> <i>&nbsp&nbsp Costo: </i>{{product_selected.costoinventario}} </h3>
+    <h3> <i>&nbsp&nbsp Stock Minimo</i>: {{product_selected.cantidadminimainventario}} </h3>
+    <h3> <i>&nbsp&nbsp Unidad Medida</i>: {{product_selected.unidad}} </h3>
+    <div>
+        <center>
+            <h3 class="alignBtm">
+                <span><button id="btnEliminarInventario" type="button" class="btn-sopa-funciones sopa-eliminar" data-toggle="modal" data-target="#delete-inventory-modal" ng-click="sendDataDeleteInventory(product_selected.idinventario, product_selected.descripcioninventario)">       </button></span>
+                <span><button id="btnEditarInventario" type="button" class="btn-sopa-funciones sopa-editar" data-toggle="modal" data-target="#update-inventory-modal" ng-click="sendDataInventory(product_selected.idinventario, product_selected.idcategoriainventario, product_selected.descripcioninventario, product_selected.cantidaddisponibleinventario, product_selected.costoinventario, product_selected.cantidadminimainventario, product_selected.unidad)"></button></span>
+                <span><button id="btnCrearInventory" type="button" class="btn-sopa-funciones sopa-crear" data-toggle="modal" data-target="#create-inventory-modal"></button></span>
+                <span><button id="btnCargarInventory" type="button" class="btn-sopa-funciones sopa-cargar-inventario" data-toggle="modal" data-target="#cargar-inventario-modal" ng-click="sendDataInventoryForLoad(product_selected.idinventario, product_selected.descripcioninventario)">       </button></span>
+            </h3>
+        </center>
+    </div>
+</script>
+
+<!-- CARGA TABLA DE PRODUCTO -->
+<script type="text/ng-template" id="sell_products_table">
+    <div class="table-responsive">
+        <div class="btn-group">
+            <!--CATEGORIAS-->
+            <!--RON-->
+            <button ng-click="category={descripcioncategoria: 'Ron'}" type="button" class=" btn-sopa sopa-ron ">Ron</button>
+            <!--WHISKY-->
+            <button ng-click="category={descripcioncategoria: 'Whisky'}" type="button" class=" btn-sopa sopa-whisky ">Whisky</button>
+            <!--VODKA-->
+            <button ng-click="category={descripcioncategoria: 'Vodka'}" type="button" class=" btn-sopa sopa-vodka ">Vodka</button>
+            <!--CACIQUE-->
+            <button ng-click="category={descripcioncategoria: 'Cacique'}" type="button" class=" btn-sopa sopa-cacique ">Cacique</button>
+            <!--TEQUILA-->
+            <button ng-click="category={descripcioncategoria: 'Tequila'}" type="button" class=" btn-sopa sopa-tequila ">Tequila</button>
+            <!--JAGER-->
+            <button ng-click="category={descripcioncategoria: 'Jager'}" type="button" class=" btn-sopa sopa-jager ">Jager</button>
+            <!--ESPECIALES-->
+            <button ng-click="category={descripcioncategoria: 'Especiales'}" type="button" class=" btn-sopa sopa-especiales ">Especiales</button>
+            <!--TODOS-->
+            <button ng-click="category = ''" class=" btn-sopa sopa-todos">Todos</button>
+        </div>
+        <table class="table table-condensed table-hover">
+            <thead class="tableHeaders">
+                <tr>
+                    <th class="col-sm-1" ng-click="sort('idproducto')">id
+                        <span ng-show="sortKey=='idproducto'" ng-class="{'fa fa-caret-down':reverse, 'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('descripcionproducto')">Descripción
+                        <span ng-show="sortKey=='descripcionproducto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('descripcioncategoria')">Categoria
+                        <span ng-show="sortKey=='descripcioncategoria'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('precioproducto')">Precio
+                        <span ng-show="sortKey=='precioproducto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th class="ng-hide"></th>
+                </tr>
+            </thead>
+            <tbody id="productTable">
+                <tr ng-class="{'productSelected':product.idproducto == selectedRow}"  ng-repeat="product in object | orderBy:sortKey:reverse | filter:search | filter:category">
+                    <td class="ng-hide"> {{product.idclasificacion}}</td>
+                    <td class="col-sm-1" ng-click="rowClicked(product)">{{product.idproducto}}</td>
+                    <td ng-click="rowClicked(product)" class="nr">{{product.descripcionproducto}}</td>
+                    <td ng-click="rowClicked(product)">{{product.descripcioncategoria}}</td>
+                    <td ng-click="rowClicked(product)">{{product.precioproducto | currency:"₡"}}</td>
+                    <td class="ng-hide" ><input type="radio" name="sell_products_radio" ng-model="product.checked"></td>
+                </tr>
+            </tbody>
+          </table>
+    </div>
+</script>
+
+<!-- CARGA TABLA DE INVENTARIO -->
+<script type="text/ng-template" id="raw_products_table">
+    <div class="table-responsive">
+        <div class="btn-group">
+            <!--CATEGORIAS-->
+            <!--CONSUMIBLES-->
+            <button ng-click="category={descripcioncategoriainventario: 'Consumibles'}" type="button" class="btn-sopa sopa-consumible">Consumibles</button>
+            <!--DESECHABLES-->
+            <button ng-click="category={descripcioncategoriainventario: 'Desechables'}" type="button" class="btn-sopa sopa-desechable">Desechables</button>
+            <!--LICOR-->
+            <button ng-click="category={descripcioncategoriainventario: 'Licor'}" type="button" class="btn-sopa sopa-licor">Licor</button>
+            <!--FRESCOS-->
+            <button ng-click="category={descripcioncategoriainventario: 'Frescos'}" type="button" class="btn-sopa sopa-fresco">Fresco</button>  
+            <!--GASEOSOS-->
+            <button ng-click="category={descripcioncategoriainventario: 'Gaseosos'}" type="button" class="btn-sopa sopa-gaseosa">Gaseoso</button>
+            <!--HIELO-->
+            <button ng-click="category={descripcioncategoriainventario: 'Hielo'}" type="button" class="btn-sopa sopa-hielo">Hielo</button>-->
+            <!--JUGOS Y CREMAS-->
+            <button ng-click="category={descripcioncategoriainventario: 'Jugos'}" type="button" class="btn-sopa sopa-jugo">Jugos</button>
+            <!--TODOS-->
+            <button ng-click="category = ''" class="btn-sopa sopa-cacique">Todos</button> <!-- btn-function -->
+
+        </div>
+        <table class="table table-condensed table-hover">
+            <thead class="tableHeaders">
+                <tr>
+                    <th class="col-sm-1" ng-click="sort('idinventario')">id
+                        <span ng-show="sortKey=='idinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+
+                    <th ng-click="sort('descripcioninventario')">Descr
+                        <span ng-show="sortKey=='descripcioninventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('descripcioncategoriainventario')">Categoria
+                        <span ng-show="sortKey=='descripcioncategoriainventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('cantidaddisponibleinventario')">Disponible
+                        <span ng-show="sortKey=='cantidaddisponibleinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('costoinventario')">Costo
+                        <span ng-show="sortKey=='costoinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('cantidadminimainventario')">Min
+                        <span ng-show="sortKey=='cantidadminimainventario'" ng-class="{'fa fa-caret-down':reverse, 'fa fa-caret-up':!reverse}"></span>
+                    </th>
+<!--                    <th ng-click="sort('unidad')">Unidad
+                        <span ng-show="sortKey=='unidad'" ng-class="{'fa fa-caret-down':reverse, 'fa fa-caret-up':!reverse}"></span>
+                    </th> -->
+                    <!--  <th class="ng-hide"></th> -->
+                </tr>
+            </thead>
+            <tbody id="inventoryTable">
+                <tr ng-class="{'productSelected': product.idinventario == selectedRow}" ng-repeat="product in Inventario | orderBy:sortKey:reverse | filter:search | filter:category">
+                    <td class="ng-hide"> product.codigobarrainventario</td>
+                    <td class="col-sm-1 nr" ng-click="rowClicked(product)">{{product.idinventario}}</td>
+                    <td ng-click="rowClicked(product)">{{product.descripcioninventario}}</td>
+                    <td ng-click="rowClicked(product)">{{product.descripcioncategoriainventario}}</td>
+                    <td ng-click="rowClicked(product)">{{product.cantidaddisponibleinventario}}</td>
+                    <td ng-click="rowClicked(product)">{{product.costoinventario | currency:"₡"}}</td>
+                    <td ng-click="rowClicked(product)">{{product.cantidadminimainventario}}</td>
+<!--                    <td ng-click="rowClicked(product)">{{product.unidad}}</td>-->
+                    <!-- <td class="ng-hide" ><input type="radio" name="raw_material_radio" ng-model="product.checked"></td> -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<!-- Modals -->
+<!-- Modal Editar Composicion -->
+<div id="composicion-producto-modal" class="modal fade" role="dialog">
+    <div class="modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Producto: {{product_selected.descripcionproducto}} - Composicion</h4>
+                <div ng-include="'/shared/search.html'"></div>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" method="POST" role="form">
+                    <div class="form-group">
+                     <table class="table table-condensed table-hover">
+                      <thead class="tableHeaders">
+                          <tr>
+                              <th class="col-sm-1" ng-click="sort('idinventario')">Id 
+                                  <span ng-show="sortKey=='idproducto'" ng-class="{'fa fa-caret-down':reverse, 'fa fa-caret-up':!reverse}"></span>
+                              </th>
+                              <th class="col-sm-2" ng-click="sort('descripcioninventario')">Descripción
+                                  <span ng-show="sortKey=='descripcionproducto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                              </th>
+                              <th class="col-sm-1" >Cantidad
+                              </th>
+                              <!-- <th class="ng-hide"> + </th> -->
+                          </tr>
+                      </thead>
+                      <tbody id="composicionTable">
+                          <tr ng-class="{'productSelected':element.cantidadnecesaria > 0}"  ng-repeat="element in raw_material | orderBy:sortKey:reverse | filter:search track by $index">
+
+                              <td class="col-sm-1" ng-click="material_selected(element,product_selected);">{{element.idinventario}}</td>
+                              <td class="col-sm-2" ng-click="material_selected(element,product_selected);">{{element.descripcioninventario}}</td>
+                              <td class="col-sm-1" ng-click="material_selected(element,product_selected);">
+                                  <input type="number" min="0" class="form-control validateNumbers pointer-events: auto; cursor: pointer;" placeholder={{raw_material_copy[$index].cantidadnecesaria}} ng-model="element.cantidadnecesaria">
+
+                              </td>
+                              <!-- <td class="ng-hide" ><input type="checkbox" name="element_check" ng-model="element.checked"></td> -->
+                          </tr>
+                      </tbody>
+                    </table> 
+                   </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnComposicionGuardar" ng-click="save_new_composicion(product_selected);" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button id="btnComposicionCancelar" ng-click="cancelarComposicion(template_RRight);" type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar PRODUCTO-->
+<div id="update-producto-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Producto - Actualizar</h4>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" method="POST" role="form">
+                    <div class="form-group">
+                        <h5 style="color: blue;">Descripcion:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtDescripcionProductoAC" placeholder="Descripcion Producto" ng-model="product_selected.descripcionproducto" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Código producto:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtCodigoProductoAC" placeholder="Código de producto" ng-model="product_selected.codigoproducto" maxlength="24" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Precio:
+                            <input type="text" class="form-control validateNumbers" id="txtPrecioProductoAC" placeholder="Precio Producto" ng-model="product_selected.precioproducto" ng-change="calcularImpuesto(product_selected.precioproducto,'txtporcentajeImpuestoAC','txtImpuestoValorAC',product_selected.tipoimpuesto,'txtPrecioIVAAC','txtPrecioProductoAC');" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Costo Unitario:
+                            <input type="text" class="form-control validateNumbers" id="txtCostoUnitarioAC" placeholder="Costo Unitario" ng-model="product_selected.costounitario" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Categoria:
+                            <select required class="form-control" ng-bind="default_idcategory" ng-options="item as item.descripcioncategoria for item in Categorias track by item.idcategoria" ng-model="product_selected.idcategoria" name="descripcionCategoria" id="txtDescripcionCategoriaAC">
+                                <!-- <option label=" Categoria " disabled selected="selected" value=""></option> -->
+                                 <option disabled selected value="">Categoría</option> 
+                            </select>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Clasificacion de Producto:
+                            <select required class="form-control" ng-options="nombre.nombre_clasificacion for nombre in clasificacionProductos track by nombre.codigo_impuesto" ng-model="product_selected.clasificacionAC" name="descripcionImpuesto" id="clasificacioProductoAC" ng-change="cargarCodigoImpuesto(product_selected.clasificacion)">
+                                <option value="" disabled> Seleccione clasificacion</option>
+                            </select>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Tipo de impuesto asociado:
+                            <select required class="form-control"  ng-options="subimpuesto.descripcion for subimpuesto in listaSubImpuestos track by subimpuesto.idimpuesto" ng-model="product_selected.tipoimpuesto" name="descripcionImpuestoAC" id="txtTipoImpuestoAC" ng-change="calcularImpuesto(product_selected.precioproducto,'txtporcentajeImpuestoAC','txtImpuestoValorAC',product_selected.tipoimpuesto,'txtPrecioIVAAC','txtPrecioProductoAC');">
+                                <option value="" disabled> Seleccione Tipo impuesto</option>
+                            </select>
+                        </h5>
+                    </div>
+                     <div class="form-group">
+                        <h5 style="color: blue;">Porcentaje del Impuesto:
+                            <input type="text" class="form-control validateNumbers" id="txtporcentajeImpuestoAC" placeholder="Porcentaje Impuesto" readonly required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Unidad de medida:
+                            <select required class="form-control" ng-options="unidad as unidad.descripcion for unidad in unidadMedida track by unidad.simbolo" ng-model="product_selected.unidadmedida" name="descripcionUnidadMedida" id="txtDescripcionUnidadMedidaAC">
+                                <option disabled selected value="">Unidad medida</option> 
+                                <!-- <option label="-- Categoria --" disabled selected="selected" value=""></option> -->
+                            </select>
+                        </h5>
+                    </div>
+                        <div class="form-group">
+                        <h5 style="color: blue;">Unidad de medida comercial:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtUnidadMedidaComercialAC" placeholder="Unidad Medida Comercial" ng-model="product_selected.unidadmedidacomercial" maxlength="20" required>
+                        </h5>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnProductEdit" ng-click="editProduct(product_selected);" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button type="reset" ng-click="cancelarEditProduct(template_Right);" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar INVENTARIO-->
+<div id="update-inventory-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Inventario - Actualizar</h4>
+            </div>
+            <div class="modal-body">
+                <form id="inventoryForm" method="POST" role="form">
+                    <div class="form-group">
+                        <h5 style="color: blue;">Descripcion:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtDescripcionInventario" placeholder="Descripcion Inventario" ng-model="product_selected.descripcioninventario" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Categoria Inventario:
+                            <select required class="form-control" ng-bind="default_idcategory" ng-options="item as item.descripcioncategoriainventario for item in CategoriasInventario track by item.idcategoriainventario" ng-model="product_selected.idcategoriainventario" name="descripcionCategoriaInventario" id="txtDescripcionCategoriaInventario">
+                                <!-- <option label="-- Categoria --" disabled selected="selected" value=""></option> -->
+                            </select>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Cantidad Disponible:
+                            <input type="text" class="form-control" id="txtCantidadDisponible" placeholder="Cantidad Disponible" ng-model="product_selected.cantidaddisponibleinventario" disabled required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Costo:
+                            <input type="text" class="form-control" id="txtCostoInventario" placeholder="Costo" ng-model="product_selected.costoinventario" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Stokc Minimo:
+                            <input type="text" class="form-control" id="txtCantidadMinima" placeholder="Cantidad Minima" ng-model="product_selected.cantidadminimainventario" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Unidad de Medida:
+                            <input type="text" class="form-control validateLetters" id="txtUnidadMedida" placeholder="Unidad de Medida" ng-model="product_selected.unidad" required>
+                        </h5>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnInventoryGuardar" ng-click = "editInventory(product_selected.idinventario,product_selected.descripcioninventario,product_selected.cantidaddisponibleinventario,product_selected.costoinventario,product_selected.cantidadminimainventario, product_selected.unidad, product_selected.idcategoriainventario);" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button type="reset" class="btn btn-default" ng-click="cancelarEditInventory(template_Right);" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear PRODUCTO-->
+<div id="create-product-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Producto - Crear</h4>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" method="POST" role="form">
+                    <div class="form-group">
+                        <h5 style="color: blue;">Descripcion:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtDescripcionProducto" placeholder="Descripcion Producto" ng-model="new_descripcionproducto" required>
+                        </h5>
+                    </div>
+                     <div class="form-group">
+                        <h5 style="color: blue;">Código producto:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtCodigoProducto" placeholder="Código de producto" ng-model="new_codigoproducto" maxlength="24" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Precio:
+                            <input type="text" class="form-control validateNumbers" id="txtPrecioProducto" placeholder="Precio" ng-model="new_precioproducto" ng-change="calcularImpuesto(new_precioproducto,'txtporcentajeImpuesto','txtmontoImpuesto',new_tipoImpuesto,'txtPrecioIVI','txtPrecioProducto');"  required>
+                        </h5>
+                    </div>
+                      
+                      <div class="form-group">
+                        <h5 style="color: blue;">Costo Unitario:
+                            <input type="text" class="form-control validateNumbers" id="txtCostoUnitario" placeholder="Costo Unitario" ng-model="new_costounitario" required>
+                        </h5>
+                    </div>
+                     <div class="form-group">
+                        <h5 style="color: blue;">Categoria Producto:
+                            <select required class="form-control" ng-bind="default_idcategory" ng-options="item as item.descripcioncategoria for item in Categorias track by item.idcategoria" ng-model="new_categoria" name="descripcionCategoria" id="txtDescripcionCategoria">
+                               <option value="" disabled> Seleccione Categoría</option>
+                            </select>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Clasificacion de Producto:
+                            <select required class="form-control" ng-options="nombre as nombre.nombre_clasificacion for nombre in clasificacionProductos track by nombre.codigo_impuesto" ng-model="new_clasificacion" name="descripcionImpuesto" id="clasificacioProducto" ng-change="cargarCodigoImpuesto(new_clasificacion,Obj)">
+                                <option value="" disabled> Seleccione clasificacion</option>
+                            </select>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Tipo de impuesto asociado:
+                            <select required class="form-control"  ng-options="subimpuesto.descripcion for subimpuesto in listaSubImpuestos track by subimpuesto.idimpuesto" ng-model="new_tipoImpuesto" name="descripcionImpuesto" id="txtTipoImpuesto" ng-change="calcularImpuesto(new_precioproducto,'txtporcentajeImpuesto','txtmontoImpuesto',new_tipoImpuesto,'txtPrecioIVI','txtPrecioProducto');">
+                                <option value="" disabled> Seleccione Tipo impuesto</option>
+                            </select>
+                        </h5>
+                    </div>
+                     <div class="form-group">
+                        <h5 style="color: blue;">Porcentaje del Impuesto:
+                            <input type="text" class="form-control validateNumbers" id="txtporcentajeImpuesto" placeholder="Porcentaje Impuesto" ng-model="new_porcentajeImpuesto" readonly required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Unidad de medida:
+                            <select required class="form-control" ng-options="unidad as unidad.descripcion for unidad in unidadMedida track by unidad.simbolo" ng-model="p.new_unidadMedida" name="descripcionUnidadMedida" id="txtDescripcionUnidadMedida" ng-change="cagarSimboloUnidadMedida(new_unidadMedida,'txtSimboloUnidad')">
+                               <option value="" disabled> Seleccione unidad medida</option>
+                            </select>
+                        </h5>
+                    </div>
+                        <div class="form-group">
+                        <h5 style="color: blue;">Unidad de medida comercial:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtSimboloUnidadMedidaComercial" placeholder="Unidad Medida Comercial" ng-model="new_unidadmedidacomercial" maxlength="20" required>
+                        </h5>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnProductoGuardar" ng-click="saveProduct(new_descripcionproducto,new_codigoproducto,new_precioproducto, 
+                    new_costounitario,new_categoria,new_clasificacion,new_tipoImpuesto,new_porcentajeImpuesto,
+                    p.new_unidadMedida, new_unidadmedidacomercial);" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear INVENTARIO-->
+<div id="create-inventory-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Inventario - Crear</h4>
+            </div>
+            <div class="modal-body">
+                <form id="inventoryForm" method="POST" role="form">
+                    <div class="form-group">
+                        <h5 style="color: blue;">Descripcion:
+                            <input type="text" class="form-control validateAlphanumeric" id="txtDescripcionInventario" placeholder="Descripcion Inventario" ng-model="new_descripcioninventario" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Cantidad Disponible:
+                            <input type="text" class="form-control" id="txtCantidadDisponible" placeholder="Cantidad Disponible" ng-model="new_cantidaddisponibleinventario" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Costo:
+                            <input type="text" class="form-control" id="txtCostoInventario" placeholder="Costo" ng-model="new_costoinventario" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Cantidad Minima:
+                            <input type="text" class="form-control" id="txtCantidadMinima" placeholder="Cantidad Minima" ng-model="new_cantidadminimainventario" required>
+                        </h5>
+                    </div>
+                    <div class="form-group">
+                      <h5 style="color: blue;">Unidad:
+                          <input type="text" class="form-control validateLetters" id="txtUnidad" placeholder="Unidad de Medida" ng-model="new_unidad" required>
+                      </h5>
+                    </div>
+                    <div class="form-group">
+                        <h5 style="color: blue;">Categoria Inventario:
+                            <select required class="form-control" ng-bind="default_idcategory" ng-options="item as item.descripcioncategoriainventario for item in CategoriasInventario track by item.idcategoriainventario" ng-model="new_categoria" name="descripcionCategoriaInventario" id="txtDescripcionCategoriaInventario">
+                                <!-- <option label="-- Categoria --" disabled selected="selected" value=""></option> -->
+                            </select>
+                        </h5>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnInventoryGuardar" ng-click="saveInventory(new_descripcioninventario,new_cantidaddisponibleinventario,new_costoinventario,new_cantidadminimainventario, new_unidad, new_categoria);" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar PRODUCTO -->
+<div id="delete-product-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea Eliminar el Producto?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="productFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateLetters" id="txtDescripcionProductoDelete" placeholder="Descripcion Producto" ng-model="product_selected.descripcionproducto" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button ng-click="deleteProduct(product_selected.idproducto);" type="submit" class="btn btn-primary" data-dismiss="modal">Eliminar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar INVENTARIO -->
+<div id="delete-inventory-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea Eliminar el Inventario?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="inventoryFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateLetters" id="txtDescripcionInventarioDelete" placeholder="Descripcion Inventario" ng-model="product_selected.descripcioninventario" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button ng-click="deleteInventory(product_selected.idinventario);" type="submit" class="btn btn-primary" data-dismiss="modal">Eliminar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cargar INVENTARIO -->
+<div id="cargar-inventario-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Cargar Inventario</h4>
+            </div>
+            <div class="modal-body">
+                <form id="cargarInventarioForm" method="POST" role="form">
+                    <div class="form-group">
+                        <select class="form-control" name="descripcionInventario" id="descripcionInventario">
+                            <option ng-repeat="inv in Inventario" value="{{inv.idinventario}}">{{inv.descripcioninventario}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="empresa" id="empresa">
+                            <option ng-repeat="proveedor in Proveedores" value="{{proveedor.idproveedor}}">{{proveedor.empresa}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtCantidadProducto" placeholder="Cantidad" ng-model="cantidadProducto" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtCostoProducto" placeholder="Costo Unitario" ng-model="costoProducto" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button ng-click="loadInventario();" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

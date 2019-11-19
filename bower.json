@@ -1,0 +1,34 @@
+{
+  "name": "sopa",
+  "description": "SOPA: Local Web Application for ImagineIng",
+  "main": "server.js",
+  "authors": [
+    "JeanCarlos Chavarría Hughes",
+    "Kevin Picado Arias",
+    "Bryan Chavarría Hughes"
+  ],
+  "license": "AGPL-3.0",
+  "keywords": [
+    "sopa",
+    "imagineing"
+  ],
+  "homepage": "https://github.com/JeanCarlosChavarriaHughes/sopa",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^1.12.4",
+    "angular": "1.6.3",
+    "angular-route": "1.6.3",
+    "angular-route-styles": "*",
+    "components-font-awesome": "^4.7.0",
+    "bootstrap": "^3.3.7",
+    "angularUtils-pagination": "angular-utils-pagination#^0.11.1",
+    "moment": "^2.18.1"
+  }
+}

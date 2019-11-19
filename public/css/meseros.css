@@ -1,0 +1,7 @@
+.dropdown-menu{
+   width: 100%;
+}
+
+.dropdown > .btn{
+   text-align: left;
+}

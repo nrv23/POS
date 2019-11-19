@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<div class="wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="col-lg-6">
+            <div class="pull-left">
+              <div class="div-resume">
+                <h4>
+                  <span ng-bind="(totalPagar | currency:'₡')"></span>
+                </h4>
+              </div>
+            </div> 
+          </div>
+        </div>
+      </div>
+      <div class="row content background-image">
+        <!--<div class="col-md-8">-->
+        <div class="col-md-9">
+            <div class="table-responsive">
+              <table style="margin-top: 0;" class="table table-condensed table-hover">
+                <thead>
+                  <tr>
+                    <th align="center">Producto</th>
+                    <th align="center">Cantidad</th>
+                    <th align="center">Precio</th>
+                    <th align="center">Sub Total</th>
+                    <th align="center">Hora</th>
+                    <th align="center">Descuento</th>
+                    <th align="right">
+                      <span> Todo </span>
+                      <input type="checkbox" ng-model="v" ng-click="selectOrder()" style="transform: scale({{scale}});">
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="facturaTable">
+                  <tr ng-repeat="orden in object">
+                    <td ng-click="rowClicked(orden)" class="nr">{{orden.descripcionproducto}}</td>
+                    <td align="center">{{orden.cantidadproducto}}</td>
+                    <td align="left">{{orden.precioproducto | currency:"₡"}}</td>
+                    <td align="left">{{orden.subtotal | currency:"₡"}}</td>
+                    <td align="left">{{orden.fecharegistro}}</td>
+                    <td align="left">
+                      <input type="number" max="100" min="0" class="form-control validateNumbers" id="txtDescuentoOrden" placeholder="% Descuento Max: 100%" ng-model="orden.descuentoOrden" ng-change="cambiotxtDescuento();" maxlength="2" oninput="validity.valid||(value='');">
+                    </td>
+                    <td align="center">
+                      <div>
+                        <input style="transform: scale({{scale}});" type="checkbox" ng-model="orden.selected" idOrden="{{orden.idorden}}" descripcionProducto="{{orden.descripcionproducto}}" subTotal="{{orden.subtotal}}" cantidad="{{orden.cantidadproducto}}" idCategoria="{{orden.idcategoria}}" descuentoOrden="{{orden.descuentoOrden}}" ng-checked="v" ng-click="selectOrder()"/>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row background-image">
+              <div >
+                <h4>
+                  <label><input style="transform: scale({{scale}});" type="checkbox" id="cboxDescuento" ng-model="valueDescuento" ng-change="cambiocboxDescuento()"> Aplicar Descuento</label>
+                </h4>
+              </div>
+              <!--
+              <div >
+                <input type="number" max="100" min="0" class="form-control validateNumbers" id="txtDescuento" placeholder="% Descuento Max: 100%" ng-model="txtDescuento" ng-change="cambiotxtDescuento();" maxlength="2" oninput="validity.valid||(value='');">
+              </div>
+              -->
+              <div >
+                <h4>
+                  <span class="text-info" ng-bind="(totalMenosDescuento | currency:'₡')"></span>
+                </h4>
+              </div>
+            </div>
+            <br><br>
+            <br><br>
+            <div class="row background-image">
+              <div >
+                <h4>
+                  <label><input style="transform: scale({{scale}});" type="checkbox" id="cboxDividirCuenta" ng-model = "valueDividir" ng-change="cambiocboxDividirCuenta()"> Dividir Cuenta</label>
+                </h4>
+              </div>
+              <div >
+                <select class="form-control" name="cantDivisiones" id="cantDivisiones" ng-model="valueCantDivisiones" ng-change="cambioSelectDivision()">
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                </select>
+              </div>
+              <div>
+                <h4>
+                  <span class="text-info" ng-bind="(totalDividida | currency:'₡')"></span>
+                </h4>
+              </div>
+            </div>
+            <br>
+            <hr><br>
+            <div class="row background-image">
+              <div class="col-md-5">
+                <form action="" class="formaPagoForm" id="formaPagoForm">
+                  <h4>
+                    <input style="transform: scale({{scale}});" type="radio" name="tipoPago" style="font-size:45px" value="Efectivo" checked> <label style="font-size: 18px;"> <b> Efectivo </b> </label>                    <br>
+                    <input style="transform: scale({{scale}});" type="radio" name="tipoPago" style="font-size:45px" value="Tarjeta"> <label style="font-size: 18px;"> <b> Tarjeta </b> </label>                    <br>
+                  </h4>
+                </form>
+              </div>
+              <div class="col-md-3">
+                <button id="pagarCuenta" ng-click="pagarCuenta()" type="button" class="btn btn-sopa-funciones sopa-pagar btn-sm" data-toggle="modal" data-target="#new-factura-modal">Pagar</button>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Pagar Factura-->
+<div id="new-factura-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+  <!-- Modal content-->
+    <div class="modal-content modal-sm">
+      <div class="modal-header modal-sm">
+        <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Factura</h4>
+      </div>
+      <div class="modal-body modal-sm">
+        <table>
+          <thead class="tableHeaders">
+            <tr>
+              <th>Cantidad</th>
+              <th>Producto</th>
+              <th>Sub Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="element in elements">
+              <td>{{element.cantidadproducto}}</td>
+              <td>{{element.descripcionproducto}}</td>
+              <td align="center">{{element.subtotal | currency:"₡"}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div align="right">
+          <label class="text-info">Sub Total:</label> <label class="text-info">{{totalPagar | currency:"₡"}}</label>
+        </div>
+        <div align="right">
+          <label class="text-info">Descuento:</label> <label class="text-info">{{porcentajeDescuento}}&#37;</label>
+        </div>
+        <div align="right">
+          <label class="text-info">Monto Descuento:</label> <label class="text-info">{{descuentoColones | currency:"₡"}}</label>
+        </div>
+        <div align="right">
+          <label class="text-info">Total:</label> <label class="text-info">{{totalMenosDescuento | currency:"₡"}}</label>
+        </div>
+        <div align="right">
+          <label class="text-info">Por Persona:</label> <label class="text-info">{{totalDividida | currency:"₡"}}</label>
+        </div>
+      </div>
+      <div class="modal-footer modal-sm">
+        <div class="pull-left">
+          <button id="btnPagarOrden" ng-click="pagarOrden();" type="submit" class="btn btn-primary" data-dismiss="modal">Confirmar</button>
+          <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Imprimir de nuevo-->
+<div id="imprimir-factura-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+  <!-- Modal content-->
+    <div class="modal-content modal-sm">
+      <div class="modal-header modal-sm">
+        <h4 class="modal-title">Re-Imprimir Factura</h4>
+      </div>
+      <div class="modal-footer modal-sm">
+        <div class="pull-left">
+          <button id="btnImprimirOrdenOk" ng-click="imprimirOrden('ok');" type="submit" class="btn btn-primary" data-dismiss="modal">Confirmar</button>
+          <button id="btnImprimirOrdenCancelar" ng-click="imprimirOrden('');" type="submit" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

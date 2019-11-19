@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<div class="wrapper">
+   <div class="container-fluid background-image">
+      <!-- CONTENT -->
+      <div class="row">
+         <!--PRODUCT-->
+         <div class="col-sm-3">
+            <input type="text" ng-model="searchProduct" aria-label="..." class="form-control txtbox" placeholder="Buscar producto" ng-click="clearfunction()"> <br>
+
+            <input type="hidden" name="tipoCambio" class="form-control txtbox" id="tipoCambio" readonly style="width: 40%">
+            <br>
+         </div>
+         <div class="col-sm-3">
+            <button id="finalizarPeriodoVenta" type="button" class="btn-sopa-funciones sopa-finalizarPeriodo text-center" data-toggle="modal" data-target="#aceptar-finalizar-periodo-modal" align="center"></button>
+            <h3> {{periodoVenta}} </h3>
+         </div>
+         <div class="col-sm-2">
+            <h3 id="cliente_receptor">Cliente </h3>
+            <div class="col-sm-1">
+            <button ng-click="refresh();" type="button" class="btn btn-default"><span class="fa fa-refresh"></span></button>
+         </div>
+         </div>
+
+          <div class="col-sm-1">
+            <button type="button" class="btn-sopa-funciones sopa-cliente-editar"
+            data-toggle="modal" data-target="#insert-proveedor-modal"  align="center"></button>
+         </div>
+         <div class="col-sm-1">
+           <button type="button" class="btn-sopa-funciones sopa-cliente-lista"
+            data-toggle="modal" data-target="#choose-proveedor-modal" align="center"></button>
+         </div>
+         <div class="col-sm-1">
+		 <button type="button" class="btn-sopa-funciones sopa-cliente" align="center" ng-click="loadReceptorPage();"> <span class=""></span> </button>
+         </div>
+         <div class="col-sm-1">
+            <button class="btn-sopa-funciones sopa-facturacion" type="button" align="center" ng-click="loadFacturacion_page();"> <span class="glyphicon glyphicon-notes-2"></span></button>
+         </div>
+      </div>
+      <div class="row content">
+         <div class="col-sm-8">
+            <!-- ================================================================= -->
+            <!-- PRODUCT TABLE -->
+            <div>
+               <table class="table table-responsive table-condensed table-hover">
+                  <thead class="tableHeaders">
+                     <tr>
+                        <th data-field="desc" data-sortable="true" width="35%" ng-click="sortRestaurantAddOrder('descripcionproducto')" style="padding-left: 0px;padding-right: 0px; text-indent: 0.3cm;">Descripción <span ng-show="sortKey=='descripcionproducto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                        </th>
+                        <th data-field="price" data-sortable="true" width="35%" ng-click="sortRestaurantAddOrder('precioproducto')">Precio <span ng-show="sortKey=='precioproducto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                        </th>
+                        <th class="ng-hide">Categoria</th>
+                        <th class="ng-hide">CheckBox</th>
+                        <th width="15%" style="width:auto; text-align:right;" data-field="add" data-sortable="false">+ </th>
+                        <th width="15%" data-field="qty" style="width:70px" data-sortable="false">Cant</th>
+                        <th width="15%" style="widht:auto; text-align:left;" data-sortable="false"> -</th>
+                     </tr>
+                  </thead>
+                  <tbody id="restaurant_table" style="height: 350px;">
+                     <tr height="10%" ng-class="{rowSelected: product.checked}" ng-repeat="product in object|orderBy:sortKey:reverse | filter:searchProduct | filter:category">
+                        <td class="ng-hide"> product.codigobarraproducto</td>
+                        <td ng-click="rowClicked(product)" width="25%" style=" white-space:normal; word-wrap: break-word;min-width: 320px;max-width: auto; text-indent: 0.3cm;">{{product.descripcionproducto}}</td>
+                        <td ng-click="rowClicked(product)" width="15%"> {{product.precioproducto | currency:"₡"}} </td>
+                        <td ng-click="rowClicked(product)" class="ng-hide"> {{product.descripcionCategoria}} </td>
+                        <td ng-click="rowClicked(product)" class="ng-hide"><input type="checkbox" ng-model="product.checked"></td>
+                        <td width="13%" >
+                           <button ng-click="increment(product)" style="margin-left:50px;" type="button" class="btn-change">
+                           <i class="fa fa-plus"></i>
+                           </button>
+                        </td>
+                        <td width="10%" >
+                           <div>
+                              <input ng-model="product.cantidad" style="width:70px; text-align:center;" type="number" value="1" class="form-control validateNumbers pointer-events: auto; cursor: pointer; margin-left:20px" min="1" placeholder="0" />
+                           </div>
+
+                        <td width="10%">
+                           <button ng-click="decrement(product)" ng-disabled="product.cantidad<=0" style="margin-right:100px;" type="button" class="btn-change">
+                           <i class="fa fa-minus"></i>
+                           </button>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+
+            </div>
+         </div>
+         <div class="col-sm-4">
+            <!-- ================================================================= -->
+            <!-- ORDER TABLE -->
+            <div class="row">
+               <table class="table table-responsive  table-condensed table-hover">
+                  <thead class="tableHeaders">
+                     <tr>
+                        <th class="col-md-4" ng-click="sortRestaurantPendinOrder('producto')" style="text-indent: 0.3cm;">Producto
+                           <span ng-show="sortKey=='producto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                        </th>
+                        <th class="col-md-2" align="left" ng-click="sortRestaurantPendinOrder('total')" style="text-indent: 0.3cm;">Total
+                           <span ng-show="sortKey=='total'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                        </th>
+                        <th class="ng-hide">Checkbox</th>
+                     </tr>
+                  </thead>
+                  <tbody style="height: 240px" id="orders_per_cuenta_table">
+                     <!-- The fixed heigh of 240px is 320px set in the home.css for tbody minus the height of buttons for payment.-->
+                     <tr ng-class="{rowSelected: order.checked}" ng-repeat="order in orders|orderBy:sortKey:reverse">
+                        <td ng-click="rowClickedOrder(order)" style="text-indent: 0.3cm;" class="col-md-4" >{{order.cantidad}} {{order.producto}}</td>
+                        <td ng-click="rowClickedOrder(order)" class="col-md-3" align="center">{{order.total | currency:"₡"}}</td>
+                        <td ng-click="rowClickedOrder(order)" class="ng-hide" align="center"><input type="checkbox" ng-model="order.checked"></td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+            <div class="center">
+                <h4>&nbsp;&nbsp;&nbsp;Total:  <span class="badge"> {{pendienteTotal | currency:"₡"}} </span></h4>
+            </div>
+            <div role="toolbar" style="margin: auto;">
+               <button id="pagarEfectivo" ng-click="sendDataToPay('Efectivo');" type="button" class="btn-sopa-funciones sopa-pagarEfectivo sopa-pagar" data-toggle="modal" data-target="#new-factura-modal"></button>
+               <input type="hidden" id="descripcionNaturaleza">
+               <input type="hidden" id="receptor">
+               <input type="hidden" id="idreceptor">
+               <input type="hidden" id="idfactura" name="idfactura">
+               <input type="hidden" id="ultimoIdRcecptor" name="ultimoIdRcecptor">
+               <input type="hidden" id="emisor" name="emisor">
+
+               <button id="pagarTarjeta" ng-click="sendDataToPay('Tarjeta');" type="button" class="btn-sopa-funciones sopa-pagarTarjeta" data-toggle="modal" data-target="#new-factura-modal"></button>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-sm-7 pull-left">
+            <div class="btn-toolbar" role="toolbar">
+               <div class="btn-group">
+                  <!--CATEGORIAS-->
+                  <!--RON-->
+                  <button ng-click="category={descripcioncategoria: 'Ron'}" type="button" class="btn-sopa sopa-ron">Ron</button>
+                  <!--WHISKY-->
+                  <button ng-click="category={descripcioncategoria: 'Whisky'}" type="button" class="btn-sopa sopa-whisky">Whisky</button>
+                  <!--VODKA-->
+                  <button ng-click="category={descripcioncategoria: 'Vodka'}" type="button" class="btn-sopa sopa-vodka">Vodka</button>
+                  <!--CACIQUE-->
+                  <button ng-click="category={descripcioncategoria: 'Cacique'}" type="button" class="btn-sopa sopa-cacique">Cacique</button>
+                  <!--TEQUILA-->
+                  <button ng-click="category={descripcioncategoria: 'Tequila'}" type="button" class="btn-sopa sopa-tequila">Tequila</button>
+                  <!--JAGER-->
+                  <button ng-click="category={descripcioncategoria: 'Jager'}" type="button" class="btn-sopa sopa-jager"> Jager</button>
+                  <!--ESPECIALES-->
+                  <button ng-click="category={descripcioncategoria: 'Especiales'}" type="button" class="btn-sopa sopa-especiales">Especiales</button>
+                  <!--TODOS-->
+                  <button ng-click="category = ''" class="btn btn-sopa sopa-todos btn-sm"> Todos</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-sm-1">
+            <button id="restaurant_submit" ng-click="createOrder();" type="button" class="btn-sopa-funciones sopa-agregar text-center"></button>
+         </div>
+         <div class="col-sm-4 pull-right">
+            <div>
+               <button id="dividirCuenta" ng-click="sendDataSplitAccount()" type="button" class="btn-sopa-funciones sopa-dividirCuenta sopa-opciones-pago" data-toggle="modal" data-target="#dividir-cuenta-modal"></button>
+            </div>
+            <div>
+               <button id="eliminarOrdenes" ng-click="sendDataDeleteOrder()" type="button" class="btn-sopa-funciones sopa-eliminarProductos" data-toggle="modal" data-target="#delete-order-modal"></button>
+            </div>
+            <div>
+               <button id="aplicarDescuento" ng-click="cargarDescuentos();" type="button" class="btn-sopa-funciones sopa-descuento" data-toggle="modal" data-target="#aplicar-descuentos-modal"></button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!--DELETE ORDER MODAL-->
+<div id="delete-order-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">¿Desea Eliminar las siguientes Ordenes?</h4>
+         </div>
+         <!-- ORDER TABLE TO DELETE -->
+         <div class="modal-body modal-sm">
+            <table>
+               <thead class="tableHeaders sm">
+                  <tr>
+                     <th class="col-md-4"># Orden</th>
+                     <th class="col-md-4">Producto</th>
+                     <th class="col-md-4">Cantidad</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr ng-repeat="element in deleteOrders">
+                     <td class="col-md-4" align="right">{{element.idorden}}</td>
+                     <td class="col-md-4" align="left">{{element.producto}}</td>
+                     <td class="col-md-4" align="center">{{element.cantidad}}</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div class="modal-footer">
+            <div>
+               <button id="btnDeleteProduct" ng-click="deleteOrden()" type="submit" class="btn btn-primary pull-left" data-dismiss="modal">Eliminar</button>
+               <button type="reset" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- APLICAR DESCUENTOS MODAL -->
+
+<div id="aplicar-descuentos-modal" class="modal fade" role="dialog" id="modal_desc" >
+   <div class="modal-dialog modal-sm" id="modal_desc">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Digite o seleccione un descuento para cada linea</h4>
+         </div>
+         <!-- ORDER TABLE DISCOUNT -->
+         <div class="modal-body modal-md">
+            <table id="listaDescuentos">
+               <thead class="tableHeaders">
+                  <tr>
+                     <th class="col-sm-1">Producto</th>
+                     <th class="col-sm-1">Subtotal</th>
+                     <th class="col-sm-1">Monto Total</th>
+                     <th class="col-sm-1">Monto Descuento</th>
+                     <th class="col-sm-2">Descuento</th>
+                     <th class="col-sm-3"></th>
+                     <th class="col-sm-2"></th>
+                  </tr>
+               </thead>
+               <tbody id="discountTable">
+                  <tr ng-repeat="element in discountOrders" style="margin-bottom: 5px;">
+                     <td class="col-sm-1">{{element.cantidad}} {{element.producto}}</td>
+                     <td class="col-sm-1">{{element.total}}</td>
+                     <td class="col-sm-1">                        
+                           {{element.subtotal}}
+                     </td>
+                     <td class="col-sm-1">{{element.descuentoColones}}</td>
+                     <td class="col-sm-2">
+                        <div>
+                              <button type="button" class="btn btn-warning btn_descuento" ng-click="limpiarDescuennto(element)" style="float: left;">
+                                    <span></span>-</button>
+                              <input type="number" string-to-number max="100" min="0" style="width:75%; float: right;" id="txt_Descuento" class="form-control validateNumbers pointer-events: auto; cursor: pointer"  ng-model="element.descuento">
+                        </div>
+                     </td>
+                     <td class="col-sm-3"><button type="button" class="btn btn-warning btn_descuento" ng-click="cargarDescuento(1,element,'otros'); cargarDescripcionDescuento(element, 'Otros')">
+                        <span></span>+1%</button>
+                        <button type="button" class="btn btn-warning btn_descuento" ng-click="cargarDescuento(10,element,'otros'); cargarDescripcionDescuento(element, 'Otros')">
+                           <span ></span>+10%</button>
+                           <button type="button" class="btn btn-warning btn_descuento" ng-click="cargarDescuento(15,element,'otros'); cargarDescripcionDescuento(element, 'Otros')">
+                              <span></span>+15%</button>
+                        </td>
+                           
+                     <td class="col-sm-2">
+                        <select  class="form-control input-sm listaSelectsDescuentos" ng-model="descuentos" ng-options="descuentos.descripciondescuento for descuentos in arrayDescuentos track by descuentos.descripciondescuento" ng-change="cargarDescuento(descuentos.porcentajedescuento,element,'lista'); cargarDescripcionDescuento(element, descuentos.descripciondescuento)" style="width: 100%" id="{{element.idorden}}">
+                        <option value="" disabled>Naturaleza Descuento</option>
+                        
+                     </select></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div class="modal-footer">
+            <div>
+               <button id="btnDiscountProduct" ng-click="saveDiscount(descuentos)" type="submit" class="btn btn-primary pull-left" data-dismiss="modal">Aplicar Descuento</button>
+                 <div class="col-sm-4">
+                  <!--<input type="hidden" id="descripcionNaturaleza">-->
+                  
+               </div>
+               <button type="reset" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- DIVIDIR CUENTA MODAL -->
+<div id="dividir-cuenta-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Dividir Cuenta</h4>
+         </div>
+         <div class="modal-body modal-md">
+            <h4 style="color: black">Cantidad de Personas:</h4>
+            <select class="form-control" name="cantDivisiones" id="cantDivisiones" ng-model="valueCantDivisiones">
+               <option value="1">1</option>
+               <option value="2">2</option>
+               <option value="3">3</option>
+               <option value="4">4</option>
+               <option value="5">5</option>
+               <option value="6">6</option>
+               <option value="7">7</option>
+               <option value="8">8</option>
+               <option value="9">9</option>
+            </select>
+         </div>
+         <div class="modal-footer">
+            <div>
+               <button id="btnDividirCuenta" ng-click="cantidadDivisiones()" type="submit" class="btn btn-primary pull-left" data-dismiss="modal">Aplicar</button>
+               <button type="reset" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- PAGAR CUENTA MODAL-->
+<div id="new-factura-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-md">
+      <!-- Modal content-->
+      <div class="modal-content modal-sm">
+         <div class="modal-header modal-sm">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Factura</h4>
+         </div>
+         <div class="modal-body modal-sm">
+            <table>
+               <thead class="tableHeaders">
+                  <tr>
+                     <th>Cantidad</th>
+                     <th>Producto</th>
+                     <th>Sub Total</th>
+                  </tr>
+               </thead>
+               <tbody style="height: auto">
+                  <tr ng-repeat="element in payOrders">
+                     <td>{{element.cantidad}}</td>
+                     <td>{{element.producto}}</td>
+                     <td align="center">{{element.total | currency:"₡"}}</td>
+                  </tr>
+               </tbody>
+            </table>
+            <br>
+            <div align="right">
+               <label class="text-info">Sub Total:</label> <label class="text-info" id="subtotal">{{totalPagar | currency:"₡"}}</label>
+            </div>
+            <div align="right">
+               <label class="text-info">Descuento:</label> <label class="text-info">{{porcentajeDescuento.toFixed(2)}}&#37;</label>
+            </div>
+            <div align="right">
+               <label class="text-info">Monto Descuento:</label> <label class="text-info" id="descuento_total">{{descuentoColones | currency:"₡"}}</label>
+            </div>
+            <div align="right">
+               <label class="text-info">Total:</label> <label class="text-info">{{totalMenosDescuento | currency:"₡"}}</label>
+            </div>
+            <div align="right">
+               <label class="text-info">Por Persona:</label> <label class="text-info">{{totalDividida | currency:"₡"}}</label>
+            </div>
+            <div align="right">
+               <label class="text-info">Medigo Pago:</label> <label class="text-info">{{factura.medioPago.medio}}</label>
+            </div>
+            <div align="right">
+               <label class="text-info">Condición Venta:</label> <label class="text-info">{{factura.condicionVenta.condicion}}</label>
+            </div>
+                <div class="form-group">
+                    <select class="form-control"  id="tipoComprobante" ng-init="factura.tipoComprobante= {descripcion: tipoComprobante[3].descripcion}"  ng-model="factura.tipoComprobante" ng-options="lista.descripcion for lista in tipoComprobante track by lista.descripcion " name="tipoComprobante" required>
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <select class="form-control"  id="mediosPago"  ng-init="factura.medioPago= {medio: mediosPago[0].medio}" ng-model="factura.medioPago" ng-options="medio as medio.medio for medio in mediosPago track by medio.medio " name="mediosPago" required>
+
+                    </select>
+                </div>
+
+
+
+               <div class="form-group">
+                    <select class="form-control"  id="condicionVenta" ng-init="factura.condicionVenta= {condicion: condicionVenta[0].condicion}" ng-model="factura.condicionVenta" ng-options="condicion as condicion.condicion for condicion in condicionVenta track by condicion.condicion" name="condicionVenta" required>
+
+                    </select>
+                </div>
+
+
+
+         </div>
+         <div class="modal-footer modal-sm">
+            <div class="pull-left">
+               <button id="btnPagarOrden" ng-click="pagarOrden();" type="submit" class="btn btn-primary" data-dismiss="modal">Confirmar</button>
+               <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal Aceptar Finalizar Periodo Venta-->
+<div id="aceptar-finalizar-periodo-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Aceptar Finalizar Período Venta</h4>
+         </div>
+         <div class="modal-body">
+            <p>Nota: Al finalizar el período actual, se activará inmediatamente el siguiente perdíodo de venta.</p>
+         </div>
+         <div class="modal-footer">
+            <div>
+               <button id="btnNuevoPeriod" type="submit" class="btn btn-primary pull-left" data-dismiss="modal" onclick="$('#finalizar-periodo-modal').modal('show');">Aceptar</button>
+               <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal Finalizar Período de Venta -->
+<div id="finalizar-periodo-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Finalizar Período Venta</h4>
+         </div>
+         <div class="modal-body">
+            <!--
+               <p>Nota: Al finalizar el período actual, se activará inmediatamente el siguiente perdíodo de venta.</p>
+               -->
+            <p>Por favor, registre el nombre del nuevo período:</p>
+            <form id="newPeriodForm" method="POST" role="form">
+               <div class="form-group">
+                  <input type="text" class="form-control validateAlphanumeric" id="txtNombrePeriodo" placeholder="Nombre Periodo" required>
+               </div>
+            </form>
+         </div>
+         <div class="modal-footer">
+            <div>
+               <button id="btnNuevoPeriod" ng-click="nuevoPeriodoVenta();" type="submit" class="btn btn-primary pull-left" data-dismiss="modal">Finalizar Período Venta</button>
+               <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal Producto Sin Stock -->
+<div id="producto-sinStock-modal" class="modal fade" role="dialog">
+   <div class="modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Materias Primas Sin Stock:</h4>
+         </div>
+         <div class="modal-body">
+            <form id="productForm" method="POST" role="form">
+               <div class="form-group">
+                  <table class="table table-condensed table-hover">
+                     <thead class="tableHeaders">
+                        <tr>
+                           <th class="col-sm-1" ng-click="sortRestaurantAddOrder('descripcionInventario')">Materia Prima
+                              <span ng-show="sortKey=='descripcionInventario'" ng-class="{'fa fa-caret-down':reverse, 'fa fa-caret-up':!reverse}"></span>
+                           </th>
+                           <th class="col-sm-2" ng-click="sortRestaurantAddOrder('cantDisponible')">Disponible
+                              <span ng-show="sortKey=='cantDisponible'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                           </th>
+                           <th class="col-sm-1" ng-click="sortRestaurantAddOrder('cantMinima')">Mínima
+                              <span ng-show="sortKey=='cantMinima'" ng-class="{'fa fa-caret-down':reverse, 'fa fa-caret-up':!reverse}"></span>
+                           </th>
+                        </tr>
+                     </thead>
+                     <tbody id="composicionTable">
+                        <tr ng-repeat="element in inventario_SinStock | orderBy:sortKey:reverse | filter:search track by $index">
+                           <td class="col-sm-1">{{element[0].descripcioninventario}}</td>
+                           <td class="col-sm-2">{{element[0].disponible}}</td>
+                           <td class="col-sm-1">{{element[0].minima}}</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </form>
+         </div>
+         <div class="modal-footer">
+            <div class="pull-center">
+               <button id="btnOk" type="reset" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal Imprimir de nuevo-->
+<div id="imprimir-factura-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content modal-sm">
+         <div class="modal-header modal-sm">
+            <h4 class="modal-title">Re-Imprimir Factura</h4>
+         </div>
+         <div class="modal-footer modal-sm">
+            <div class="pull-left">
+               <button id="btnImprimirOrdenOk" ng-click="imprimirOrden('ok');" type="submit" class="btn btn-primary" data-dismiss="modal">Confirmar</button>
+               <button id="btnImprimirOrdenCancelar" ng-click="imprimirOrden('');" type="submit" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- ------------------------------------------------------- -->
+<div id="insert-proveedor-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Nuevo Receptor</h4>
+         </div>
+         <!-- ORDER TABLE DISCOUNT -->
+         <div class="modal-body">
+           <p style="font-size: 12px;">Campos con signo * son requeridos</p>
+               <!-------------------------------------->
+                <form id="receptorFormUpdate" method="POST" role="form" novalidate>
+                    <div class="form-group" ng-class="{ 'has-error' : receptorFormUpdate.nombre.$invalid && !receptorFormUpdate.nombre.$pristine }">
+                     <span class="form-required">Nombre o razón social *</span>
+                        <input type="text" class="form-control validateAlphanumeric" id="nombre" placeholder="Nombre o razón social" ng-model="receptor.nombre" size="40" maxLength="80" required >
+                    </div>
+
+                    <!--NombreComercial -->
+                    <div class="form-group">
+                      <span class="form-required">Nombre comercial *</span>
+                      <input type="text" class="form-control validateAlphanumeric" ng-model="receptor.nombrecomercial" placeholder="Ingresar el Nombre Comercial" size="40" maxLength="80" id="nombreComercial" />
+                    </div>
+
+                    <div class="form-group">
+                    <span class="form-required">Tipo de identificación *</span>
+                    <select class="form-control" id="tipo_id" required ng-model="receptor.identificacion_tipo" ng-options="item as item.name for item in tipoIds track by item.id" ng-change="cargarId(receptor);">
+                      <option value="" disabled>Seleccione tipo ID </option>
+                    </select>
+                  </div>
+
+               <div>
+
+               <div class="form-group">
+                  <input type="hidden" id="txt_num_tipoIdentificacion" ng-model="receptor.identificacion_tipo_id_numero" size="3" maxlength="3" minlength="1" />
+               </div>
+
+                 <div class="form-group">
+                    <span class="form-required">Número de identificacion *</span>
+                    <input type="number"  class="form-control identificacion_numero" ng-model="receptor.identificacion_numero" data-type="input-textbox" class="form-textbox  validateNumbers" size="20" maxlength="20" data-component="textbox" required="" placeholder="numero de identificacion"/>
+                    <p id="mensaje" style="color:#FF0000; font-size: 10px;"></p>
+                </div>
+                <div class="form-group">
+                    <span class="form-required">Número de identificacion <b>extranjero</b> </span>
+                    <input type="number"  class="form-control identificacion_numero" ng-model="receptor.identificacion_numero_extranjero" data-type="input-textbox" class="form-textbox validateNumbers" size="20" maxlength="20" data-component="textbox" required="" placeholder="numero de identificacion en el extranjero"/>
+                    <p id="mensaje" style="color:#FF0000; font-size: 10px;"></p>
+                </div>
+               </div>
+
+                <!-- Ubicacion -->
+                <div class="form-group">
+                   <span class="form-required">Provincia *</span>
+                    <select class="form-control"  id="id_provincia" ng-model="receptor.ubicacion_provincia" ng-options="provincia as provincia.nombre_provincia for provincia in provincias track by provincia.codigo_provincia " ng-change="cargarCanton(receptor)" name="codigo_provincia" required>
+                        <option value="" disabled> Seleccione Provincia</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                  <span class="form-required">Canton *</span>
+                    <select  class="form-control" id="id_canton" ng-model="receptor.ubicacion_canton" name="codigo_canton"
+                    ng-options="canton as canton.nombre_canton for canton in cantones track by canton.id"
+                    ng-change="cargarDistrito(receptor)" required  >
+                        <option value="" disabled> Seleccione Canton</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                <span class="form-required">Distrito *</span>
+                    <select  class="form-control" id="id_distrito" ng-model="receptor.ubicacion_distrito"
+                     ng-options="distrito as distrito.nombre_distrito for distrito in distritos track by distrito.codigo_distrito"
+                    required >
+                       <option value="" disabled> Seleccione Distrito</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                  <span class="form-required">Dirección *</span>
+                    <textarea class="form-control validateAlphanumeric" id="otras_senas" ng-model="receptor.ubicacion_otras_senas" cols="20"  placeholder="Ingrese una dirección especifica" data-component="textbox" style="resize: none"></textarea><br>
+                    <span class="validity"></span>
+                </div>
+                <div class="form-group">
+                  <span class="form-required">Dirección extranjero </span>
+                    <textarea class="form-control validateAlphanumeric" id="otras_senas_extranjero" ng-model="receptor.ubicacion_otras_senas_extranjero" cols="20"  placeholder="Ingrese una dirección en el extranjero" data-component="textbox" style="resize: none"></textarea><br>
+                    <span class="validity"></span>
+                </div>
+                <!-- Telefono  dfsdf -->
+               <div class="form-group">
+                  <span class="form-required">Código Teléfono *</span>
+                  <input type="text" id="cod_telefono" ng-model="receptor.codigo_pais" data-type="input-textbox" class="form-control validateNumbers"  size="3" maxLength="3"  data-component="textbox" placeholder="Codigo pais" />
+                </div>
+
+               <div class="form-group">
+                  <span class="form-required">Número Teléfono *</span>
+                  <input type="text" id="telefono_numero" ng-model="receptor.telefono_numero" data-type="input-textbox" class="form-control  form-textbox validateNumbers" size="20" maxLength="20"  data-component="textbox" placeholder="Numero de telefono" />
+                </div>
+                <!-- Fax-->
+                <!-- Fax -->
+                <div class="form-group">
+                  <span class="form-required">Código Teléfono Fax *</span>
+                  <input type="text" id="fax_codigoPais" ng-model="receptor.fax_codigopais" data-type="input-textbox" class="form-control  form-textbox validateNumbers" size="3" maxLength="3"  data-component="textbox" placeholder="Código de país" />
+                </div>
+                <div class="form-group">
+                  <span class="form-required">Número Teléfono Fax *</span>
+                  <input type="text" id="fax_numero" ng-model="receptor.fax_numero" data-type="input-textbox" class="form-control  form-textbox validateNumbers" size="20" maxLength="20" data-component="textbox" placeholder="Número de Fax" /><br>
+                </div>
+                <!--CorreoElectronico -->
+                <div class="form-group">
+                  <span class="form-required">Correo electrónico *</span>
+                    <input class="form-control" id="email" type="email" ng-model="receptor.correoelectronico" placeholder="Ingresar el Correo Eletronico" size="60" maxLength="60" required="" ngPattern="\s*\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*\s*"/>
+                </div>
+                <input type="hidden" id="id_search" ng-model="receptor.id_search">
+                  <!------------------------------------------------------------------------------------>
+
+                </form>
+         </div>
+         <div class="modal-footer">
+            <div class="pull-left">
+               <button id="btnInsertReceiver" ng-click= "receptorUpdate(receptor);" type="submit" class="btn btn-primary" ng-disabled="receptorFormUpdate.$invalid">Guardar</button>
+                    <button type="button" class="btn btn-default" id="cancelarReceptor" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!--MODAL QUE CARGA LOS RECEPTORES PARA ESCOCGER CUAL VA SER EL CLIENTE DEL TIQUETE -->
+<div id="choose-proveedor-modal" class="modal fade" role="dialog" id="escoger_proveedor">
+   <div class="modal-dialog modal-sm" id="escoger_proveedor">
+      <!-- Modal content -->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Receptor- Elegir un cliente</h4>
+         </div>
+         <div class="modal-body">
+         <!-- ORDER TABLE DISCOUNT -->
+                   <div class="col" ng-include="'/shared/search.html'">
+
+                   </div>
+
+<!-- CARGA TABLA DE PROVEEDORES -->
+<div id="listaReceptores">
+               <table class="table" id="mitabla">
+                  <thead class="tableHeaders" >
+                     <tr>
+                     <th data-field="cod" data-sortable="true" width="50%" ng-click="sortReceiver('identificacion_numero')">Código<span ng-show="sortKeyR=='nombre'" ng-class="{'fa fa-caret-down':reverseR,'fa fa-caret-up':!reverseR}"></span>
+                        </th>
+                        <th data-field="name" data-sortable="true" width="50%" ng-click="sortReceiver('nombre')">Nombre<span ng-show="sortKeyR=='nombre'" ng-class="{'fa fa-caret-down':reverseR,'fa fa-caret-up':!reverseR}"></span>
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody id="restaurant_table" style="height: 350px;">
+                     <tr id="tc_rc" height="10%" ng-class="{'receptorSelected': rcpt.idreceptor == receptorSelected}" ng-repeat="rcpt in receptor | orderBy:sortKeyR:reverseR | filter:search">
+
+                       <td ng-click="rcpClicked(rcpt);" ><span>{{rcpt.receptor_numero}}</span></td>
+                        <td ng-click="rcpClicked(rcpt);" ><span> {{rcpt.nombre}}</span></td>
+
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <div class="pull-left">
+               <button id="btnAsignarReceiver" ng-click="asignarCliente()" type="submit" class="btn btn-primary" >Cargar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,86 @@
+.background-image {
+	/*background-image: url("/assets/img/sales_background.png");*/
+	background-color: #ffffff;
+}
+
+.margin-top {
+	margin-top: 10px;
+	display: block;
+}
+
+.badge {
+	font-size: 115%;
+	color: #F2331F;
+	background-color: transparent;
+    text-align: center;
+    margin-left: 30px;
+}
+
+.accountSelected {
+	background-color: #FFF;
+	color: #000;
+	text-decoration: none;
+}
+
+.btn-change{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background: none;
+    margin: 0px;
+    /*float: left;*/
+    /*box-shadow: 0 0 1px #ccc;*/
+    -webkit-transition: all 0.5s ease-in-out;
+    border: 2px solid #2b0b34;
+    color: #2b0b34;
+}
+
+.center{
+    margin: auto;
+    color: blue;
+}
+
+.btn-change:hover{
+    -webkit-transform: scale(1.1);
+    background: #ee6c10;
+}
+
+table {
+    border-radius: 20px;
+    background-color: azure;
+}
+#modal_desc{
+    width: 90% !important;
+}
+
+.descuento_cm{
+     width: 39% !important;
+}
+
+#escoger_proveedor{
+
+
+    width: 45% !important;
+
+};
+
+#trc:hover {
+   background-color: #f00;
+   cursor: progress;
+}
+
+#mitabla tr:hover {
+    background-color: #F0F8FF;
+    cursor: pointer;
+}
+
+
+.receptorSelected {
+  background-color: #F0F8FF;
+  
+}
+.btn_descuento{
+    border-radius: 15px;
+    background: white;
+    color: #ee6c10;
+}

@@ -1,0 +1,24 @@
+input[type=text] {
+  background-color: white;
+  color: black;
+}
+
+input[type=email] {
+  background-color: white;
+  color: black;
+}
+
+
+input[type=number] {
+  background-color: white;
+  color: black;
+}
+
+select {
+  color: black;
+}
+
+textarea {
+  background-color: white;
+  color: black;
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<div class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div ng-include="'/shared/search.html'"></div>
+            <!-- First Section: Right -->
+    <!--        <div> -->
+             
+<!--            </div>-->
+        </div>
+        <div class="row content background-image">
+            <!-- Second Section Left -->
+            <div class="col-md-8">
+                <ng-include src="template_Left"></ng-include>
+            </div>
+            <!-- Second Section Right -->
+            <div class="col-md-4">
+                <h4>
+                    <center>Detalles&nbsp&nbsp
+                      
+                    </center>
+                </h4>
+                <ng-include src="template_Right"></ng-include>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<!-- CARGA TABLA DE PROVEEDORES -->
+<script type="text/ng-template" id="proveedores_table">
+    <div class="table-responsive">
+        <!-- <table class="table table-consensed table-hover table-fixed cf"> -->
+        <table class="table table-condensed table-hover">
+            <!-- <thead class="cf"> -->
+            <thead class="tableHeaders">
+                <tr>
+                    <th style="width= 100px;" ng-click="sortReceiver('idescuento')">Código
+                        <span ng-show="sortKey=='idreceptor'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortReceiver('descripciondescuento')">Descripción
+                        <span ng-show="sortKey=='nombre'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortReceiver('porcentajedescuento')">Porcentaje
+                        <span ng-show="sortKey=='correoelectronico'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th>Estado
+                        <span></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="proveedorTable">
+                <tr ng-class="{'descuentoSelected':descuento.iddescuento == true}" ng-repeat="descuento in object | orderBy:sortKey:reverse | filter:search">
+                    <td class="nr" ng-click="rowClicked(descuento)">{{descuento.iddescuento}}</td>
+                    <td ng-click="rowClicked(descuento)"><span ng-bind="descuento.descripciondescuento"></span></td>
+                    <td ng-click="rowClicked(descuento)"><span ng-bind="descuento.porcentajedescuento"></span></td>
+                    <td><button class="btn btn-warning descuento" ng-click="cambiarEstadoDescuento(descuento)" iddescuento>{{descripcionEstado}}</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<!-- CARGA DETALLE DE PROVEEDORES -->
+<script type="text/ng-template" id="proveedores">
+    <h4> <b> <i> Descripción:</i> {{descuentoSelected.descripciondescuento}}</b></h4>
+    <h4> <b> <i> Porcentaje:</i> {{descuentoSelected.porcentajedescuento}}</b></h4>
+    <div>
+        <center>
+            <h4 class="alignBtm">
+                <span><button id="btnDesactivarDescuento" type="button" class="btn-function btn-color btn-sm"  ng-click="cargarModalDescuentoEliminar(descuentoSelected)">Eliminar
+                </button></span>
+
+                <span><button id="btnEditarDescuento" type="button" class="btn-function btn-color btn-sm" ng-click=" cargarModalDescuentoEditar(descuentoSelected)">Editar
+                </button></span>
+                <span><button id="btnNuevoDescuento" type="button" class="btn-function btn-color btn-sm" data-toggle="modal" data-target="#descuento-modal">Nuevo
+                </button></span>
+            </h4>
+        </center>
+    </div>
+</script>
+
+
+
+<!-- Modal Update PROVEEDORES-->
+<div id="descuento-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Nuevo Descuento</h4>
+         </div>
+         <!-- ORDER TABLE DISCOUNT -->
+         <div class="modal-body">
+               
+                <form id="descuentoFormNew" method="POST" role="form" novalidate>
+                    <div class="form-group" ng-class="{ 'has-error' : descripcion.descripciondescuento.$invalid && !descripcion.descripciondescuento.$pristine }">
+                     <span class="form-required">*</span>
+                        <input type="text" class="form-control validateAlphanumeric" id="descripciondescuento" placeholder="Descripción del descuento" ng-model="descuento.descripciondescuento" size="50" maxLength="80"  >
+                    </div>
+                      <div class="form-group">
+                    <input type="text" id="porcentajedescuento" ng-model="descuento.porcentajedescuento" data-type="input-textbox" class="form-control  form-textbox validateNumbers" size="20" maxLength="20" data-component="textbox" placeholder="Porcentaje del descuento" /><br>
+                </div>
+                </form>
+         </div>
+         <div class="modal-footer">
+            <div class="pull-left">
+               <button id="btnGuardarDescuento" ng-click= "insertarDescuento(descuento);" type="submit" class="btn btn-primary" ng-disabled="descuentoFormNew.$invalid">Guardar</button>
+                    <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!-- Modal Eliminar PROVEEDORES-->
+<div id="eliminar-descuento-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea eliminar el descuento?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="proveedorFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateNumbers" id="descripcionDescuentoEliminar" placeholder="Descripción del descuento" ng-model="descuentoSelected.descripciondescuento" disabled>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="porcentajeDescuentoEliminar" placeholder="Porcentaje del descuento" ng-model="descuentoSelected.porcentajedescuento" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnEliminarDescuento" ng-click="eliminarDescuento(descuentoSelected);" type="submit" class="btn btn-primary" data-dismiss="modal">Eliminar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ACTUALIZAR DESCUENTO-->
+
+<div id="actualizar-descuento-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+       <!-- Modal content-->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+             <h4 class="modal-title">Actualizar Descuento</h4>
+          </div>
+          <!-- ORDER TABLE DISCOUNT -->
+          <div class="modal-body">
+                
+                 <form id="descuentoFormUpdate" method="POST" role="form" novalidate>
+                     <div class="form-group" ng-class="{ 'has-error' : descuentoSelected.descripciondescuento.$invalid && !descuentoSelected.descripciondescuento.$pristine }">
+                      <span class="form-required">*</span>
+                         <input type="text" class="form-control validateAlphanumeric" id="descripciondescuentoActualizar" placeholder="Descripción del descuento"  size="50" maxLength="80"  >
+                     </div>
+                       <div class="form-group">
+                     <input type="text" id="porcentajedescuentoActualizar" data-type="input-textbox" class="form-control  form-textbox validateNumbers" size="20" maxLength="20" data-component="textbox" placeholder="Porcentaje del descuento" /><br>
+                 </div>
+                 </form>
+          </div>
+          <div class="modal-footer">
+             <div class="pull-left">
+                <button id="btnActualizarDescuento" ng-click= "editarDescuento(descuentoSelected);" type="submit" class="btn btn-primary" ng-disabled="descuentoFormUpdate.$invalid">Guardar</button>
+                     <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>

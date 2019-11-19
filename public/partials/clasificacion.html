@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<div class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div ng-include="'/shared/search.html'"></div>
+            <!-- First Section: Right -->
+    <!--        <div> -->
+             
+<!--            </div>-->
+        </div>
+        <div class="row content background-image">
+            <!-- Second Section Left -->
+            <div class="col-md-8">
+                <ng-include src="template_Left"></ng-include>
+            </div>
+            <!-- Second Section Right -->
+            <div class="col-md-4">
+                <h4>
+                    <center>Detalles&nbsp&nbsp
+                      
+                    </center>
+                </h4>
+                <ng-include src="template_Right"></ng-include>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<!-- CARGA TABLA DE PROVEEDORES -->
+<script type="text/ng-template" id="proveedores_table">
+    <div class="table-responsive">
+        <!-- <table class="table table-consensed table-hover table-fixed cf"> -->
+        <table class="table table-condensed table-hover">
+            <!-- <thead class="cf"> -->
+            <thead class="tableHeaders">
+                <tr>
+                    <th style="width= 100px;" ng-click="sortReceiver('id')">Código
+                        <span ng-show="sortKey=='idreceptor'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortReceiver('nombre_clasificacion')">Nombre
+                        <span ng-show="sortKey=='nombre'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortReceiver('descripcion_impuesto')">Impuesto
+                        <span ng-show="sortKey=='correoelectronico'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="proveedorTable">
+                <tr ng-class="{'clasificacionSelected':clasificacion.id == true}" ng-repeat="clasificacion in object | orderBy:sortKey:reverse | filter:search">
+                    <td class="nr" ng-click="rowClicked(clasificacion)">{{clasificacion.id}}</td>
+                    <td ng-click="rowClicked(clasificacion)"><span ng-bind="clasificacion.nombre_clasificacion"></span></td>
+                    <td ng-click="rowClicked(clasificacion)"><span ng-bind="clasificacion.descripcion_impuesto"></span></td>
+                    
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<!-- CARGA DETALLE DE PROVEEDORES -->
+<script type="text/ng-template" id="proveedores">
+    <h4> <b> <i> Nombre:</i> {{clasificacionSelected.nombre_clasificacion}}</b></h4>
+    <h4> <b> <i> impuesto:</i> {{clasificacionSelected.descripcion_impuesto}}</b></h4>    
+    <div>
+        <center>
+            <h4 class="alignBtm">
+              <!--   <span><button id="btnDesactivarDescuento" type="button" class="btn-function btn-color btn-sm"  ng-click="cargarModalDescuentoEliminar(descuentoSelected)">Eliminar
+                </button></span> -->
+
+                <span><button id="btnEditarDescuento" type="button" class="btn-function btn-color btn-sm" ng-click=" cargarDatos()">Editar
+                </button></span>
+                <span><button id="btnNuevoDescuento" type="button" class="btn-function btn-color btn-sm" data-toggle="modal" data-target="#clasificacion-modal">Nuevo
+                </button></span>
+            </h4>
+        </center>
+    </div>
+</script>
+
+
+
+<!-- Modal Update PROVEEDORES-->
+<div id="clasificacion-modal" class="modal fade" role="dialog">
+   <div class="modal-dialog modal-sm">
+      <!-- Modal content-->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Crear Clasificacion</h4>
+         </div>
+         <!-- ORDER TABLE DISCOUNT -->
+         <div class="modal-body">
+               
+                <form id="clasificacionForNew" method="POST" role="form" novalidate>
+                    <div class="form-group" ng-class="{ 'has-error' : descripcion.descripcionClasificacion.$invalid && !descripcion.descripcionClasificacion.$pristine }">
+                     
+                        <input type="text" class="form-control validateAlphanumeric" id="descripcionClasificacion" placeholder="Descripción de la clasificacion" ng-model="clasificacion.descripcion" size="50" maxLength="80"  >
+                    </div>
+                    
+                    <div class="form-group">
+                        
+                        <select class="form-control"  id="clasificacion_impuesto" ng-model="clasificacion.impuesto" 
+                        ng-options="impuesto as impuesto.descripcion for impuesto in clasificacionImpuestos track by impuesto.codigo" required >
+                            <option value="" disabled> Seleccione impuesto</option>
+                        </select>
+                    </div>
+                </form>
+         </div>
+         <div class="modal-footer">
+            <div class="pull-left">
+               <button id="btnGuardarClasificacion" ng-click= "insertarClasificacion(clasificacion);" type="submit" class="btn btn-primary" ng-disabled="clasificacionForNew.$invalid">Guardar</button>
+                    <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!-- Modal Eliminar PROVEEDORES-->
+<div id="eliminar-descuento-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea eliminar el descuento?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="proveedorFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateNumbers" id="descripcionDescuentoEliminar" placeholder="Descripción del descuento" ng-model="descuentoSelected.descripciondescuento" disabled>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="porcentajeDescuentoEliminar" placeholder="Porcentaje del descuento" ng-model="descuentoSelected.porcentajedescuento" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnEliminarDescuento" ng-click="eliminarDescuento(descuentoSelected);" type="submit" class="btn btn-primary" data-dismiss="modal">Eliminar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ACTUALIZAR DESCUENTO-->
+<div id="actualizar-clasificacion-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+           <!-- Modal content-->
+           <div class="modal-content">
+              <div class="modal-header">
+                 <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                 <h4 class="modal-title">Actualizar Clasificacion</h4>
+              </div>
+              <!-- ORDER TABLE DISCOUNT -->
+              <div class="modal-body">
+                    
+                     <form id="clasificacionFormUpdate" method="POST" role="form" novalidate  name="clasificacionFormUpdate">
+                         <div class="form-group" ng-class="{ 'has-error' : descripcion.descripcionClasificacionActualizar.$invalid && !descripcion.descripcionClasificacionActualizar.$pristine }">
+                          
+                             <input type="text" class="form-control validateAlphanumeric" id="descripcionClasificacionActualizar" placeholder="Descripción de la clasificacion" ng-model="clasificacionAC.descripcionActualizar" size="50" maxLength="80"  >
+                         </div>
+                         
+                         <div class="form-group">
+                             
+                             <select class="form-control"  id="clasificacion_impuesto_actualizar" ng-model="clasificacionAC.impuestoActualizar" 
+                             ng-options="impuesto as impuesto.descripcion for impuesto in clasificacionImpuestos track by impuesto.codigo" required  name="clasificacion_impuesto_actualizar">
+                                 <option value="" disabled> Seleccione impuesto</option>
+                             </select>
+                         </div>
+
+                     </form>
+              </div>
+              <div class="modal-footer">
+                 <div class="pull-left">
+                    <button id="btnActualizarDescuento" ng-click= "editarClasificacion(clasificacionAC)" type="submit" class="btn btn-primary" >Guardar</button>
+                         <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+     

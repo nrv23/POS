@@ -1,0 +1,320 @@
+.btn-sopa {
+    height: 90px;
+    width: 50px;
+    margin-left: 20px;
+    padding-left: 0px;
+    padding-top: 60px;
+    /*border: 1px solid #000;*/
+    border: none;
+    background-color: transparent;
+}
+
+.btn-link {
+    height: 40px;
+    width: 140px;
+    padding-left: 0px;
+    padding-top: 0px;
+    /*border: 1px solid #000;*/
+    border: none;
+    color: white;
+    text-align: center;
+    font: 20px arial, sans-serif;
+    background-color: transparent;
+}
+
+.btn-sopa-total {
+    height: 60px;
+    width: 60px;
+    padding-left: 0px;
+    padding-top: 15px;
+    /*border: 1px solid #000;*/
+    border: none;
+    background-color: transparent;
+}
+
+.btn-sopa-funciones {
+    height: 90px;
+    width: 90px;
+    padding-left: 20px;
+    padding-top: 55px;
+    /*border: 1px solid #000;*/
+    border: none;
+    background-color: transparent;
+}
+
+.sopa-ron {
+    background: url("/assets/icons/Ron.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+.sopa-whisky {
+    background: url("/assets/icons/whisky.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+.sopa-vodka {
+    background: url("/assets/icons/vodka.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+.sopa-cacique {
+    background: url("/assets/icons/cacique.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+.sopa-tequila {
+    background: url("/assets/icons/tequila.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+.sopa-jager {
+    background: url("/assets/icons/jager.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+.sopa-especiales {
+    background: url("/assets/icons/especiales.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+.sopa-todos {
+    background: url("/assets/icons/todos.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-filtros {
+    background: url("/assets/icons/filtros.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-consumible {
+    background: url("/assets/icons/consumible.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+.sopa-desechable {
+    background: url("/assets/icons/desechable.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+.sopa-licor {
+    background: url("/assets/icons/licor.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+.sopa-fresco {
+    background: url("/assets/icons/fresco.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+.sopa-gaseosa {
+    background: url("/assets/icons/gaseosa.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+.sopa-hielo {
+    background: url("/assets/icons/hielo.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+.sopa-jugo {
+    background: url("/assets/icons/jugo.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+
+.sopa-eliminar {
+    background: url("/assets/icons/botonEliminar.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+
+.sopa-facturacion {
+    background: url("/assets/icons/BotonFactuaccion.png") no-repeat;
+    cursor: pointer;
+    float: left;
+}
+
+.sopa-crear {
+    background: url("/assets/icons/botonCrear.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+
+.sopa-editar {
+    background: url("/assets/icons/botonEditar.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+
+.sopa-editar-composicion {
+    background: url("/assets/icons/botonEditarComposicion.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+
+.sopa-cargar-inventario {
+    background: url("/assets/icons/botonCargarInventario.png") no-repeat 10px;
+    cursor: pointer;
+    float: left;
+}
+
+.sopa-sell {
+    background: url("/assets/icons/bebida32x32.png") no-repeat;
+    cursor: pointer;
+    float: left;
+    padding-left: 5px;
+    padding-top: 20px;
+}
+
+.sopa-materiales {
+    background: url("/assets/icons/materiales.png") no-repeat;
+    float: left;
+    cursor: pointer;
+    padding-left: 5px;
+    padding-top: 20px;
+}
+
+.sopa-bebida {
+    background: url("../assets/icons/bebida32x32.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-cliente {
+    background: url("../assets/icons/cliente.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-cliente-editar {
+    background: url("../assets/icons/BotonEditarCliente.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-cliente-lista {
+    background: url("../assets/icons/BotonListaClientes.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-otros {
+    background: url("../assets/icons/platos32x32.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-finalizarPeriodo {
+    background: url("../assets/icons/finalizarPeriodo.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-agregar {
+    background: url("../assets/icons/iconoAgregar.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-basurero {
+    background: url("../assets/icons/iconoBasurero.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-pagar {
+    margin-left: 60px;
+}
+
+.sopa-opciones-pago {
+    margin-left: 30px;
+}
+
+.sopa-descuento {
+    background: url("../assets/icons/descuento.png") no-repeat;
+    float: left;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.sopa-dividirCuenta {
+    background: url("../assets/icons/dividirCuenta.png") no-repeat;
+    float: left;
+    cursor: pointer;
+}
+
+.sopa-eliminarProductos {
+    background: url("../assets/icons/eliminarProductos.png") no-repeat;
+    float: left;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.sopa-pagarEfectivo {
+    background: url("../assets/icons/pagarEfectivo.png") no-repeat;
+    float: inherit;
+    cursor: pointer;
+}
+
+.sopa-pagarTarjeta {
+    background: url("../assets/icons/pagarTarjeta.png") no-repeat;
+    float: inherit;
+    cursor: pointer;
+}
+/*
+.sopa-ron:hover,
+.sopa-whisky:hover,
+.sopa-eliminar:hover,
+.sopa-vodka:hover,
+.sopa-ginebra:hover,
+.sopa-vino:hover,
+.sopa-tequila:hover,
+.sopa-sell:hover,
+.sopa-raw:hover,
+.sopa-bebida:hover,
+.sopa-cliente:hover,
+.sopa-otros:hover {
+    display: inline-block;
+    border: 0;
+    // width:196px;
+    // height:210px;
+    position: relative;
+    -webkit-transition: all 200ms ease-in;
+    -webkit-transform: scale(1);
+    -ms-transition: all 200ms ease-in;
+    -ms-transform: scale(1);
+    -moz-transition: all 200ms ease-in;
+    -moz-transform: scale(1);
+    transition: all 200ms ease-in;
+    transform: scale(1);
+}
+*/
+.sopa-ron:hover,
+.sopa-whisky:hover,
+.sopa-eliminar:hover,
+.sopa-vodka:hover,
+.sopa-cacique:hover,
+.sopa-jager:hover,
+.sopa-tequila:hover,
+.sopa-sell:hover,
+.sopa-materiales:hover,
+.sopa-bebida:hover,
+.sopa-cliente:hover,
+.sopa-todos:hover,
+.sopa-especiales:hover,
+.sopa-otros:hover {
+    color: #ee6c10;
+    box-shadow: 0px 0px 15px #000000;
+    z-index: 2;
+    -webkit-transition: all 200ms ease-in;
+    -webkit-transform: scale(1.2);
+    -ms-transition: all 200ms ease-in;
+    -ms-transform: scale(1.2);
+    -moz-transition: all 200ms ease-in;
+    -moz-transform: scale(1.2);
+    transition: all 200ms ease-in;
+    transform: scale(1.2);
+}

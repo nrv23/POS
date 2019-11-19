@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<div class="wrapper">
+  <div class="container-fluid">
+    <div class="row col-md-push-12">
+      &nbsp&nbsp&nbsp&nbsp&nbsp
+      <button id="btnFecha" ng-click="" type="button" class="btn btn-default">Fechas
+        <span class="glyphicon glyphicon-time" aria-hidden="true"> </span>
+      </button>
+      <!-- Boton de Refresh -->
+      <button id="btnProuctRefresh" ng-click="refreshDashboard();" type="button" class="btn btn-default">
+        <span class="fa fa-refresh"></span>
+      </button>
+
+      <!-- Botones de templates-->
+      <button id="btnShowSales" type="button" class="btn btn-link btn-sm" ng-click="template='Sales'; templateAction('Sales')"> Ventas</button>
+      <button id="btnShowDaily" type="button" class="btn btn-link btn-sm" ng-click="template='Daily'; templateAction('Daily')">   Cierre Diario</button>
+      <button id="btnShowConsumed" type="button" class="btn btn-link btn-sm" ng-click="template='Consumed'; templateAction('Consumed')">Inventario<br>Consumido</button>
+      <button id="btnShowAvailable" type="button" class="btn btn-link btn-sm" ng-click="template='Available'; templateAction('Available')"> Inventario<br>Disponible</button>
+      <button id="btnShowExpenses" type="button" class="btn btn-link btn-sm" ng-click="template='Expenses'; templateAction('Expenses')">Gastos</button>
+
+      <!-- Boton de Refresh -->
+      <button id="btnProuctRefresh" ng-click="refreshDashboard();" type="button" class="btn btn-default">
+        <span class="fa fa-refresh"></span>
+      </button>
+    </div>
+    <div>&nbsp</div>
+    <div class="row">
+      <div ng-include="'/shared/search.html'"></div>
+      <div>
+        <h4> 
+          <!-- Boton de Reporte2 -->
+          <button id="btnProuctReport1" ng-click="reporte_excel2();" type="button" class="btn btn-default">Periodos
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> </span>
+          </button>
+          Hora Actual: {{ horaReloj }}
+        </h4>
+      </div>
+    </div>
+    <div class="row content background-image">
+      <div class="col-md-12">
+        <ng-include src="template"></ng-include>
+      </div>    
+    </div>
+  </div>
+</div>
+
+<script type="text/ng-template" id="Sales">
+  <div class="table-responsive">
+    <table class="table table-hover table-condensed table-fixed cf">
+      <thead class="cf">
+        <tr>
+          <th class="ng-hide" ng-click="sortDashboard('Mes')"><a>Mes</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='Mes'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th class="ng-hide" ng-click="sortDashboard('Semana')"><a>Semana</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='Semana'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('fecha_date')"><a>Fecha</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='fecha_date'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('idempleado')"><a>Empleado</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='idempleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('nombreperiodo')"><a>Período</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='nombreperiodo'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <!--
+          <th ng-click="sortDashboard('estadoperiodo')"><a>Estado</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='estadoperiodo'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          -->
+          <th ng-click="sortDashboard('efectivos')"><a>Efectivo</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='efectivos'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('tarjetas')"><a>Tarjeta</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='tarjetas'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('subtotal')"><a>SubTotal</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='subtotal'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <!--
+          <th ng-click="sortDashboard('efectivosdescuentos')"><a>Descuento Efectivo</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='efectivosdescuentos'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('tarjetasdescuentos')"><a>Descuento Tarjeta</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='tarjetasdescuentos'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          -->
+          <th ng-click="sortDashboard('descuento')"><a>Descuento</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='descuento'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('total')"><a>Total</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='total'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="summaryTable">
+        <tr ng-repeat="summary in object | orderBy:sortKey:reverse | filter:search">
+          <td ng-click="rowClicked(summary)" class="ng-hide">{{summary.mes}}</td>
+          <td ng-click="rowClicked(summary)" class="ng-hide">{{summary.semana}}</td>
+          <td ng-click="rowClicked(summary)">{{summary.fecha_date | date:'dd/MMM/yy HH:mm:ss':'-0600'}}</td>
+          <td ng-click="rowClicked(summary)">{{summary.nombreempleado}} {{summary.apellidoempleado}}</td>
+          <td ng-click="rowClicked(summary)">{{summary.nombreperiodo}}</td>
+          <!-- <td ng-click="rowClicked(summary)">{{summary.estadoperiodo}}</td> -->
+          <td align="left" ng-click="rowClicked(summary)">{{summary.efectivos | currency:"₡"}}</td>
+          <td align="left" ng-click="rowClicked(summary)">{{summary.tarjetas | currency:"₡"}}</td>
+          <td align="left" ng-click="rowClicked(summary)">{{summary.subtotal | currency:"₡"}}</td>
+          <!-- <td align="left" ng-click="rowClicked(summary)">{{summary.efectivosdescuentos | currency:"₡"}}</td>
+          <td align="left" ng-click="rowClicked(summary)">{{summary.tarjetasdescuentos | currency:"₡"}}</td> -->
+          <td align="left" ng-click="rowClicked(summary)">{{summary.descuento | currency:"₡"}}</td>
+          <td align="left" ng-click="rowClicked(summary)">{{summary.subtotal - summary.descuento | currency:"₡"}}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td style="float:right;">Total Semana: {{ventasSemana | currency:"₡"}}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>   
+  <div class="row">
+    <div class="col-md-9 col-lg-9">
+      <h4> PERIODO:
+        <span ng-bind="nombrePeriodo" class="text-info"></span> FECHA INICIO:
+        <span ng-bind="fechaInicioPeriodo" class="text-info"></span>
+        &nbsp&nbsp&nbsp&nbspMes: {{mesPeriodo}} &nbsp&nbsp&nbsp&nbspAcumulado: {{acumuladoMes | currency:"₡"}}
+      </h4>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="Daily">
+  <div class="table-responsive">
+    <table class="table table-hover table-condensed table-fixed cf">
+      <thead class="cf">
+        <tr>
+          <th ng-click="sortDashboard('idfactura')"><a># Factura</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='idfactura'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('fechafactura')"><a>Fecha</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='fechafactura'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('descripcionproducto')"><a>Producto</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='descripcionproducto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('cantidadproducto')"><a>Cantidad</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='cantidadproducto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('formapago')"><a>Forma Pago</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='cantidadproducto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('subtotal')"><a>Sub Total</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='subtotal'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('porcentajedescuento')"><a>Descuento</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='porcentajedescuento'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('total')"><a>Total</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='total'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('costo')"><a>Costo</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='costo'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="summaryTable">
+        <tr ng-repeat="summary in periodoSeleccionadoDetalle | orderBy:sortKey:reverse | filter:search">
+          <td align="left">{{summary.idfactura}}</td>
+          <td align="left">{{summary.fechafactura}}</td>
+          <td align="left">{{summary.descripcionproducto}}</td>
+          <td align="left">{{summary.cantidadproducto}}</td>
+          <td align="left">{{summary.formapago}}</td>
+          <td align="left">{{summary.subtotal | currency:"₡"}}</td>
+          <td align="left">{{summary.descuentoorden}}%</td>
+          <td align="left">{{summary.total | currency:"₡"}}</td>
+          <td align="left">{{summary.costo | currency:"₡"}}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td style="float:right;">Total Período: {{ventasTotal | currency:"₡"}}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <div class="col-md-3">
+        <h4>Período Venta:</h4>
+      </div>
+      <div class="col-md-3">
+        <select class="form-control" name="seleccionarPeriodo" id="seleccionarPeriodo" ng-model="seleccionarPeriodo" ng-change="cambioPeriodo()">
+          <option ng-repeat="itm in periodosVentas" value="{{itm.idperiodoventa}}"> {{itm.nombreperiodoventa}} {{itm.mes}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="Available">
+  <div class="table-responsive">
+    <table class="table table-hover table-condensed table-fixed cf">
+      <thead class="cf">
+        <tr>
+          <th ng-click="sortDashboard('idinventario')"><a>Id</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='idinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('descripcioninventario')"><a>Inventario</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='descripcioninventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('descripcioncategoriainventario')"><a>Categoria</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='descripcioncategoriainventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('cantidaddisponibleinventario')"><a>Cant Disponible</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='cantidaddisponibleinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('costoinventario')"><a>Costo</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='costoinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('cantidadminimainventario')"><a>Cant Mínima</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='porcentajedescuento'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="summaryTable">
+        <tr ng-repeat="inventario in inventarioDisponible | orderBy:sortKey:reverse | filter:search">
+          <td align="left">{{inventario.idinventario}}</td>
+          <td align="left">{{inventario.descripcioninventario}}</td>
+          <td align="left">{{inventario.descripcioncategoriainventario}}</td>
+          <td align="left">{{inventario.cantidaddisponibleinventario}}</td>
+          <td align="left">{{inventario.costoinventario}}</td>
+          <td align="left">{{inventario.cantidadminimainventario}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</script>
+
+<script type="text/ng-template" id="Consumed">
+  <div class="table-responsive">
+    <table class="table table-hover table-condensed table-fixed cf">
+      <thead class="cf">
+        <tr>
+          <th ng-click="sortDashboard('idinventario')"><a>Id</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='idinventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('descripcioninventario')"><a>Inventario</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='descripcioninventario'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('consumo')"><a>Consumido</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='consumo'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('unidad')"><a>Unidad</a>
+            <span class="glyphicon sort-icon" ng-show="sortKey=='unidad'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+        </tr>
+      </thead>
+        <tbody id="summaryTable">
+          <tr ng-repeat="inventario in inventarioConsumido | orderBy:sortKey:reverse | filter:search">
+            <td align="left">{{inventario.idinventario}}</td>
+            <td align="left">{{inventario.descripcioninventario}}</td>
+            <td align="left">{{inventario.consumo}}</td>
+            <td align="left">{{inventario.unidad}}</td>
+          </tr>
+        </tbody>
+    </table>
+  </div>
+</script>
+
+<script type="text/ng-template" id="Expenses">
+  <div class="table-responsive">
+    <table class="table table-condensed table-hover">
+      <thead class="tableHeaders">
+        <tr>
+          <th class="ng-hide col-xs-1" ng-click="sortDashboard('idgasto')">#id
+            <span ng-show="sortKey=='idgasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('fechagasto')">Fecha
+            <span ng-show="sortKey=='fechagasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('tipogasto')">Tipo
+            <span ng-show="sortKey=='tipogasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('descripciongasto')">Descripcion
+            <span ng-show="sortKey=='descripciongasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('montogasto')">Monto
+            <span ng-show="sortKey=='montogasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('estadogasto')">Estado
+            <span ng-show="sortKey=='estadogasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+          <th ng-click="sortDashboard('observaciongasto')">Observacion
+            <span ng-show="sortKey=='observaciongasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="gastoTable">
+        <tr ng-repeat="gasto in Gastos | orderBy:sortKey:reverse | filter:search">
+          <td class="ng-hide col-xs-1 nr" ng-click="rowClicked(gasto)">{{gasto.idgasto}}</td>
+          <td ng-click="rowClicked(gasto)">{{gasto.fechagasto | date:"DD/MM/YY"}}</td>
+          <td ng-click="rowClicked(gasto)">{{gasto.descripciontipogasto}}</td>
+          <td ng-click="rowClicked(gasto)">{{gasto.descripciongasto}}</td>
+          <td ng-click="rowClicked(gasto)">{{gasto.montogasto | currency:"₡"}}</td>
+          <td ng-click="rowClicked(gasto)">{{gasto.estadogasto}}</td>
+          <td ng-click="rowClicked(gasto)">{{gasto.observaciongasto}}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td style="float:right;">TOTAL DE GASTOS: {{totalGastos | currency:"₡"}}</td>
+        </tr>
+      </tfoot>
+    </table>            
+  </div>
+</script>

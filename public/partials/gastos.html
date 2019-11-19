@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<div class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div ng-include="'/shared/search.html'"></div>
+                <div class="col-xs-12 col-sm-7 col-md-6 col-lg-5">
+                    <div class="pull-right">
+                        <button id="btnRegistrarTipoGasto" type="button" class="btn-function btn-color" data-toggle="modal" data-target="#registrar-tipo-de-gasto-modal">+TipoGasto</button>
+                        <button id="btnRegistrarGasto" type="button" class="btn-function btn-color" data-toggle="modal" data-target="#registrar-gasto-modal">Registrar Gasto</button>            
+                        <button id="btnGastoRefresh" ng-click="refreshGasto();" type="button" class="btn btn-default">
+                            <span class="fa fa-refresh"></span>
+                        </button>
+                        <button id="btnProuctReport1" ng-click="reporte_excel3();" type="button" class="btn btn-default">Gastos
+                          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> </span>
+                        </button>
+                    </div>
+                </div>
+        </div>
+    <!--
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-10 col-lg-7">
+            <h4>
+                TOTAL DE GASTOS: ₡<span ng-bind="totalGastos" class="text-info"></span>
+            </h4>
+       </div>
+    </div>
+    -->
+        <div class="row content">
+            <div class="col-md-10 col-lg-8">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead class="tableHeaders">
+                            <tr>
+                                <th class="ng-hide col-xs-1" ng-click="sort('idgasto')">#id
+                                    <span ng-show="sortKey=='idgasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                                </th>
+                                <th ng-click="sort('fechagasto')">Fecha
+                                    <span ng-show="sortKey=='fechagasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                                </th>
+                                <th ng-click="sort('tipogasto')">Tipo
+                                    <span ng-show="sortKey=='tipogasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                                </th>
+                                <th ng-click="sort('descripciongasto')">Descripcion
+                                    <span ng-show="sortKey=='descripciongasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                                </th>
+                                <th ng-click="sort('montogasto')">Monto
+                                    <span ng-show="sortKey=='montogasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                                </th>
+                                <th ng-click="sort('estadogasto')">Estado
+                                    <span ng-show="sortKey=='estadogasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                                </th>
+                                <th ng-click="sort('observaciongasto')">Observacion
+                                    <span ng-show="sortKey=='observaciongasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                                </th>
+                                <th class="col-sm-1" ></th>
+                            </tr>
+                        </thead>
+                        <tbody id="gastoTable">
+                            <tr ng-class="{'rowSelected':gasto.idgasto == selectedRow}"  ng-repeat="gasto in object | orderBy:sortKey:reverse | filter:search">
+                                <td class="ng-hide col-xs-1 nr" ng-click="rowClicked(gasto)">{{gasto.idgasto}}</td>
+                                <td ng-click="rowClicked(gasto)">{{gasto.fechagasto | date:"DD/MM/YY"}}</td>
+                                <td ng-click="rowClicked(gasto)">{{gasto.descripciontipogasto}}</td>
+                                <td ng-click="rowClicked(gasto)">{{gasto.descripciongasto}}</td>
+                                <td ng-click="rowClicked(gasto)">{{gasto.montogasto | currency:"₡"}}</td>
+                                <td ng-click="rowClicked(gasto)">{{gasto.estadogasto}}</td>
+                                <td ng-click="rowClicked(gasto)">{{gasto.observaciongasto}}</td>
+                                <td class="col-sm-1">
+                                    <button type="submit" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-gasto" ng-click = "editGasto_data (gasto.idgasto, gasto.descripciongasto, gasto.montogasto, gasto.estadogasto, gasto.observaciongasto)">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"> </span>
+                                    </button>
+                                    <!--
+                                    <button type="submit" class="btn btn-warning btn-sm" ng-click = "sendDatadeleteGasto (gasto.idgasto, gasto.descripciongasto)" data-toggle="modal" data-target="#delete-gasto">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"> </span>
+                                    </button>
+                                    -->
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td style="float:right;">TOTAL DE GASTOS: {{totalGastos | currency:"₡"}}</td>
+                            </tr>
+                        </tfoot>
+                    </table>            
+                </div>
+            </div>  
+            <div class="col-md-2 col-lg-4">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead class="tableHeaders">
+                            <tr>
+                                <th ng-click="sort('descripciontipogasto')">Tipo Gasto
+                                    <span ng-show="sortKey=='descripciontipogasto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tipoGastoTable">
+                            <tr ng-class="{'rowSelected':tipoGasto.idtipogasto == selectedRowType}"  ng-repeat="tipoGasto in TipoGastos | orderBy:sortKey:reverse | filter:search">
+                                <td ng-click="rowClickedType(tipoGasto)">{{tipoGasto.idtipogasto}}:{{tipoGasto.descripciontipogasto}}
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-tipo-gasto" ng-click="editTipoGasto_data(tipoGasto.descripciontipogasto,tipoGasto.idtipogasto)">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"> </span>
+                                    </button>
+                                    <!--
+                                    <button type="submit" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#update-tipo-gasto-modal" idTipoGasto={{tipoGasto.idtipogasto}} ng-click="sendTipoGastoDataDelete(tipoGasto.idtipogasto, tipoGasto.descripciontipogasto)">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"> </span>
+                                    </button>
+                                    -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Actualizar Tipo Gasto-->
+<div id="edit-tipo-gasto" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Editar Tipo Gasto</h4>
+            </div>
+            <div class="modal-body">
+                <form id="tipoGastoForm" method="POST" role="form">
+                    <div class="form-group">
+                        id:{{idTipoGasto}}
+                        <input type="text" class="form-control " id="descripcionTipoGasto" ng-model="descripcionTipoGasto" ng-attr-placeholder="{{descripcionTipoGasto}}" required="">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnGastoGuardar" ng-click="updateTipoGasto();" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button ng-click="refreshGasto();" type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Actualizar Gasto-->
+<div id="edit-gasto" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Editar Gasto</h4>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control " id="txtDescripcionGasto" ng-model="descripcionGasto" placeholder="Descripcion">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtmontoGasto"  ng-model="montoGasto" placeholder="Monto">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="estadoGasto" id="txtEstadoGasto">
+                            <option ng-repeat="itm in estadoGastos" value="{{itm}}">{{itm}}</option>
+                        </select>  
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtobservacionGasto" ng-model="observacionGasto" placeholder="Observacion">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnGastoGuardar" ng-click="updateGasto();" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button ng-click="refreshGasto();" type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Gasto -->
+<div id="delete-gasto" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea Eliminar?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="gastoFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateLetters" id="txtDescripcionProductoDelete" placeholder="Descripcion Gasto" ng-model="descripcionGasto" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnDeleteProduct" ng-click="deleteGasto();" type="submit" class="btn btn-primary" data-dismiss="modal">Eliminar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Registrar Gasto -->
+<div id="registrar-gasto-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Formulario de Registro Gastos</h4>
+            </div>
+            <div class="modal-body">
+                <form id="registroGastosForm" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtDescripcionGasto" placeholder="Descripcion Gasto*" ng-model="descripcionGasto" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtMontoGasto" placeholder="Monto*" ng-model="montoGasto" required>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="tipoGasto" id="tipoGasto" ng-model="idTipoGasto" > 
+                            <option ng-repeat="itm in TipoGastos"  value="{{itm.idtipogasto}}">{{itm.descripciontipogasto}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="estadoGasto" id="estadoGasto" ng-model="estadoGasto">
+                            <option ng-repeat="itm in estadoGastos" value="{{itm}}">{{itm}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control " id="txtObservacion" placeholder="Observacion" ng-model="observacionGasto">
+                    </div>           
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnRegistroGasto" ng-click="saveGasto();" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Tipo de Gasto Nuevo-->
+<div id="registrar-tipo-de-gasto-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Formulario de Tipo de Gasto</h4>
+            </div>
+            <div class="modal-body">
+                <form id="registroTipoGastosForm" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateLetters" id="descripcionTipoGastoInsert" placeholder="Tipo de Gasto" ng-model="descripcionTipoGastoInsert">
+                    </div>                      
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnRegistroTipoGasto" ng-click="saveTipoGasto();" type="submit" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  
+  <!-- Modal Eliminar Tipo Gasto-->
+<div id="update-tipo-gasto-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea Eliminar?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="tipoGastoFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateLetters" id="txtDescripcionTipoGastoDelete" placeholder={{descripcionTipoGasto}} disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnDeleteTipoGasto" ng-click="deleteTipoGasto();" type="submit" class="btn btn-primary" data-dismiss="modal">Eliminar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

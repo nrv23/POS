@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<div class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div ng-include="'/shared/search.html'"></div>
+            <!-- First Section: Right -->
+    <!--        <div> -->
+                <div class="row pull-right" style="margin-right: 2%;">
+                    <button id="btnShow_Proveedores" type="button" class="btn-sopa-funciones btn sopa-cliente-editar" ng-click = "template_Right='proveedores'; template_Left = 'proveedores_table'; template_Right_action('proveedores');">
+                    </button>
+                    <button id="btnShow_Empleados" type="button" class="btn-sopa-funciones btn sopa-cliente-lista" ng-click= "template_Right='empleados'; template_Left='empleados_table'; template_Right_action('empleados');">
+                    </button>
+                </div>
+<!--            </div>-->
+        </div>
+        <div class="row content background-image">
+            <!-- Second Section Left -->
+            <div class="col-md-8">
+                <ng-include src="template_Left"></ng-include>
+            </div>
+            <!-- Second Section Right -->
+            <div class="col-md-4">
+                <h4>
+                    <center>Detalles&nbsp&nbsp
+                        <button id="btnProveedoresRefresh" ng-click="refresh(template_Right);" type="button" class="btn btn-default"><span class="fa fa-refresh"></span></button>
+                    </center>
+                </h4>
+                <ng-include src="template_Right"></ng-include>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<!-- CARGA TABLA DE PROVEEDORES -->
+<script type="text/ng-template" id="proveedores_table">
+    <div class="table-responsive">
+        <!-- <table class="table table-consensed table-hover table-fixed cf"> -->
+        <table class="table table-condensed table-hover">
+            <!-- <thead class="cf"> -->
+            <thead class="tableHeaders">
+                <tr>
+                    <th ng-click="sortProveedor('idproveedor')">Proveedor
+                        <span ng-show="sortKey=='idproveedor'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortProveedor('empresa')">Empresa
+                        <span ng-show="sortKey=='empresa'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortProveedor('nombrecontacto')">Nombre
+                        <span ng-show="sortKey=='nombrecontacto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th class="ng-hide">Contacto 1</th>
+                    <th class="ng-hide">Contacto 2</th>
+                    <th>Correo</th>
+                    <th class="ng-hide">Observación</th>
+                    <th class="ng-hide"></th>
+                </tr>
+            </thead>
+            <tbody id="proveedorTable">
+                <tr ng-class="{'personSelected':proveedor.idproveedor == selectedRow}" ng-repeat="proveedor in object | orderBy:sortKey:reverse | filter:search">
+                    <td class="nr" ng-click="rowClicked(proveedor)">{{proveedor.idproveedor}}</td>
+                    <td ng-click="rowClicked(proveedor)"><span ng-bind="proveedor.empresa"></span></td>
+                    <td ng-click="rowClicked(proveedor)"><span ng-bind="proveedor.nombrecontacto"></span></td>
+                    <td class="ng-hide" ng-click="rowClicked(proveedor)"><span ng-bind="proveedor.contactoproveedor1"></span></td>
+                    <td class="ng-hide" ng-click="rowClicked(proveedor)"><span ng-bind="proveedor.contactoproveedor2"></span></td>
+                    <td ng-click="rowClicked(proveedor)"><span ng-bind="proveedor.correoproveedor"></span></td>
+                    <td class="ng-hide" ng-click="rowClicked(proveedor)"><span ng-bind="proveedor.observacionproveedor"></span></td>
+                    <td class="ng-hide" ><input type="radio" name="proveedores_radio" ng-model="proveedor.checked"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<!-- CARGA DETALLE DE PROVEEDORES -->
+<script type="text/ng-template" id="proveedores">
+    <h4> <b> <i> Empresa:</i> {{person_selected.empresa}}</b></h4>
+    <h4> <i>&nbsp&nbsp Contacto:</i> {{person_selected.nombrecontacto}} </h4>
+    <h4> <i>&nbsp&nbsp Telefono:</i> {{person_selected.contactoproveedor1}} </h4>
+    <h4> <i>&nbsp&nbsp Celular:</i> {{person_selected.contactoproveedor2}} </h4>
+    <h4> <i>&nbsp&nbsp Correo:</i> <span href="mailto:{{person_selected.correoproveedor}}"></span> {{person_selected.correoproveedor}} </h4>
+    <h4> <i>&nbsp&nbsp Observación:</i> {{person_selected.observacionproveedor}} </h4>
+    <div>
+        <center>
+            <h4 class="alignBtm">
+                <span><button id="btnEliminarProveedor" type="button" class="btn-function btn-color btn-sm" data-toggle="modal" data-target="#delete-proveedor-modal" ng-click="sendDataDeleteProveedor(person_selected.idproveedor, person_selected.empresa)">Eliminar
+                </button></span>
+                <span><button id="btnEditarProveedor" type="button" class="btn-function btn-color btn-sm" data-toggle="modal" data-target="#update-proveedor-modal" ng-click="sendDataUpdateProveedor(person_selected.idproveedor, person_selected.empresa, person_selected.nombrecontacto, person_selected.contactoproveedor1, person_selected.contactoproveedor2, person_selected.correoproveedor, person_selected.observacionproveedor)">Editar
+                </button></span>
+                <span><button id="btnCrearProveedor" type="button" class="btn-function btn-color btn-sm" data-toggle="modal" data-target="#update-proveedor-modal">Crear
+                </button></span>
+            </h4>
+        </center>
+    </div>
+</script>
+
+<!-- CARGA TABLA DE EMPLEADOS -->
+<script type="text/ng-template" id="empleados_table">
+    <div class="table-responsive">
+        <!-- <table class="table table-consensed table-hover table-fixed cf"> -->
+        <table class="table table-condensed table-hover">
+            <!-- <thead class="cf"> -->
+            <thead class="tableHeaders">
+                <tr>
+                    <th ng-click="sortProveedor('idempleado')">Empleado
+                        <span ng-show="sortKey=='idempleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortProveedor('nombreempleado')">Nombre
+                        <span ng-show="sortKey=='nombreempleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortProveedor('apellidoempleado')">Apellido
+                        <span ng-show="sortKey=='apellidoempleado'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th ng-click="sortProveedor('descripcionpuesto')">Puesto
+                        <span ng-show="sortKey=='descripcionpuesto'" ng-class="{'fa fa-caret-down':reverse,'fa fa-caret-up':!reverse}"></span>
+                    </th>
+                    <th class="ng-hide"></th>
+                </tr>
+            </thead>
+            <tbody id="empleadoTable">
+                <tr ng-class="{'personSelected':empleado.idempleado == selectedRow}" ng-repeat="empleado in Empleados | orderBy:sortKey:reverse | filter:search">
+                    <td class="nr" ng-click="rowClicked(empleado)">{{empleado.idempleado}}</td>
+                    <td ng-click="rowClicked(empleado)"><span ng-bind="empleado.nombreempleado"></span></td>
+                    <td ng-click="rowClicked(empleado)"><span ng-bind="empleado.apellidoempleado"></span></td>
+                    <td ng-click="rowClicked(empleado)"><span ng-bind="empleado.descripcionpuesto"></span></td>
+                    <td class="ng-hide" ><input type="radio" name="empleados_radio" ng-model="empleado.checked"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<!-- CARGA DETALLE DE EMPLEADOS -->
+<script type="text/ng-template" id="empleados">
+    <h4> <b> <i> Nombre:</i> {{person_selected.nombreempleado}} {{person_selected.apellidoempleado}}</b></h4>
+    <h4> <i>&nbsp&nbsp Puesto:</i> {{person_selected.descripcionpuesto}} </h4>
+    <div>
+        <center>
+            <h4 class="alignBtm">
+
+                <!--
+                <span><button id="btnEliminarEmpleado" type="button" class="btn-function btn-color btn-sm" data-toggle="modal" data-target="#delete-empleado-modal" ng-click="sendDataDeleteEmpleado(person_selected.idempleado, person_selected.nombreempleado, person_selected.apellidoempleado)">Eliminar
+                </button></span>
+                
+                <span><button id="btnCrearEmpleado" type="button" class="btn-function btn-color btn-sm" data-toggle="modal" data-target="#update-empleado-modal">Crear
+                -->
+            
+                <span><button id="btnEditarEmpleado" type="button" class="btn-function btn-color btn-sm" data-toggle="modal" data-target="#update-empleado-modal" ng-click="sendDataUpdateEmpleado(person_selected.idempleado, person_selected.nombreempleado, person_selected.apellidoempleado, person_selected.idpuesto, person_selected.descripcionpuesto)">Editar
+                </button></span>
+            </h4>
+        </center>
+    </div>
+</script>
+
+<!-- Modal Update PROVEEDORES-->
+<div id="update-proveedor-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Formulario de Proveedor - Actualizar</h4>
+            </div>
+            <div class="modal-body">
+                <form id="proveedorFormUpdate" method="POST" role="form">
+                    <div class="form-group" ng-class="{ 'has-error' : proveedorFormUpdate.empresa.$invalid && !proveedorFormUpdate.empresa.$pristine }">
+                        <input type="text" class="form-control validateAlphanumeric" id="empresa" placeholder="Empresa" ng-model="person_selected.empresa" required>
+                        <p ng-show="proveedorFormUpdate.empresa.$invalid && !proveedorFormUpdate.empresa.$pristine" class="help-block">El nombre de la empresa es requerido.</p>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control validateAlphanumeric" id="txtNombreContacto" placeholder="Nombre Contacto" ng-model="person_selected.nombrecontacto" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control validateAlphanumeric" id="txtContato1" placeholder="Contacto 1" ng-model="person_selected.contactoproveedor1">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control validateAlphanumeric" id="txtContato2" placeholder="Contacto 2" ng-model="person_selected.contactoproveedor2">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtCorreo" placeholder="Correo" ng-model="person_selected.correoproveedor">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control validateAlphanumeric" id="txtObservacion" placeholder="Observacion" ng-model="person_selected.observacionproveedor">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;">
+                <div class="pull-left">
+                    <button id="btnUpdateProveedor" ng-click="updateProveedor(person_selected);" type="submit" class="btn btn-primary" ng-disabled="proveedorFormUpdate.$invalid">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearData(template_Right);">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar PROVEEDORES-->
+<div id="delete-proveedor-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea Eliminar el Proveedor?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="proveedorFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateLetters" id="txtEmpresaDelete" placeholder="Empresa" ng-model="person_selected.empresa" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnDeleteProveedor" ng-click="deleteProveedor(person_selected.idproveedor);" type="submit" class="btn btn-primary" data-dismiss="modal">Eliminar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar EMPLEADOS-->
+<div id="delete-empleado-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">¿Desea Eliminar el Empleado?</h4>
+            </div>
+            <div class="modal-body">
+                <form id="empleadoFormDelete" method="POST" role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control validateLetters" id="txtEmpleadoDelete" placeholder="Empresa" ng-model="person_selected.nombre" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button id="btnDeleteEmpleado" ng-click="deleteEmpleado(person_selected.idempleado);" type="submit" class="btn btn-primary" data-dismiss="modal">Eliminar</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Update EMPLEADOS-->
+<div id="update-empleado-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Formulario de Empleados - Actualizar</h4>
+            </div>
+            <div class="modal-body">
+                <form id="empleadoFormUpdate" method="POST" role="form">
+                    <div class="form-group" ng-class="{ 'has-error' : empleadoFormUpdate.nombreempleado.$invalid && !empleadoFormUpdate.nombreempleado.$pristine }">
+                        <input type="text" class="form-control validateAlphanumeric" id="txtNombre" placeholder="Nombre" ng-model="person_selected.nombreempleado" required>
+                        <p ng-show="empleadoFormUpdate.nombreempleado.$invalid && !empleadoFormUpdate.nombreempleado.$pristine" class="help-block">El nombre del empleado es requerido.</p>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control validateAlphanumeric" id="txtApellido" placeholder="Apellido" ng-model="person_selected.apellidoempleado" required>
+                    </div>
+                    <!--
+                    <div class="form-group">
+                        <select required class="form-control" ng-bind="default_idpuesto" ng-options="item as item.descripcionpuesto for item in Puestos track by item.idpuesto" ng-model="person_selected.idpuesto" name="descripcionPuesto" id="txtDescripcionPuesto">
+                        </select>
+                    </div>
+                    -->
+                </form>
+            </div>
+            <div class="modal-footer" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;">
+                <div class="pull-left">
+                    <button id="btnUpdateProveedor" ng-click="updateEmpleado(person_selected);" type="submit" class="btn btn-primary" ng-disabled="proveedorFormUpdate.$invalid">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearData(template_Right);">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
