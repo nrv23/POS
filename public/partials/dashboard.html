@@ -3,9 +3,10 @@
   <div class="container-fluid">
     <div class="row col-md-push-12">
       &nbsp&nbsp&nbsp&nbsp&nbsp
-      <button id="btnFecha" ng-click="" type="button" class="btn btn-default">Fechas
+      <button id="btnFecha" ng-click="" type="button" class="btn btn-default" data-toggle="modal" data-target="#busqueda-fechas-modal">Fechas
         <span class="glyphicon glyphicon-time" aria-hidden="true"> </span>
       </button>
+
       <!-- Boton de Refresh -->
       <button id="btnProuctRefresh" ng-click="refreshDashboard();" type="button" class="btn btn-default">
         <span class="fa fa-refresh"></span>
@@ -314,3 +315,40 @@
     </table>            
   </div>
 </script>
+<div id="busqueda-fechas-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+     <!-- Modal content-->
+     <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+           <h4 class="modal-title">Busqueda</h4>
+        </div>
+        <!-- ORDER TABLE DISCOUNT -->
+        <div class="modal-body">
+              
+               <form id="busquedaFechasForm" method="POST" role="form" novalidate  name="busquedaFechasForm">
+                <div class="form-group">
+                    <label for="fecha1" style="color: #3F3933">Fecha Inicial:</label> 
+                  <input 
+                  type="date" class="form-control" id="fecha1" ng-model="busqueda.fecha1"
+                  />
+                 </div>
+                   
+                   <div class="form-group">
+                      <label for="fecha2" style="color: #3F3933">Fecha Final:</label>
+                    <input 
+                    type="date" class="form-control" id="fecha2" ng-model="busqueda.fecha2"
+                    />
+                   </div>
+
+               </form>
+        </div>
+        <div class="modal-footer">
+           <div class="pull-left">
+              <button id="btnBuscarPorFechas" ng-click= "BuscarPorFechas()" type="submit" class="btn btn-primary" >Buscar</button>
+                   <button type="button" id="cancelarInfo" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>

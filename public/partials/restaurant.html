@@ -5,39 +5,33 @@
       <div class="row">
          <!--PRODUCT-->
          <div class="col-sm-3">
-            <input type="text" ng-model="searchProduct" aria-label="..." class="form-control txtbox" placeholder="Buscar producto" ng-click="clearfunction()"> <br>
+            <input type="text" id="txtBuscarProducto"ng-model="searchProduct" aria-label="..." class="form-control txtbox" placeholder="Buscar producto" ng-click="clearfunction()"> 
 
             <input type="hidden" name="tipoCambio" class="form-control txtbox" id="tipoCambio" readonly style="width: 40%">
             <br>
          </div>
          <div class="col-sm-3">
             <button id="finalizarPeriodoVenta" type="button" class="btn-sopa-funciones sopa-finalizarPeriodo text-center" data-toggle="modal" data-target="#aceptar-finalizar-periodo-modal" align="center"></button>
-            <h3> {{periodoVenta}} </h3>
+            <article>
+               <h3 style="margin-top: 5px"> {{periodoVenta}} </h3>
+               <h5 id="cliente_receptor" style="color: #A2A1BE; font-size: 15px;">Cliente </h5>
+            </article>
          </div>
-         <div class="col-sm-2">
-            <h3 id="cliente_receptor">Cliente </h3>
-            <div class="col-sm-1">
-            <button ng-click="refresh();" type="button" class="btn btn-default"><span class="fa fa-refresh"></span></button>
+         <div class="col-sm-1">
+          <button ng-click="refresh();" type="button" class="btn btn-default top"><span class="fa fa-refresh"></span></button>
          </div>
-         </div>
-
-          <div class="col-sm-1">
+         <div class="col-sm-5">
             <button type="button" class="btn-sopa-funciones sopa-cliente-editar"
             data-toggle="modal" data-target="#insert-proveedor-modal"  align="center"></button>
-         </div>
-         <div class="col-sm-1">
-           <button type="button" class="btn-sopa-funciones sopa-cliente-lista"
+            <button type="button" class="btn-sopa-funciones sopa-cliente-lista"
             data-toggle="modal" data-target="#choose-proveedor-modal" align="center"></button>
-         </div>
-         <div class="col-sm-1">
-		 <button type="button" class="btn-sopa-funciones sopa-cliente" align="center" ng-click="loadReceptorPage();"> <span class=""></span> </button>
-         </div>
-         <div class="col-sm-1">
+            <button type="button" class="btn-sopa-funciones sopa-cliente" align="center" ng-click="loadReceptorPage();"> <span class=""></span> </button>
             <button class="btn-sopa-funciones sopa-facturacion" type="button" align="center" ng-click="loadFacturacion_page();"> <span class="glyphicon glyphicon-notes-2"></span></button>
+            <a id="btnShow_SellingProducts" class="btn-sopa-funciones sopa-productos" href="#!/productos"></a>
          </div>
       </div>
-      <div class="row content">
-         <div class="col-sm-8">
+      <div class="row content barra">
+         <div class="col-sm-8 extender">
             <!-- ================================================================= -->
             <!-- PRODUCT TABLE -->
             <div>
@@ -55,7 +49,7 @@
                         <th width="15%" style="widht:auto; text-align:left;" data-sortable="false"> -</th>
                      </tr>
                   </thead>
-                  <tbody id="restaurant_table" style="height: 350px;">
+                  <tbody id="restaurant_table" style="height: 435px;">
                      <tr height="10%" ng-class="{rowSelected: product.checked}" ng-repeat="product in object|orderBy:sortKey:reverse | filter:searchProduct | filter:category">
                         <td class="ng-hide"> product.codigobarraproducto</td>
                         <td ng-click="rowClicked(product)" width="25%" style=" white-space:normal; word-wrap: break-word;min-width: 320px;max-width: auto; text-indent: 0.3cm;">{{product.descripcionproducto}}</td>
@@ -215,6 +209,7 @@
          </div>
          <!-- ORDER TABLE DISCOUNT -->
          <div class="modal-body modal-md">
+            <input type="hidden" id="descuento_seleccionado">
             <table id="listaDescuentos">
                <thead class="tableHeaders">
                   <tr>
@@ -251,7 +246,7 @@
                         </td>
                            
                      <td class="col-sm-2">
-                        <select  class="form-control input-sm listaSelectsDescuentos" ng-model="descuentos" ng-options="descuentos.descripciondescuento for descuentos in arrayDescuentos track by descuentos.descripciondescuento" ng-change="cargarDescuento(descuentos.porcentajedescuento,element,'lista'); cargarDescripcionDescuento(element, descuentos.descripciondescuento)" style="width: 100%" id="{{element.idorden}}">
+                        <select  class="form-control input-sm listaSelectsDescuentos" ng-model="descuentos" ng-options="descuentos.descripciondescuento for descuentos in arrayDescuentos track by descuentos.descripciondescuento" ng-change="cargarDescuento(descuentos.porcentajedescuento,element,'lista','select'); cargarDescripcionDescuento(element, descuentos.descripciondescuento)" style="width: 100%" id="{{element.idorden}}">
                         <option value="" disabled>Naturaleza Descuento</option>
                         
                      </select></td>

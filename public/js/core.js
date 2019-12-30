@@ -423,6 +423,69 @@ app.config(function ($routeProvider) {
   $scope.default_idcategory = ''
   $scope.materials_update = []
 
+  let obtenerSubImpuestos = async () => {
+
+    let response;
+
+    response= await $http({ method: 'GET', url: '/impuesto/iva', params: {}})
+    $scope.subImpuesto01= response.data[0];
+    
+    response= await $http({ method: 'GET', url: '/impuesto/selectivo', params: {}})
+    $scope.subImpuesto02= response.data[0];
+
+    response= await $http({ method: 'GET', url: '/impuesto/combustible', params: {}})
+    $scope.subImpuesto03= response.data[0];
+
+    response= await $http({ method: 'GET', url: '/impuesto/bebidas-alcoholicas', params: {}})
+    $scope.subImpuesto04= response.data[0];
+
+    response= await $http({ method: 'GET', url: '/impuesto/bebidas-jabones', params: {}})
+    $scope.subImpuesto05= response.data[0];
+
+    response= await $http({ method: 'GET', url: '/impuesto/tabaco', params: {}})
+    $scope.subImpuesto06= response.data[0];
+
+    response= await $http({ method: 'GET', url: '/impuesto/calculo-especial', params: {}})
+    $scope.subImpuesto07= response.data[0];
+
+    response= await $http({ method: 'GET', url: '/impuesto/otros', params: {}})
+    $scope.subImpuesto99= response.data[0];
+
+    /*const subImpuesto01="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoIVA01.json";
+    const subImpuesto02="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoSelectivoConsumo02.json";
+    const subImpuesto03="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoUnicoCombustibles03.json";
+    const subImpuesto04="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoBebidasAlcoholicas04.json";
+    const subImpuesto05="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoBebidasEnvasadasSinAlcoholJabones05.json";
+    const subImpuesto06="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoProductosTabaco06.json";
+    const subImpuesto07="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoIVACalculoEspecial07.json";
+    const subImpuesto99="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoOtros99.json";
+
+    response= await fetch(subImpuesto01)
+    $scope.subImpuesto01= await response.json();
+
+    response= await fetch(subImpuesto02)
+    $scope.subImpuesto02= await response.json();
+
+    response= await fetch(subImpuesto03)
+    $scope.subImpuesto03= await response.json();
+
+    response= await fetch(subImpuesto04)
+    $scope.subImpuesto04= await response.json();
+
+    response= await fetch(subImpuesto05)
+    $scope.subImpuesto05= await response.json();
+
+    response= await fetch(subImpuesto06)
+    $scope.subImpuesto06= await response.json();
+    console.log($scope.subImpuesto06);
+    response= await fetch(subImpuesto07);
+    $scope.subImpuesto07= await response.json();
+   
+    response= await fetch(subImpuesto99)
+    $scope.subImpuesto99= await response.json();*/
+    
+  } 
+  obtenerSubImpuestos();
   // var onCheckBoxCargarInventarioChange = '';
   loadData($scope, $http, $log, '/api/product', data)
   // save (insert & update) product method
@@ -455,6 +518,7 @@ app.config(function ($routeProvider) {
     }
     $scope.refreshProduct()
   } */
+
 
   /* $scope.cargarProductosInventario = function () {
     $scope.onCheckBoxCargarInventarioChange = $scope.valueCargarInventario tipo_ 'Checked' : 'UnChecked'
@@ -509,7 +573,7 @@ getPromise($scope, $http, $log, '/api/product/clasificacion', {}, false).then(cl
 
 
   $scope.clasificacionProductos= clasificaciones;
-  console.log("clasificacion ",$scope.clasificacionProductos)
+
 }).catch(err => { console.error(err)});
 
 
@@ -529,44 +593,7 @@ getPromise($scope, $http, $log, '/api/product/clasificacion', {}, false).then(cl
   }
 
 
-  let obtenerSubImpuestos = async () => {
 
-    let response;
-    const subImpuesto01="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoIVA01.json";
-    const subImpuesto02="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoSelectivoConsumo02.json";
-    const subImpuesto03="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoUnicoCombustibles03.json";
-    const subImpuesto04="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoBebidasAlcoholicas04.json";
-    const subImpuesto05="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoBebidasEnvasadasSinAlcoholJabones05.json";
-    const subImpuesto06="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoProductosTabaco06.json";
-    const subImpuesto07="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoIVACalculoEspecial07.json";
-    const subImpuesto99="https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/subImpuestoOtros99.json";
-
-    response= await fetch(subImpuesto01)
-    $scope.subImpuesto01= await response.json();
-
-    response= await fetch(subImpuesto02)
-    $scope.subImpuesto02= await response.json();
-
-    response= await fetch(subImpuesto03)
-    $scope.subImpuesto03= await response.json();
-
-    response= await fetch(subImpuesto04)
-    $scope.subImpuesto04= await response.json();
-
-    response= await fetch(subImpuesto05)
-    $scope.subImpuesto05= await response.json();
-
-    response= await fetch(subImpuesto06)
-    $scope.subImpuesto06= await response.json();
-
-    response= await fetch(subImpuesto07);
-    $scope.subImpuesto07= await response.json();
-   
-    response= await fetch(subImpuesto99)
-    $scope.subImpuesto99= await response.json();
-    
-  } 
-  obtenerSubImpuestos();
 
   function UnidadesMedidaServicios () {
     return  ['Al','Alc','Cm','I','Os','Sp','Spe','St','d','h','s'];
@@ -602,6 +629,7 @@ $scope.cargarCodigoImpuesto = (clasificacion,tipo) =>{
             break;
         case '06': 
             $scope.listaSubImpuestos= $scope.subImpuesto06.tipoImpuesto;
+            console.log( $scope.subImpuesto06.tipoImpuesto)
             break;
         case '07':
             $scope.listaSubImpuestos= $scope.subImpuesto07.tipoImpuesto;
@@ -646,8 +674,8 @@ $scope.cargarCodigoImpuesto = (clasificacion,tipo) =>{
         }
 
         document.getElementById(porcentaje).setAttribute("value", tipoimpuesto.porcentaje);
-        document.getElementById(precio_ivi).setAttribute("value",new_precio);
-        document.getElementById(monto).setAttribute("value",valorImpuesto);
+        //document.getElementById(precio_ivi).setAttribute("value",new_precio);
+        //document.getElementById(monto).setAttribute("value",valorImpuesto);
       }
   }
 
@@ -834,30 +862,21 @@ $scope.cargarCodigoImpuesto = (clasificacion,tipo) =>{
       let tipoProducto='';
       let codigo ='';
 
-      //NO BORRAR EL CODIGO COMENTADO
-      /*for(let i=0; i < unidadesMedidaServicios.length; i++){
-        if(unidadSeleccionada == unidadesMedidaServicios[i]){
-            codigo ='Servicio';
-            tipoProducto='01';
-         }
-      }
-
-      if(tipoProducto === ''){
-        tipoProducto='02';
-        codigo='Mercancía';
-      }*/
-
       if(unidadesMedidaServicios.includes(unidadSeleccionada)){ // saber si existe dentro de los elementos del array
         codigo ='Servicio';
         tipoProducto='01';
-        console.log('si')
+
       }else{
-        console.log('NO')
+
         codigo='Mercancía';
         tipoProducto='02';
       }
 
-      data = {
+      if(typeof $scope.idclasificacion === 'undefined'){
+          $scope.idclasificacion= product_selected.idclasificacion;
+      }
+
+     const data = {
 
           idproducto: product_selected.idproducto,
           descripcionproducto: product_selected.descripcionproducto.replace(/ +$/, ''),
@@ -871,12 +890,12 @@ $scope.cargarCodigoImpuesto = (clasificacion,tipo) =>{
           tipoProducto: tipoProducto,
           codigoProducto: codigo,
           codigo_impuesto: product_selected.codigo_impuesto,
-          clasificacion: product_selected.idclasificacion,
+          clasificacion: $scope.idclasificacion,
       }
 
-      console.log("data ",data); 
-      
-      actualizarLinea(data, '/api/product/update').then(response =>{
+      console.log("DATA ", data);
+
+     actualizarLinea(data, '/api/product/update').then(response =>{
           if(response.status === 200){
             alert("Actualizado");
 
@@ -1093,11 +1112,18 @@ $scope.cargarCodigoImpuesto = (clasificacion,tipo) =>{
     return -1
   }
 
+  $scope.cargarIdClasificacion =(product) => {
+
+    console.log("cambio ",product)
+    $scope.idclasificacion = product.id
+    console.log($scope.idclasificacion);  
+  }
   $scope.rowClicked = function (product) {
     $scope.selectedRow = false
     $scope.product_selected = product
     if (typeof product.idproducto !== 'undefined') {
       // we are in the sell products tab
+    
       $log.info(product.idproducto)
       $scope.raw_material = ''
       $scope.get_list_inventario_per_product(product.idproducto)
@@ -2545,7 +2571,7 @@ $scope.cargarCodigoImpuesto = (clasificacion,tipo) =>{
                     'idfactura': idfactura
                     }
                 }
-
+                console.log("data_firma ", data_firma[1]);
           insertarFila(data_firma[1], '/firma_electronica/serverside').then(data => {
             console.log("xml ",data)
             if(typeof data.data.resp.xmlFirmado !== "undefined"){
@@ -3164,12 +3190,13 @@ $scope.cargarCodigoImpuesto = (clasificacion,tipo) =>{
       idEmpleado: $scope.idEmpleado,
       idPeriodo: $scope.idPeriodoVenta
     }
-
+    console.log(dataEmpleado)
     $http({
       method: 'GET',
       url: '/getInfoPeriodoCierre',
       params: dataEmpleado
     }).then(function (response) {
+      console.log("response ",response)
       // resolve(response.data)
       $log.info(response.data)
       var ventaTotal = truncate(response.data[0].ventatotal)
@@ -3580,7 +3607,7 @@ $scope.cargarDescripcionDescuento = (elemento, descripcion) =>{
   console.log(elemento)
 }
 
-$scope.cargarDescuento = ( descuento, obj, tipo)=>{
+$scope.cargarDescuento = ( descuento, obj, tipo,tag={})=>{
 
   // esta funcion obtiene el descuento y el objeto de descuento para obtener el monto de descuento
   // y restarlo al precio de la orden y mostrarlo en la orden actual
@@ -3589,36 +3616,60 @@ $scope.cargarDescuento = ( descuento, obj, tipo)=>{
   // 3 botones que asignan un descuento y su naturaleza de descuento va ser otros, sino entonces
   // quiere decir que el descuento viene de algun select y su naturaleza de descuento va ser la que tare 
   // la opcion seleccionada del select
-  let descuentoOrden;
-  if(descuento == 0){
-    descuentoOrden = obj.descuento;
 
+  let descuentoAplicado = obj.descuento;
+  descuentoAplicado+= descuento;
+ 
+  if(descuentoAplicado > 100){ // VALIDAR QUE EL DESCUENTO NO SE PASE DEL 100%
+    return;
   }else{
-    descuentoOrden= descuento;
-  }
-   obj.descuento= descuentoOrden;
-   let newDescuento = descuento / 100;
-   newDescuento = newDescuento * parseFloat(obj.subtotal);
 
-    obj.descuentoColones=newDescuento;
-
-   let total = parseFloat(obj.subtotal);
-   
-   obj.total = total - newDescuento;
-    if(tipo === 'otros'){
-      let select_descuento = document.getElementsByClassName("listaSelectsDescuentos");
-     
-      for(let i=0; i < select_descuento.length; i++){
-        if(obj.idorden == select_descuento[i].getAttribute("id")){
-           const options= select_descuento[i].options;
-           for(let b=0; b < options.length; b++){
-             if(options[b].innerText == "Otros")
-              select_descuento[i].options[b].selected = true;
-           }
-        } 
+      let descuentoOrden;
+      if(descuento == 0){
+        descuentoOrden = parseFloat(obj.descuento);
+    
+      }else{
+        descuentoOrden= parseFloat(descuento);
       }
-    }else{
-      return;
+      
+      obj.descuento+= descuentoOrden;  
+      console.log("descuento final ",obj.descuento)
+      
+      let newDescuento = Number(obj.descuento) / 100;
+      newDescuento = newDescuento * parseFloat(obj.subtotal);
+        
+      
+        for(let i=0; i < newDescuento.toString().length; i++){
+        if(newDescuento.toString()[i] == '.'){
+            const descuento = newDescuento.toString(); 
+            const decimales = descuento.substr(i+1, descuento.length);
+            if(decimales.length > 2){
+              newDescuento = parseFloat(newDescuento).toFixed(2);
+            }
+          }
+        }
+        
+        obj.descuentoColones=newDescuento;
+    
+      let total = parseFloat(obj.subtotal);
+      
+      obj.total = total - newDescuento;
+        if(tipo === 'otros'){
+          let select_descuento = document.getElementsByClassName("listaSelectsDescuentos");
+        
+          for(let i=0; i < select_descuento.length; i++){
+            if(obj.idorden == select_descuento[i].getAttribute("id")){
+              const options= select_descuento[i].options;
+              for(let b=0; b < options.length; b++){
+                if(options[b].innerText == "Otros")
+                  select_descuento[i].options[b].selected = true;
+                  
+              }
+            } 
+          }
+        }else{
+          return;
+        }
     }
  }
 
@@ -3831,11 +3882,11 @@ $scope.descripcionDescuento = function (orden, descripcion) {
 
   $scope.saveDiscount = function () {
     let descuento=0;
-
+  
     for (let i = 0; i < $scope.discountOrders.length; i++) {
 
       let data = {
-        id: $scope.discountOrders[i].idorden,
+        id: '',
         descuento: '',
         naturaleza: ''
       }
@@ -3845,15 +3896,16 @@ $scope.descripcionDescuento = function (orden, descripcion) {
         //let select= document.getElementById("naturalezaDescuento");
        // let value= select.value;
         //naturalezadescuento= select.options[select.selectedIndex].innerText;
-        
-        data.descuento= $scope.discountOrders[i].descuentoColones;
-        data.porcentajeDescuento= $scope.discountOrders[i].descuento;
-        data.naturaleza= $scope.discountOrders[i].naturalezadescuento;
-        data.total = $scope.discountOrders[i].total
-        data.subtotal = $scope.discountOrders[i].subtotal 
+        data.id= $scope.discountOrders[i].idorden,
+        data.descuento= $scope.discountOrders[i].descuentoColones,
+        data.porcentajeDescuento= $scope.discountOrders[i].descuento,
+        data.naturaleza= $scope.discountOrders[i].naturalezadescuento,
+        data.total= $scope.discountOrders[i].total,
+        data.subtotal= $scope.discountOrders[i].subtotal
 
       }else{
-        
+
+        data.id= $scope.discountOrders[i].idorden;
         data.descuento= 0;
         data.porcentajeDescuento= 0;
         data.naturaleza= '';
@@ -7529,6 +7581,54 @@ $scope.clearData = function (template_Right) {
     cargarPeriodosVentas($scope, $http, $log)
   }
 
+  $scope.BuscarPorFechas = () => {
+      let fecha1,fecha2, datosFecha={
+        fecha1:'',
+        fecha2:''
+      };
+
+      fecha1=new Date(document.getElementById("fecha1").value);
+      fecha2=new Date(document.getElementById("fecha2").value);
+
+    let mes, anio, dia;
+    mes = Number(fecha1.getMonth())+1;
+    dia= Number(fecha1.getDate())+1;
+    anio = fecha1.getFullYear();
+
+    if(mes < 10) mes= '0'+String(mes);
+    if(dia< 10) dia = '0'+String(dia);
+
+    datosFecha.fecha1=[mes,anio].join('/').toString();
+
+    // DATOS PARA FECHA 2
+    mes = Number(fecha2.getMonth())+1;
+    dia= Number(fecha2.getDate())+1;
+    anio = fecha2.getFullYear();
+
+    if(mes < 10) mes= '0'+String(mes);
+    if(dia< 10) dia = '0'+dia;
+ 
+    datosFecha.fecha2=[mes,anio].join('/').toString();
+    datosFecha.tipo='fechas';
+
+    //getLinea(datosFecha,'/dataFactura/perFechas').then(resultado => {
+      $http({ method: 'GET', url: '/dasboard_load_perDate', params: datosFecha}) // se hace la peticion 
+      // al server y se carga el objeto que carga la tabla
+      .then(response => {  
+        $scope.object = response.data
+        //console.log($scope.object)
+        for (var i = 0; i < $scope.object.length; i++) {
+          $scope.object[i]['fecha_dated'] = new Date($scope.object[i]['fecha_date'])
+        }
+        $scope.nombrePeriodo= ''
+        $scope.fechaInicioPeriodo = ''
+        $scope.mesPeriodo = ''
+        $scope.acumuladoMes= ''
+        hideModal('#busqueda-fechas-modal');
+      })
+      .catch(err => console.error(err));
+  }
+
   $scope.reporte_excel2 = function () {
     /* Metodo para descargar el tipo de reporte2.
     https:// stackoverflow.com/questions/36931521/how-to-download-binary-file-in-angular-js-using-http
@@ -7683,6 +7783,7 @@ $scope.clearData = function (template_Right) {
   }
 
   $scope.rowClicked = function (periodo) {
+    
     $scope.nombrePeriodo = periodo.nombreperiodo
     $scope.fechaInicioPeriodo = periodo.fecha
     var idPeriodoSeleccionado = periodo.idperiodoventa
@@ -7695,6 +7796,7 @@ $scope.clearData = function (template_Right) {
           url: '/getMonthSales',
           params: infoMes
         }).then(function (response) {
+          console.log("periodo ",response)
           $scope.acumuladoMes = response.data[0].totalventasmes
         }).catch(function (error) {
           $log.error(error)
@@ -7708,10 +7810,28 @@ $scope.clearData = function (template_Right) {
       method: 'GET',
       url: '/dashboard_load'
     }).then(function (response) {
+      console.log(response)
       $scope.object = response.data
+      //console.log($scope.object)
       for (var i = 0; i < $scope.object.length; i++) {
         $scope.object[i]['fecha_dated'] = new Date($scope.object[i]['fecha_date'])
       }
+
+      $scope.nombrePeriodo= $scope.object[0].nombreperiodo;
+      $scope.fechaInicioPeriodo = $scope.object[0].fecha;
+      $scope.mesPeriodo = $scope.object[0].mes;
+
+      var infoMes = { mes: $scope.object[0].mes }
+      $http({
+        method: 'GET',
+        url: '/getMonthSales',
+        params: infoMes
+      }).then(function (response) {
+        console.log("periodo ",response)
+        $scope.acumuladoMes = response.data[0].totalventasmes
+      }).catch(function (error) {
+        $log.error(error)
+      })
     }).catch(function (error) {
       $log.error(error)
     })
@@ -7806,6 +7926,49 @@ $scope.clearData = function (template_Right) {
     cargarDashboard($scope, $http, $log)
     cargarPeriodosVentas($scope, $http, $log)
   }*/
+
+  $scope.limpiarResultados = (listaBusqueda)=> {
+
+    let objeto={};
+
+    objeto[0] ={
+      'clavenumerica': '',
+      'codigomoneda': '',
+      'condicion_venta': '',
+      'consecutivo': '',
+      'fecharegistrofactura': '',
+      'idfactura': '',
+      'medio_pago': '',
+      'plazo_credito': '',
+      'receptor_numero': '',
+      'status': '',
+      'tipo': '',
+      'tipocambio': '',
+      'totalcomprobante': '',
+      'totaldescuentos': '',
+      'totalexento': '',
+      'totalgravado': '',
+      'totalimpuesto': '',
+      'totalmercanciasexentas': '',
+      'totalmercanciasgravadas': '',
+      'totalservexentos': '',
+      'totalservgravados': '',
+      'totalventa': '',
+      'totalventaneta': '',
+      'subtotal': '',
+      'receptorEmail': '',
+      "emisorEmail": ''
+    };
+
+    $scope.listaBusqueda = Object.keys(objeto).map((key) => {
+      return objeto[key];
+    });
+
+    const tabla = document.getElementById("summaryTable");
+    
+   console.log(tabla);
+
+  }
 
   let datosIniciales =  () =>{
     // esta funcion de datosIniciales son  peticiones http que obtienen la informacion 
@@ -10106,8 +10269,7 @@ function getProductData ($scope) {
     //product_selected.unidadmedida,product_selected.unidadmedidacomercial, product_selected.tipo_producto,
     //product_selected.codigoproducto, product_selected.precio_ivi
      // console.log("producto  ",product_selected)
-      console.log("PRODUCTO ",product_selected)
-
+      
       $('#update-producto-modal').modal({show:true});
 
       let codigoproducto;
@@ -10150,32 +10312,69 @@ function getProductData ($scope) {
             unidadMedida.options[i].selected=true;
           }
       }
+      
+      for(let i=0; i < clasificacionProducto.options.length; i++){
+        console.log(clasificacionProducto.options[i].value);
+        if(clasificacionProducto.options[i].value == product_selected.codigo_impuesto){
+          clasificacionProducto.options[i].selected=true;
+          $scope.cargarCodigoImpuesto(product_selected);
+          setTimeout(() =>{
+            for (let i = 0; i < tipoImpuesto.length; i++) {
 
-      $scope.clasificacionProductos.forEach((clasificacion,i) =>{
-        console.log("opciones ",clasificacionProducto.options[i].value);
-       // console.log("opcion BD ",product_selected.codigo_impuesto);
+              if(tipoImpuesto.options[i].value == product_selected.tipo_impuesto){
+
+                console.log("opcion escogida ",product_selected.tipo_impuesto)
+                console.log("opcion del select ",tipoImpuesto.options[i].value)
+                console.log("Llego")
+                tipoImpuesto.options[i].selected=true;
+                
+                for(indice in $scope.listaSubImpuestos) {
+              
+                  if($scope.listaSubImpuestos[indice].idimpuesto == product_selected.tipo_impuesto){                 
+                        
+                      let impuesto ={
+                          porcentaje: $scope.listaSubImpuestos[indice].porcentaje
+                      }
+                      
+                      $scope.calcularImpuesto(product_selected.precioproducto,'txtporcentajeImpuestoAC','txtImpuestoValorAC',impuesto,'txtPrecioIVAAC','txtPrecioProductoAC');
+                  }
+                }
+              }
+            }
+          },800);
+        }
+      }
+
+      //No borrar este codigo comentado
+    /*  $scope.clasificacionProductos.forEach((clasificacion,i) =>{
         if(clasificacionProducto.options[i].value == product_selected.codigo_impuesto){
           clasificacionProducto.options[i].selected=true;
 
-          $scope.cargarCodigoImpuesto(product_selected,'Text');
-
+          $scope.cargarCodigoImpuesto(product_selected);
+          tipoImpuesto= document.getElementById("txtTipoImpuestoAC");
+          console.log(tipoImpuesto)
           setTimeout(() =>{
-              for (let i = 0; i < tipoImpuesto.length; i++) {
-
-                if(tipoImpuesto.options[i].value == product_selected.tipo_impuesto){
-
-                  tipoImpuesto.options[i].selected=true;
-                  let impuesto ={
-                    porcentaje: product_selected.porcentajeimpuesto
+          //tipoImpuesto.options[i].selected=true;
+            for (let i = 0; i < tipoImpuesto.length; i++) {
+              if(tipoImpuesto.options[i].value == product_selected.tipo_impuesto){
+                tipoImpuesto.options[i].selected=true;
+                
+                for(indice in $scope.listaSubImpuestos) {
+              
+                  if($scope.listaSubImpuestos[indice].idimpuesto == product_selected.tipo_impuesto){                 
+                        
+                      let impuesto ={
+                          porcentaje: $scope.listaSubImpuestos[indice].porcentaje
+                      }
+                      
+                      $scope.calcularImpuesto(product_selected.precioproducto,'txtporcentajeImpuestoAC','txtImpuestoValorAC',impuesto,'txtPrecioIVAAC','txtPrecioProductoAC');
                   }
-
-                $scope.calcularImpuesto(product_selected.precioproducto,'txtporcentajeImpuestoAC','txtImpuestoValorAC',impuesto,'txtPrecioIVAAC','txtPrecioProductoAC');
-
                 }
               }
-          },800)
+            }
+          },800);
         }
-      })
+      })*/
     }
   }
 }
@@ -10632,12 +10831,12 @@ function limpiarFormProductosCrear(){
   document.getElementById("txtSimboloUnidadMedidaComercial").value='';
   document.getElementById("txtDescripcionCategoria").selectedIndex=null;
 
-  let seleccionado = document.getElementById("txttipoproducto");
+/*  let seleccionado = document.getElementById("txttipoproducto");
   for (let i = 0; i < seleccionado.options.length; i++) {
      // dejar seleccionada una opcion por defecto
       if(seleccionado.options[i].textContent == 'Mercancía' )
         seleccionado.options[i].selected=true;
-  }
+  }*/
   document.getElementById("clasificacioProducto").selectedIndex=null;
   document.getElementById("txtTipoImpuesto").selectedIndex=null;
   document.getElementById("clasificacioProducto").selectedIndex=null;

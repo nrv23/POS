@@ -129,36 +129,46 @@
     background: url("/assets/icons/botonEliminar.png") no-repeat 10px;
     cursor: pointer;
     float: left;
+    background-position: 50% 50%; 
+    background-repeat: no-repeat;
 }
 
 .sopa-facturacion {
     background: url("/assets/icons/BotonFactuaccion.png") no-repeat;
     cursor: pointer;
-    float: left;
+    float: right;
 }
 
 .sopa-crear {
     background: url("/assets/icons/botonCrear.png") no-repeat 10px;
     cursor: pointer;
     float: left;
+    background-position: 50% 50%; 
+    background-repeat: no-repeat;
 }
 
 .sopa-editar {
     background: url("/assets/icons/botonEditar.png") no-repeat 10px;
     cursor: pointer;
     float: left;
+    background-position: 50% 50%; 
+    background-repeat: no-repeat;
 }
 
 .sopa-editar-composicion {
     background: url("/assets/icons/botonEditarComposicion.png") no-repeat 10px;
     cursor: pointer;
     float: left;
+    background-position: 50% 50%; 
+    background-repeat: no-repeat;
 }
 
 .sopa-cargar-inventario {
     background: url("/assets/icons/botonCargarInventario.png") no-repeat 10px;
     cursor: pointer;
     float: left;
+    background-position: 50% 50%; 
+    background-repeat: no-repeat;
 }
 
 .sopa-sell {
@@ -185,19 +195,19 @@
 
 .sopa-cliente {
     background: url("../assets/icons/cliente.png") no-repeat;
-    float: left;
+    float: right;
     cursor: pointer;
 }
 
 .sopa-cliente-editar {
     background: url("../assets/icons/BotonEditarCliente.png") no-repeat;
-    float: left;
+    float: right;
     cursor: pointer;
 }
 
 .sopa-cliente-lista {
     background: url("../assets/icons/BotonListaClientes.png") no-repeat;
-    float: left;
+    float: right;
     cursor: pointer;
 }
 
@@ -263,6 +273,13 @@
     background: url("../assets/icons/pagarTarjeta.png") no-repeat;
     float: inherit;
     cursor: pointer;
+}
+
+.sopa-productos {
+    background: url("/assets/icons/bebida32x32.png") no-repeat;
+    cursor: pointer;
+    float: right;
+
 }
 /*
 .sopa-ron:hover,

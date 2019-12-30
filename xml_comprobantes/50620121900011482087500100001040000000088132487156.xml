@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TiqueteElectronico xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/tiqueteElectronico" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Clave>50620121900011482087500100001040000000088132487156</Clave>
+    <CodigoActividad>729001</CodigoActividad>
+    <NumeroConsecutivo>00100001040000000088</NumeroConsecutivo>
+    <FechaEmision>2019-12-21T01:54:09.862Z</FechaEmision>
+    <Emisor>
+        <Nombre>Natanael Venegas Mendez</Nombre>
+        <Identificacion>
+            <Tipo>01</Tipo>
+            <Numero>114820875</Numero>
+        </Identificacion>
+        <NombreComercial>Imagineing </NombreComercial>
+        <Ubicacion>
+            <Provincia>1</Provincia>
+            <Canton>07</Canton>
+            <Distrito>05</Distrito><Barrio>01</Barrio>
+                <OtrasSenas>Frente a deportivas UCR </OtrasSenas>
+            </Ubicacion>
+        <Telefono>
+            <CodigoPais>506</CodigoPais>
+            <NumTelefono>89600099</NumTelefono>
+        </Telefono>
+        <Fax>
+            <CodigoPais>0</CodigoPais>
+            <NumTelefono>0</NumTelefono>
+        </Fax><CorreoElectronico>navemen23@hotmail.com</CorreoElectronico>
+    </Emisor><Receptor>
+            <Nombre/></Receptor>
+    <CondicionVenta>01</CondicionVenta><MedioPago>01</MedioPago><DetalleServicio>
+        <LineaDetalle>
+            <NumeroLinea>1</NumeroLinea>
+            <Codigo>MercancC-a</Codigo>
+            <Cantidad>1</Cantidad>
+            <UnidadMedida>kg</UnidadMedida>
+            <Detalle>Producto 47                                       </Detalle>
+            <PrecioUnitario>1500.00</PrecioUnitario>   
+            <MontoTotal>1500</MontoTotal><SubTotal>1500</SubTotal>
+                <Impuesto>
+                    <Codigo>03</Codigo>
+                    <Tarifa>5.00000</Tarifa>
+                    <Monto>75.00</Monto>
+                </Impuesto><ImpuestoNeto>75.00</ImpuestoNeto><MontoTotalLinea>1575</MontoTotalLinea></LineaDetalle>
+        <LineaDetalle>
+            <NumeroLinea>2</NumeroLinea>
+            <Codigo>MercancC-a</Codigo>
+            <Cantidad>1</Cantidad>
+            <UnidadMedida>kg</UnidadMedida>
+            <Detalle>Producto 48                                       </Detalle>
+            <PrecioUnitario>1500.00</PrecioUnitario>   
+            <MontoTotal>1500</MontoTotal><SubTotal>1500</SubTotal>
+                <Impuesto>
+                    <Codigo>01</Codigo>
+                    <CodigoTarifa>07</CodigoTarifa>
+                    <Tarifa>1.00000</Tarifa>
+                    <Monto>15.00</Monto>
+                </Impuesto><ImpuestoNeto>15.00</ImpuestoNeto><MontoTotalLinea>1515</MontoTotalLinea></LineaDetalle>
+        <LineaDetalle>
+            <NumeroLinea>3</NumeroLinea>
+            <Codigo>MercancC-a</Codigo>
+            <Cantidad>1</Cantidad>
+            <UnidadMedida>mB3</UnidadMedida>
+            <Detalle>Producto 49                                       </Detalle>
+            <PrecioUnitario>1500.00</PrecioUnitario>   
+            <MontoTotal>1500</MontoTotal><SubTotal>1500</SubTotal>
+                <Impuesto>
+                    <Codigo>01</Codigo>
+                    <CodigoTarifa>04</CodigoTarifa>
+                    <Tarifa>4.00000</Tarifa>
+                    <Monto>60.00</Monto>
+                </Impuesto><ImpuestoNeto>60.00</ImpuestoNeto><MontoTotalLinea>1560</MontoTotalLinea></LineaDetalle></DetalleServicio>
+    <ResumenFactura>
+        <TotalServGravados>0.00000</TotalServGravados>
+        <TotalServExentos>0.00000</TotalServExentos>
+        <TotalServExonerado>0.00000</TotalServExonerado>
+        <TotalMercanciasGravadas>3000.00000</TotalMercanciasGravadas>
+        <TotalMercanciasExentas>0.00000</TotalMercanciasExentas>
+        <TotalMercExonerada>0.00000</TotalMercExonerada>
+        <TotalGravado>3000.00000</TotalGravado>
+        <TotalExento>0.00000</TotalExento>
+        <TotalExonerado>0.00000</TotalExonerado>
+        <TotalVenta>3000.00000</TotalVenta>
+        <TotalDescuentos>0.00000</TotalDescuentos>
+        <TotalVentaNeta>3000.00000</TotalVentaNeta>
+        <TotalImpuesto>150.00000</TotalImpuesto>
+        <TotalIVADevuelto>0</TotalIVADevuelto>
+        <TotalComprobante>3150.00000</TotalComprobante>
+    </ResumenFactura>
+    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-7d0f62f3-4530-31ff-13b9-60848ac41ed2"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="Reference-3a03179b-3bb3-ae19-d509-755e7bbc33d4" URI=""><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>Fd3ILR3Uc89a+fyznw13Q6A6t4givE0LD+C7rZbYYlo=</ds:DigestValue></ds:Reference><ds:Reference Id="ReferenceKeyInfo" URI="#KeyInfoId-Signature-7d0f62f3-4530-31ff-13b9-60848ac41ed2"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>F0a/6hehH5KkPxdFdmPtdWQurfTNahm9W9x/iIP0KGc=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignedProperties-Signature-7d0f62f3-4530-31ff-13b9-60848ac41ed2"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>Ym3b2q/P2CD/dB0908l6YxtNGy6REihKygOtCyQA3S8=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="SignatureValue-d7ece212-5abe-ba8a-f59a-657ebe4b9db5">jVsReuIucjwD88OjYJD1Sr6id4YUnizdBjeAjXTqPYqT2m7fZOrAgpjF+3M/1uMP/tiSDL3R4tvPOnmnSXxMOzn9MdsnFKE0m6g8mxamavMyx03txGQlTAUCDWNuvPrGKizsFiyvUrrMb1IRt0elInWjHgaue/8eX/4YbuWQyCGVCEiIc03Pl3i9jYZoCaIQAhWr1R0WPWjX1qzUOnb29nPg1ILgKQG9RREIxlTj4mThHo9xydeO0rGc6ltc+Tkgh+x/IGiBGgTEtPOu9bss3X7/paNFpb3ey7RlHrIKgogULnkaInGpmKB6GIPbhzFQ/OCgw3LMvONN2KPQERUMzQ==</ds:SignatureValue><ds:KeyInfo Id="KeyInfoId-Signature-7d0f62f3-4530-31ff-13b9-60848ac41ed2"><ds:X509Data><ds:X509Certificate>MIIFWzCCA0OgAwIBAgIGAWkSFrRSMA0GCSqGSIb3DQEBCwUAMGwxCzAJBgNVBAYTAkNSMSkwJwYDVQQKDCBNSU5JU1RFUklPIERFIEhBQ0lFTkRBIC0gU0FOREJPWDEMMAoGA1UECwwDREdUMSQwIgYDVQQDDBtDQSBQRVJTT05BIEZJU0lDQSAtIFNBTkRCT1gwHhcNMTkwMjIxMjIwNDMxWhcNMjEwMjIwMjIwNDMxWjCBozEZMBcGA1UEBRMQQ1BGLTAxLTE0ODItMDg3NTEaMBgGA1UEBAwRUk9EUklHVUVaIFZFTkVHQVMxETAPBgNVBCoMCE5BVEFOSUVMMQswCQYDVQQGEwJDUjEXMBUGA1UECgwOUEVSU09OQSBGSVNJQ0ExDDAKBgNVBAsMA0NQRjEjMCEGA1UEAwwaTkFUQU5JRUwgUk9EUklHVUVaIFZFTkVHQVMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCSSW1aumxeVraFupKn1yLb+vwklkPz40YxOg/Hmqy1hdX+Y4kZHYXXcRuM22o0TenuY/exkHGaRit79ISCswsBp9pS6dh3YP++9hgbN1Z8OPyFmqq+YnlthYIVXKtdhq3ni1MwpTyfrPJ/2VQwj5fVenX7MH4agaSWBcwpeb8clIhcdAZnBgDt5uMp5QmeCQdNYhnxVDmXXNBa28N2poNaKLCpLAZq8/xuR1eM1QFnitN1EFmAsxx8Y87ifgKoPy3PfAbTxZP+BHe2fI3j2TCo13HTZ/m0oYgj4phAnDfkXVDmKpAAutQ0ImVTuL0H6H8H2JnwrYPfR2hqWIhirQzPAgMBAAGjgcowgccwHwYDVR0jBBgwFoAURiPSRE+/V1kh5L+T1TCblUzj94cwHQYDVR0OBBYEFGwjtiRVXUxJVla7du69R9pLT6GPMAsGA1UdDwQEAwIGwDATBgNVHSUEDDAKBggrBgEFBQcDBDBjBggrBgEFBQcBAQRXMFUwUwYIKwYBBQUHMAKGR2h0dHBzOi8vcGtpLmNvbXByb2JhbnRlc2VsZWN0cm9uaWNvcy5nby5jci9zdGFnL2ludGVybWVkaWF0ZS1wZi1wZW0uY3J0MA0GCSqGSIb3DQEBCwUAA4ICAQBJk+1SHcD2I945ik6dEoP6unaapSbdxo4OcjVgBFX3HYyN/zFcfZN9awHQDva0O0lztTvEbCzYZ1W0KiLaiOkPEX2bWJ+rywkv/3VJZhOeZ1pDBDAgotDQPeWJ6xW6InvmEPkhwNa/ZPzgaX5gijr+Xjc7M3LxW4WQi9IaPCm+Ozq4SoiNocbBF+tg79L/Z86fChcYWin0U7DTyKm8uDfju63rCbVppXO8KkNslbW60RCJzIJAL7TrDFJlt3DZBT/wXh5AsB+/Jpl2aqudFl5AStQ7VP9APAZeQJoR2JO72tGkww/+y3tz21GFre60xy1mMNYrr7Au+vFYmnxjVMJgRn2QRRQVZ7/zfThKztbotytfh6ZlJQ1s8efehDcfv1oouMAfWLYqEuwrclua4iZYWTtaxT1L8HtGvqOfaUdjUCtWgv9IsY/T6dm+UGfZ5AgEzLGDkWJWlZXHSgPnEDrjrajsXidE3AylbdVjcMfkt+IpSSVOj9C7SkJAEPSybt8RoLhKQ0g+qaN9RtcqP/F+lwkBq2EPZCXJIBUhy5QGkuiXW/stziXYGtHxy12UR60uvydMXKx7Km2rhXYio5Qh20jh3wNXZySL9e3v/5AjnOWE1FXSi60L4No1gGxFP37v7m0i6ooAH0cefUFDcdLESTkreWajtiBgPe5lWf1QTA==</ds:X509Certificate></ds:X509Data><ds:KeyValue><ds:RSAKeyValue><ds:Modulus>kkltWrpsXla2hbqSp9ci2/r8JJZD8+NGMToPx5qstYXV/mOJGR2F13EbjNtqNE3p7mP3sZBxmkYre/SEgrMLAafaUunYd2D/vvYYGzdWfDj8hZqqvmJ5bYWCFVyrXYat54tTMKU8n6zyf9lUMI+X1Xp1+zB+GoGklgXMKXm/HJSIXHQGZwYA7ebjKeUJngkHTWIZ8VQ5l1zQWtvDdqaDWiiwqSwGavP8bkdXjNUBZ4rTdRBZgLMcfGPO4n4CqD8tz3wG08WT/gR3tnyN49kwqNdx02f5tKGII+KYQJw35F1Q5iqQALrUNCJlU7i9B+h/B9iZ8K2D30doaliIYq0Mzw==</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue></ds:KeyInfo><ds:Object Id="XadesObjectId-ce57abf7-5690-f8ea-d3af-47023144fb61"><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Id="QualifyingProperties-facdd246-5a5b-930e-a0bf-72bd4eed351b" Target="#Signature-7d0f62f3-4530-31ff-13b9-60848ac41ed2"><xades:SignedProperties Id="SignedProperties-Signature-7d0f62f3-4530-31ff-13b9-60848ac41ed2"><xades:SignedSignatureProperties><xades:SigningTime>2019-12-20T19:54:15-06:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>GCbeFF4yiKOt5Tv2BkfzYtDhzQT26eiAOiflILd6fgA=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>CN=CA PERSONA FISICA - SANDBOX, OU=DGT, O=MINISTERIO DE HACIENDA - SANDBOX, C=CR</ds:X509IssuerName><ds:X509SerialNumber>1550786671698</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate><xades:SignaturePolicyIdentifier><xades:SignaturePolicyId><xades:SigPolicyId><xades:Identifier>https://www.hacienda.go.cr/ATV/ComprobanteElectronico/docs/esquemas/2016/v4.3/ResolucionComprobantesElectronicosDGT-R-48-2016_4.3.pdf</xades:Identifier><xades:Description/></xades:SigPolicyId><xades:SigPolicyHash><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>3gQCr0HYSdoxi0ZaRaJ4qs3mHfI=</ds:DigestValue></xades:SigPolicyHash></xades:SignaturePolicyId></xades:SignaturePolicyIdentifier></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#Reference-3a03179b-3bb3-ae19-d509-755e7bbc33d4"><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></TiqueteElectronico>

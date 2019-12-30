@@ -58,7 +58,9 @@
           <button id="btnReporteHacienda" ng-click="exportTableToExcel(listaBusqueda);" type="button" class="btn btn-default">
             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> </span>
           </button>
-          Hora Actual: {{ horaReloj }}
+          Hora Actual: {{ horaReloj }}&nbsp;
+
+          <button class="btn btn-default" ng-Click="limpiarResultados(listaBusqueda)"><span class="glyphicon glyphicon-trash"></span></button>
         </h4>
 
         </div>
@@ -175,7 +177,7 @@
           <!-- <td align="left" ng-click="rowClicked(summary)">{{summary.efectivosdescuentos | currency:"₡"}}</td>
           <td align="left" ng-click="rowClicked(summary)">{{summary.tarjetasdescuentos | currency:"₡"}}</td> -->
           <td align="left" ng-click="rowClicked(summary)">{{summary.status}}</td>
-          <td align="left" ng-click="rowClicked(summary)"><button class="btn btn-warning" ng-Click="loadDataFactura(summary)"  data-toggle="modal" data-target="#detalle-factura-modal"><span class="glyphicon glyphicon-eye-open"></span></button></td>
+          <td align="left" ng-click="rowClicked(summary)"><button class="btn btn-warning detalles" ng-Click="loadDataFactura(summary)"  data-toggle="modal" data-target="#detalle-factura-modal"><span class="glyphicon glyphicon-eye-open"></span></button></td>
         </tr>
       </tbody>
     </table>

@@ -84,3 +84,22 @@ table {
     background: white;
     color: #ee6c10;
 }
+.barra{
+    border-bottom: #FFFFFF  0px solid; 
+}
+
+#txtBuscarProducto {
+    margin-top: 30px;
+}
+
+.extender {
+    height: 500px;
+}
+
+#restaurant_table {
+    overflow-x: hidden;
+}
+.top{
+
+    margin-top: 10px;
+}

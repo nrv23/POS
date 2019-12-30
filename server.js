@@ -18,6 +18,14 @@ var ping = require("net-ping"); // use to check connection to internet. isOnline
 var request = require("request"); //use to check connection with Hacienda API
 var nodemailer = require("nodemailer");
 let listaUnidadesMedida = require("./ServiciosWeb/unidadMedida");
+const iva = require('./ServiciosWeb/SubImpuestos/IVA');
+const selectivo = require('./ServiciosWeb/SubImpuestos/Selectivo');
+const combustible = require('./ServiciosWeb/SubImpuestos/Combustible');
+const bebidasAlcoholicas = require('./ServiciosWeb/SubImpuestos/BebidasAlcoholicas');
+const bebidasJabones = require('./ServiciosWeb/SubImpuestos/BebidasJabones');
+const productosTabaco = require('./ServiciosWeb/SubImpuestos/Tabaco');
+const calculoEspecial = require('./ServiciosWeb/SubImpuestos/CalculoEspecial');
+const otros = require('./ServiciosWeb/SubImpuestos/Otros');
 let reportes = require('./Reportes/reportes');
 //var reporte= require("./pantilla_PDF/reporte.js");
 //var fs = require("file-system")
@@ -792,6 +800,108 @@ app.put("/disabled_impuesto", (req, res) => {
     } catch (error) {}
 })
 
+//SERVICIOS WEB DE TIPOS DE IMPUESTOS
+
+app.get('/impuesto/iva', (req,res) => {
+
+    try{
+
+        const impuesto = iva();
+        res.status(200).send(impuesto)
+
+    }catch(err){
+        res.status(500).send(err)
+    }
+})
+
+app.get('/impuesto/selectivo', (req,res) => {
+
+    try{
+
+        const impuesto = selectivo();
+        res.status(200).send(impuesto)
+
+    }catch(err){
+        res.status(500).send(err)
+    }
+})
+
+app.get('/impuesto/combustible', (req,res) => {
+
+    try{
+
+        const impuesto = combustible();
+        res.status(200).send(impuesto)
+
+    }catch(err){
+        res.status(500).send(err)
+    }
+})
+
+
+app.get('/impuesto/bebidas-alcoholicas', (req,res) => {
+
+    try{
+
+        const impuesto = bebidasAlcoholicas();
+        res.status(200).send(impuesto)
+
+    }catch(err){
+        res.status(500).send(err)
+    }
+})
+
+app.get('/impuesto/bebidas-jabones', (req,res) => {
+
+    try{
+
+        const impuesto = bebidasJabones();
+        res.status(200).send(impuesto)
+
+    }catch(err){
+        res.status(500).send(err)
+    }
+})
+
+app.get('/impuesto/tabaco', (req,res) => {
+
+    try{
+
+        const impuesto = productosTabaco();
+        res.status(200).send(impuesto)
+
+    }catch(err){
+        res.status(500).send(err)
+    }
+})
+
+app.get('/impuesto/calculo-especial', (req,res) => {
+
+    try{
+
+        const impuesto = calculoEspecial();
+        res.status(200).send(impuesto)
+
+    }catch(err){
+        res.status(500).send(err)
+    }
+})
+
+
+app.get('/impuesto/otros', (req,res) => {
+
+    try{
+
+        const impuesto = otros();
+        res.status(200).send(impuesto)
+
+    }catch(err){
+        res.status(500).send(err)
+    }
+})
+
+
+//
 /*--------------------------------FIN SECCION IMPUESTOS -----------------------*/
 
 // =============================================================================
@@ -1379,7 +1489,7 @@ app.put("/proveedor/delete", function(req, res, callback) {
 // =============================================================================
 app.get('/api/product', function(req, res, callback) {
     try {
-        pool.query('SELECT p.codigoBarraProducto, p.idProducto, p.descripcionProducto, p.precioProducto,  p.unidadmedida, p.unidadmedidacomercial, p.costounitario, p.porcentajeImpuesto, p.tipo_producto,   p.codigoproducto, p.idclasificacion, p.tipo_impuesto, c.idcategoria, c.descripcioncategoria, cl.id as idclasificacion, cl.codigo_impuesto FROM  producto p INNER JOIN public.categoria c ON p.idcategoria = c.idcategoria INNER JOIN clasificacion cl ON p.idclasificacion = cl.id   WHERE p.estadoproducto = 1 ORDER BY p.idProducto;', []).then(data => {
+        pool.query('SELECT p.codigoBarraProducto, p.idProducto, p.descripcionProducto, p.precioProducto,  p.unidadmedida, p.unidadmedidacomercial, p.costounitario, p.porcentajeImpuesto, p.tipo_producto,   p.codigoproducto, p.idclasificacion, p.tipo_impuesto, c.idcategoria, c.descripcioncategoria, cl.codigo_impuesto FROM  producto p INNER JOIN public.categoria c ON p.idcategoria = c.idcategoria INNER JOIN clasificacion cl ON p.idclasificacion = cl.id WHERE p.estadoproducto = 1 ORDER BY p.idProducto;', []).then(data => {
             res.status(200).send(JSON.stringify(data))
         }).catch(error => {
             console.error(error)
@@ -3047,6 +3157,8 @@ app.post("/factura/acuse/generar/", function(req, res) {
         } catch (error) {}
 
 })
+
+
 //----------------------------------------------------------------------------
 app.post("/upload_certificado", function(req, res) {
 
@@ -3454,7 +3566,8 @@ app.put("/update_discount", function(req, res) {
       let naturaleza = req.body.naturaleza;
       let total = req.body.total;
       let subtotal = req.body.subtotal;
-      
+      console.log(req.body)
+
     try {
         pool.query("UPDATE ORDEN SET montodescuento = $1, descuentoorden = $2, naturalezadescuento= $3, total_orden= $4, subtotal= $5 WHERE idorden = $6", [descuento, porcentajeDescuento, naturaleza, total, subtotal, idorden]).then(data => {
             console.log("todo bien")
@@ -4210,14 +4323,30 @@ app.get("/getOrdersCancelledBill_forPDF", function(req, res) {
 // DASHBOARD
 // =============================================================================
 app.get("/dashboard_load", function(req, res) {
-    try {
-        pool.query("SELECT pv.idPeriodoVenta, e.nombreEmpleado, e.apellidoEmpleado, TO_CHAR(pv.fechaInicioPeriodoVenta, 'MM/YY') AS Mes, TO_CHAR(pv.fechaInicioPeriodoVenta, 'WW') AS Semana, TO_CHAR(pv.fechaInicioPeriodoVenta, 'DD/MM/YY HH24:MI:SS') AS Fecha, pv.nombrePeriodoVenta as NombrePeriodo, pv.estadoPeriodoVenta as EstadoPeriodo, SUM(f.subTotal) AS subTotal, SUM(f.subtotal * f.porcentajeDescuento / 100) AS Descuento, SUM(CASE WHEN f.formapago = 'Efectivo' THEN f.subTotal END) - SUM(CASE WHEN f.formapago = 'Efectivo' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS Efectivos, SUM(CASE WHEN f.formapago = 'Tarjeta' THEN f.subTotal END) - SUM(CASE WHEN f.formapago = 'Tarjeta' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS Tarjetas, SUM(CASE WHEN f.formapago = 'Efectivo' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS EfectivosDescuentos, SUM(CASE WHEN f.formapago = 'Tarjeta' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS TarjetasDescuentos, SUM(f.subtotal - f.subtotal * f.porcentajeDescuento / 100) AS Total, pv.fechaInicioPeriodoVenta AS Fecha_Date  FROM PERIODOVENTA pv INNER JOIN FACTURA f ON pv.idPeriodoVenta = f.idPeriodoVenta LEFT JOIN EMPLEADO e ON pv.idEmpleado = e.idEmpleado WHERE f.estadoFactura = 1 GROUP BY pv.idPeriodoVenta, e.nombreEmpleado, e.apellidoEmpleado ORDER BY pv.fechaInicioPeriodoVenta DESC;", []).then(data => {
-            res.status(200).send(JSON.stringify(data))
-        }).catch(error => {
-            console.error(error)
-            res.status(500).end("SQL Query Failed")
+
+    pool.query("SELECT pv.idPeriodoVenta, e.nombreEmpleado, e.apellidoEmpleado, TO_CHAR(pv.fechaInicioPeriodoVenta, 'MM/YY') AS Mes, TO_CHAR(pv.fechaInicioPeriodoVenta, 'WW') AS Semana, TO_CHAR(pv.fechaInicioPeriodoVenta, 'DD/MM/YY HH24:MI:SS') AS Fecha, pv.nombrePeriodoVenta as NombrePeriodo, pv.estadoPeriodoVenta as EstadoPeriodo, SUM(f.subTotal) AS subTotal, SUM(f.subtotal * f.porcentajeDescuento / 100) AS Descuento, SUM(CASE WHEN f.formapago = 'Efectivo' THEN f.subTotal END) - SUM(CASE WHEN f.formapago = 'Efectivo' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS Efectivos, SUM(CASE WHEN f.formapago = 'Tarjeta' THEN f.subTotal END) - SUM(CASE WHEN f.formapago = 'Tarjeta' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS Tarjetas, SUM(CASE WHEN f.formapago = 'Efectivo' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS EfectivosDescuentos, SUM(CASE WHEN f.formapago = 'Tarjeta' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS TarjetasDescuentos, SUM(f.subtotal - f.subtotal * f.porcentajeDescuento / 100) AS Total, pv.fechaInicioPeriodoVenta AS Fecha_Date  FROM PERIODOVENTA pv INNER JOIN FACTURA f ON pv.idPeriodoVenta = f.idPeriodoVenta LEFT JOIN EMPLEADO e ON pv.idEmpleado = e.idEmpleado WHERE f.estadoFactura = 1 GROUP BY pv.idPeriodoVenta, e.nombreEmpleado, e.apellidoEmpleado ORDER BY pv.fechaInicioPeriodoVenta DESC;", []).then(data => {
+        res.status(200).send(JSON.stringify(data))
+    }).catch(error => {
+        console.error(error)
+        res.status(500).end("SQL Query Failed")
+    })
+})
+
+
+app.get('/dasboard_load_perDate',(req,res) => {
+
+    if(req.query.tipo =='fechas'){
+            
+        const {fecha1, fecha2} = req.query;
+
+        pool.query("SELECT pv.idPeriodoVenta, e.nombreEmpleado, e.apellidoEmpleado, TO_CHAR(pv.fechaInicioPeriodoVenta, 'MM/YY') AS Mes, TO_CHAR(pv.fechaInicioPeriodoVenta, 'WW') AS Semana, TO_CHAR(pv.fechaInicioPeriodoVenta, 'DD/MM/YY HH24:MI:SS') AS Fecha, pv.nombrePeriodoVenta as NombrePeriodo, pv.estadoPeriodoVenta as EstadoPeriodo, SUM(f.subTotal) AS subTotal, SUM(f.subtotal * f.porcentajeDescuento / 100) AS Descuento, SUM(CASE WHEN f.formapago = 'Efectivo' THEN f.subTotal END) - SUM(CASE WHEN f.formapago = 'Efectivo' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS Efectivos,SUM(CASE WHEN f.formapago = 'Tarjeta' THEN f.subTotal END) - SUM(CASE WHEN f.formapago = 'Tarjeta' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS Tarjetas, SUM(CASE WHEN f.formapago = 'Efectivo' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS EfectivosDescuentos, SUM(CASE WHEN f.formapago = 'Tarjeta' THEN (f.subtotal * f.porcentajeDescuento / 100) END) AS TarjetasDescuentos,SUM(f.subtotal - f.subtotal * f.porcentajeDescuento / 100) AS Total, pv.fechaInicioPeriodoVenta AS Fecha_Date FROM PERIODOVENTA pv INNER JOIN FACTURA f ON pv.idPeriodoVenta = f.idPeriodoVenta LEFT JOIN EMPLEADO e ON pv.idEmpleado = e.idEmpleado WHERE TO_CHAR(pv.fechaInicioPeriodoVenta, 'MM/YYYY') BETWEEN $1 AND $2 AND f.estadoFactura = 1 GROUP BY pv.idPeriodoVenta, e.nombreEmpleado, e.apellidoEmpleado ORDER BY pv.fechaInicioPeriodoVenta DESC;",[fecha1, fecha2]).then(data=>  {
+        
+            res.status(200).send(data);
+        
         })
-    } catch (error) {}
+        .catch(err => res.status(500).send(err));
+
+    }
 })
 
 app.get("/dashboard_all", function(req, res) {
@@ -4234,7 +4363,7 @@ app.get("/dashboard_all", function(req, res) {
 app.get("/periodos_venta_load", function(req, res) {
     try {
         pool.query("SELECT idPeriodoVenta, nombrePeriodoVenta, fechaInicioPeriodoVenta, TO_CHAR(fechaInicioPeriodoVenta, 'MM/YY') as Mes, TO_CHAR(fechaInicioPeriodoVenta, 'WW') as Semana FROM PERIODOVENTA WHERE TO_NUMBER(TO_CHAR(fechaInicioPeriodoVenta, 'WW'), '99G999D9S') >= (SELECT TO_NUMBER(TO_CHAR(NOW(), 'WW'), '99G999D9S')) - 1 AND TO_NUMBER(TO_CHAR(fechaInicioPeriodoVenta, 'YYYY'), '99G999D9S') = (SELECT TO_NUMBER(TO_CHAR(NOW(), 'YYYY'), '99G999D9S')) ORDER BY idPeriodoVenta DESC", []).then(data => {
-            console.log("data ",data);
+        
             res.status(200).send(JSON.stringify(data))
         }).catch(error => {
             console.error(error)
@@ -4461,6 +4590,8 @@ app.get("/get_comprobantes", function(req, res) {
 
 app.get("/getMonthSales", function(req, res) {
     var mes = req.query.mes
+
+    console.log("mes ", mes);
     try {
         pool.query("SELECT SUM(f.subTotal) - SUM(f.subTotal * f.porcentajeDescuento / 100) AS TotalVentasMes FROM FACTURA f WHERE  TO_CHAR(f.fechaRegistroFactura, 'MM/YY') = $1 AND f.estadoFactura = 1;", [mes])
             .then(data => {
@@ -4894,7 +5025,7 @@ app.get("/sendXMLtoEmail", function(req, res) {
     res.status(200).end()
 })
 
-app.get("/execution", function(req, res) {
+/*app.get("/execution", function(req, res) {
     var idPeriodo = req.query.idPeriodo
     var nombrePeriodo = req.query.nombrePeriodo
     var nombreEmpleado = req.query.nombreEmpleado
@@ -4914,8 +5045,20 @@ app.get("/execution", function(req, res) {
             }
         })
     res.status(200).end()
-})
+})*/
 
+//-------------------------------------------------------------------------------------------
+/*app.get("/execution", function(req, res) {
+    var idPeriodo = req.query.idPeriodo
+    var nombrePeriodo = req.query.nombrePeriodo
+    var nombreEmpleado = req.query.nombreEmpleado
+    var ventaTotal = req.query.ventaTotal
+    var wurl = "http://" + server.address().address + ":" + server.address().port + "/" + "Excel2_DetallePeriodo?idPeriodo=" + idPeriodo
+
+    sopaapi(wurl).then(data => {
+        res.status(200).send('correo enviado exitosamente')
+    }).catch(err => res.status(200).send('No se pudo enviar el correo'));
+})
 app.get("/Excel2_DetallePeriodo", function(req, res) {
     var idPeriodo = req.query.idPeriodo
     // var final_round = req.body.final
@@ -4937,6 +5080,8 @@ app.get("/Excel2_DetallePeriodo", function(req, res) {
     sopaapi(url).then(function(results) {
         // console.log("results in server")
         // console.dir(results)
+
+        return new Promise((resolve, reject) => {
         var conf = {}
         conf.stylesXmlFile = "./public/xml/styles-reporte-detalle-periodos.xml"
         conf.name = "Periodo_" + idPeriodo
@@ -4981,16 +5126,124 @@ app.get("/Excel2_DetallePeriodo", function(req, res) {
                   console.log("exec error: " + error)
                 }
               })
-              child() */
+              child() 
         var result = nodeExcel.execute(conf)
-        var outputfile = "Reporte_Detalle_Periodo" + idPeriodo + ".xlsx"
-        res.setHeader("Content-Type", "application/vnd.openxmlformats")
-        res.setHeader("Content-Disposition", "attachment; filename=" + outputfile)
+        var rutaFile = "./excel/Reporte_Detalle_Periodo" + idPeriodo + ".xlsx";     
+        const nombreFile= "Reporte_Detalle_Periodo" + idPeriodo + ".xlsx"
+        fs.writeFileSync(rutaFile,result,'binary');
 
-        res.end(result, "binary")
+        const host = obtenerHostCorreo('navemen23@hotmail.com');
+        enviarCorreos('navemen23@hotmail.com','navemen23@hotmail.com', 'Nvm231191', host, '',
+        '', '',rutaFile, nombreFile, '', '', 'informe_periodo').then(data => {
+            resolve(data)
+        }).catch(err => {
+            
+            console.log(err)
+            reject(err)
+        });
+        /*
+            //res.setHeader("Content-Type", "application/vnd.openxmlformats")
+            //res.setHeader("Content-Disposition", "attachment; filename=" + outputfile)
+            //res.end(result, "binary");
+    
+        
+        //
+        })
         // child()
     }).catch(function(error) {
         console.error(error)
+    })
+})*/
+//-------------------------------------------------------------------------------------------
+
+app.get("/execution", function(req, res) {
+    
+    const idPeriodo = req.query.idPeriodo
+    const nombrePeriodo = req.query.nombrePeriodo
+    const nombreEmpleado = req.query.nombreEmpleado
+    const ventaTotal = req.query.ventaTotal
+    const query1 = "getPeriodDetails?idPeriodo=" + idPeriodo
+    const url = "http://" + server.address().address + ":" + server.address().port + "/" + query1;
+
+    
+    sopaapi(url).then(results => {
+
+        var conf = {}
+        conf.stylesXmlFile = "./public/xml/styles-reporte-detalle-periodos.xml"
+        conf.name = "Periodo_" + idPeriodo
+        conf.cols = [{
+            caption: "idorden",
+            type: "number"
+        }, {
+            caption: "idfactura",
+            type: "number"
+        }, {
+            caption: "fechafactura",
+            type: "string"
+        }, {
+            caption: "descripcionproducto",
+            type: "string"
+        }, {
+            caption: "cantidadproducto",
+            type: "number"
+        }, {
+            caption: "formapago",
+            type: "string"
+        }, {
+            caption: "subtotal",
+            type: "number"
+        }, {
+            caption: "porcentajedescuento",
+            type: "number"
+        }, {
+            caption: "total",
+            type: "number"
+        }]
+
+        let resultsMapped = results.map(result => Object.keys(result).map(key => typeof(result[key]) === "string" ? result[key].trim() : result[key]))
+        conf.rows = resultsMapped
+        
+        const result = nodeExcel.execute(conf)
+      
+        try{
+
+           pool.query('SELECT e_correoelectronico, password_email FROM emisor',[]).then(data => {
+
+                const host = obtenerHostCorreo(data[0].e_correoelectronico);
+                const pwd = encriptar_desencriptar_password(data[0].password_email,'decrypt');
+                const email = data[0].e_correoelectronico;
+                const fecha=new Date();
+                let mes, anio, dia;
+
+                mes = Number(fecha.getMonth())+1;
+                dia= Number(fecha.getDate())+1;
+                anio = fecha.getFullYear();
+
+                if(mes < 10) mes= '0'+String(mes);
+                if(dia< 10) dia = '0'+String(dia);
+                
+                const fechaActual = `${anio}_${mes}_${dia}`;
+                const rutaFile = "./excel/Reporte_Detalle_Periodo_" + fechaActual + ".xlsx";     
+                const nombreFile= "Reporte_Detalle_Periodo_" + fechaActual + ".xlsx"               
+                const subject=`Cierre de periodo ${nombrePeriodo}`;        
+                const mensaje =`El empleado ${nombreEmpleado} ha cerrado el periodo ${nombrePeriodo} con un total vendido de ${ventaTotal}`;
+
+                fs.writeFileSync(rutaFile,result,'binary');
+                enviarCorreos(email,email,pwd , host, '',
+                subject, '',rutaFile, nombreFile, '', '', 'informe_periodo',mensaje).then(data => {
+                    return res.status(200).send(data);
+                }).catch(err => {
+                    
+                    console.log(err)
+                    return  res.status(500).send(err);
+                });  
+
+           }).catch(err => {
+                console.log(err)
+                return  res.status(500).send(err);
+            }) 
+
+        }catch(err){}
     })
 })
 
@@ -5814,7 +6067,7 @@ let crearDocumentoXML = function(path, comprobante) {
 }
 
 let enviarCorreos = function(correo_emisor='', correo_receptor='', password='', host='', comprobante='',
-    nombreinstitucion='', nombreComprobante='', ruta_PDF='', nombre_PDF='', nombre_acuse='', comprobanteAcuse='', tipo) {
+    nombreinstitucion='', nombreComprobante='', ruta_PDF='', nombre_PDF='', nombre_acuse='', comprobanteAcuse='', tipo,mensaje) {
     
     return new Promise((resolve, reject) => {
 
@@ -5863,6 +6116,18 @@ let enviarCorreos = function(correo_emisor='', correo_receptor='', password='', 
                     }
                 ]
             };
+        }else if(tipo === 'informe_periodo'){
+            mailOptions = {
+
+                from: correo_emisor,
+                to: correo_emisor,
+                subject: nombreinstitucion,
+                text: mensaje,
+                attachments: {
+                        filename: nombre_PDF,
+                        path: ruta_PDF
+                    }
+            };
         }
             transporter.sendMail(mailOptions, function(error, emailData) {
 
@@ -5882,7 +6147,7 @@ let enviarCorreos = function(correo_emisor='', correo_receptor='', password='', 
             })
         } catch (err) {
 
-            console.log(err);
+            console.log("error ",err);
             reject(err);
             
         }
@@ -6280,4 +6545,4 @@ var server2 = app.listen(process.env.PORT || PORT, "127.0.0.1", function() {
 //DATATYPE LO QUE ME VA DEVOLVER.
 
 //Comandos Utiles
-//pg_dump --no-acl --if-exists -c --no-owner --verbose --inserts --column-inserts postgres://postgres:postgres@127.0.0.1:5432/sopa2 > sopa2_v3.sql   ```
+//pg_dump --no-acl --if-exists -c --no-owner --verbose --inserts --column-inserts postgres://postgres:postgres@127.0.0.1:5432/sopa > sopa.sql   ```

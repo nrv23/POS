@@ -308,7 +308,7 @@
                     </div>
                     <div class="form-group">
                         <h5 style="color: blue;">Clasificacion de Producto:
-                            <select required class="form-control" ng-options="nombre.nombre_clasificacion for nombre in clasificacionProductos track by nombre.codigo_impuesto" ng-model="product_selected.clasificacionAC" name="descripcionImpuesto" id="clasificacioProductoAC" ng-change="cargarCodigoImpuesto(product_selected.clasificacion)">
+                            <select required class="form-control" ng-options="nombre.nombre_clasificacion for nombre in clasificacionProductos track by nombre.codigo_impuesto" ng-model="product_selected.clasificacionAC" name="descripcionImpuesto" id="clasificacioProductoAC" ng-change="cargarCodigoImpuesto(product_selected.clasificacionAC); cargarIdClasificacion(product_selected.clasificacionAC)">
                                 <option value="" disabled> Seleccione clasificacion</option>
                             </select>
                         </h5>

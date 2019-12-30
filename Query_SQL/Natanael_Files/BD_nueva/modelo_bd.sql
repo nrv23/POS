@@ -381,7 +381,7 @@ CREATE TABLE orden (
     fecharegistroorden timestamp without time zone DEFAULT now(),
     preciounitarioproducto numeric(10,2) DEFAULT 0,
     costounitarioproducto numeric(10,2) DEFAULT 0,
-    descuentoorden numeric(4,2) DEFAULT 0,
+    descuentoorden numeric(18,5) DEFAULT 0,
     numerolineadetalle integer DEFAULT 1 NOT NULL,
     codigoservicio character varying(50) DEFAULT 1 NOT NULL,
     tiposervicio character varying(2) DEFAULT '2'::character varying NOT NULL,
