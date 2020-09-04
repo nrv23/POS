@@ -27,7 +27,7 @@
     "moment": "^2.9.0"
   },
   "devDependencies": {
-    "node-sass": "^3.4.2"
+    "node-sass": "^4.14.1"
   },
   "gitHead": "9670cb08601d0fd7d9fa39734ab6f9f1ef354e8c",
   "_id": "bootstrap-daterangepicker@2.1.30",
