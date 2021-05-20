@@ -57,7 +57,7 @@
     "file-exists": "^5.0.1",
     "file-system": "^2.2.2",
     "graceful-fs": "^4.1.15",
-    "html-pdf": "^2.2.0",
+    "html-pdf": "^3.0.1",
     "ip": "^1.1.5",
     "mysql": "^2.13.0",
     "net-ping": "^1.2.3",
