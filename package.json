@@ -46,7 +46,7 @@
     "compression": "^1.7.4",
     "cors": "^2.8.3",
     "crypto-js": "^3.1.9-1",
-    "datatables.net": "^1.10.15",
+    "datatables.net": "^1.11.3",
     "datatables.net-dt": "^1.10.15",
     "debug": "^2.6.3",
     "ee-first": "^1.1.1",
