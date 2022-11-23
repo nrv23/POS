@@ -69,7 +69,7 @@
     "query-string": "^6.2.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.5.0",
     "underscore": "^1.8.3",
     "unpipe": "^1.0.0",
     "yargs": "^6.6.0"
