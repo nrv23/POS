@@ -52,7 +52,7 @@
     "ee-first": "^1.1.1",
     "es6-promise": "^4.2.5",
     "excel-export": "^0.5.1",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "express-fileupload": "^1.0.0",
     "file-exists": "^5.0.1",
     "file-system": "^2.2.2",
