@@ -80,7 +80,7 @@
     "chai": "^4.2.0",
     "flow-bin": "^0.48.0",
     "htmlhint": "^0.11.0",
-    "mocha": "^6.1.4",
+    "mocha": "^10.2.0",
     "nodemon": "^1.19.4",
     "standard": "^10.0.3",
     "start-server-and-test": "^1.7.12"
